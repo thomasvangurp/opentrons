@@ -189,9 +189,9 @@ class Placeable(object):
         if not name:
             name = str(child)
 
-        if name in self.children_by_name:
-            raise Exception('Child with the name {} already exists'
-                            .format(name))
+        # if name in self.children_by_name:
+        #     raise Exception('Child with the name {} already exists'
+        #                     .format(name))
 
         child._coordinates = Vector(coordinates)
         child.parent = self
