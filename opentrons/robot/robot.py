@@ -7,6 +7,7 @@ import requests
 import serial
 
 from opentrons import containers
+from opentrons.tracker import tracker
 from opentrons.drivers import motor as motor_drivers
 from opentrons.drivers.virtual_smoothie import VirtualSmoothie
 from opentrons.robot.command import Command
@@ -186,6 +187,7 @@ class Robot(object, metaclass=Singleton):
                 options={'limit_switches': True}
             )
         }
+        tracker.init({})
         self._driver = motor_drivers.CNCDriver()
         self.reset()
 
@@ -221,8 +223,10 @@ class Robot(object, metaclass=Singleton):
             * Instruments
             * Command queue
             * Runtime warnings
+            * Liquid Tracker
 
         """
+
         self._commands = []
         self._runtime_warnings = []
 
@@ -231,13 +235,16 @@ class Robot(object, metaclass=Singleton):
         self._deck = containers.Deck()
         self.setup_deck()
 
-        self._ingredients = {}  # TODO needs to be discusses/researched
+        tracker.init()
         self._instruments = {}
 
         self.axis_homed = {
             'x': False, 'y': False, 'z': False, 'a': False, 'b': False}
 
         return self
+
+    def add_liquid_state(self, liquid_state):
+        tracker.init(liquid_state)
 
     def add_instrument(self, axis, instrument):
         """
@@ -710,6 +717,8 @@ class Robot(object, metaclass=Singleton):
 
         for instrument in self._instruments.values():
             instrument.reset()
+
+        tracker.reset()
 
     def run(self, **kwargs):
         """
