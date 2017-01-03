@@ -1,3 +1,5 @@
+import copy
+
 from opentrons.util import trace
 from opentrons.containers.placeable import WellSeries
 from opentrons import containers
@@ -43,7 +45,9 @@ def init(state=None):
 
 def reset():
     global _tracker_init_state, _tracker_state
-    _tracker_state = _tracker_init_state
+    _tracker_state = {}
+    for k, v in _tracker_init_state.items():
+        _tracker_state[k] = v
 
 
 def state():

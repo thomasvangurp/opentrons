@@ -243,7 +243,7 @@ class Robot(object, metaclass=Singleton):
 
         return self
 
-    def add_liquid_state(self, liquid_state):
+    def set_liquid_state(self, liquid_state):
         tracker.init(liquid_state)
 
     def add_instrument(self, axis, instrument):

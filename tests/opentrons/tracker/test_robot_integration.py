@@ -56,8 +56,46 @@ def test_aspirate():
 def test_robot_add_liquids():
     robot, trough, plate, p200 = get_robot()
 
-    robot.add_liquid_state({
+    robot.set_liquid_state({
         trough['A1']: {'red': 10000},
         trough['A2']: {'green': 10000},
         trough['A3']: {'blue': 10000}
     })
+
+    assert tracker.state() == {
+        trough['A1']: {'red': 10000},
+        trough['A2']: {'green': 10000},
+        trough['A3']: {'blue': 10000}
+    }
+
+    p200.aspirate(90, trough[0])
+
+    assert tracker.state() == {
+        trough['A1']: {'red': 9910},
+        trough['A2']: {'green': 10000},
+        trough['A3']: {'blue': 10000},
+        'a': {'red': 90}
+    }
+
+    p200.dispense(plate[0])
+
+    assert tracker.state() == {
+        trough['A1']: {'red': 9910},
+        trough['A2']: {'green': 10000},
+        trough['A3']: {'blue': 10000},
+        'a': {'red': 0},
+        plate['A1']: {'red': 90}
+    }
+
+    from pprint import pprint
+    pprint(tracker.state())
+    robot.simulate()
+    pprint(tracker.state())
+
+    assert tracker.state() == {
+        trough['A1']: {'red': 9910},
+        trough['A2']: {'green': 10000},
+        trough['A3']: {'blue': 10000},
+        'a': {'red': 0},
+        plate['A1']: {'red': 90}
+    }
