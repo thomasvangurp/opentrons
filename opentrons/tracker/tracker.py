@@ -15,12 +15,12 @@ def liquid_event(data):
         return
 
     location = data.get('location')
+    if not location:
+        return
+
     volume = data.get('volume')
     pipette_axis = data.get('pipette')
     placeable, _ = containers.unpack_location(location)
-    if isinstance(placeable, WellSeries):
-        # TODO: alter volumes of each well in WellSeries
-        pass
 
     if name is 'aspirate':
         _tracker_state = aspirate(
@@ -112,18 +112,26 @@ def aspirate(state, volume, instrument, source):
         'unknown-from-{}'.format(source): volume
     }
 
-    if source in state:
-        new_state, volume_dict = substract(state[source], volume)
-        state[source] = new_state
+    if not isinstance(source, WellSeries):
+        source = [source]
+    for s in source:
+        if s in state:
+            new_state, volume_dict = substract(state[s], volume)
+            state[s] = new_state
 
     state[instrument] = add(volume_dict, state[instrument])
     return state
 
 
 def dispense(state, volume, instrument, destination):
-    state = ensure_keys(state, [destination])
+    if not isinstance(destination, WellSeries):
+        destination = [destination]
+    for d in destination:
+        state = ensure_keys(state, [d])
 
     new_state, volume = substract(state[instrument], volume)
     state[instrument] = new_state
-    state[destination] = add(volume, state[destination])
+
+    for d in destination:
+        state[d] = add(volume, state[d])
     return state
