@@ -345,13 +345,12 @@ class Pipette(Instrument):
 
             self._associate_placeable(location)
 
-            aspirate_event = {
+            trace.EventBroker.get_instance().notify({
                 'name': 'aspirate',
                 'volume': volume,
-                'location': location,
+                'location': location if location else self.previous_placeable,
                 'pipette': self.axis
-            }
-            trace.EventBroker.get_instance().notify(aspirate_event)
+            })
 
         def _do():
             nonlocal volume
@@ -465,13 +464,12 @@ class Pipette(Instrument):
 
             self._associate_placeable(location)
 
-            dispense_event = {
+            trace.EventBroker.get_instance().notify({
                 'name': 'dispense',
                 'volume': volume,
-                'location': location,
+                'location': location if location else self.previous_placeable,
                 'pipette': self.axis
-            }
-            trace.EventBroker.get_instance().notify(dispense_event)
+            })
 
         def _do():
             nonlocal location
