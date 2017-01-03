@@ -1,6 +1,5 @@
-import copy
-
 from opentrons.util import trace
+from opentrons.containers.placeable import WellSeries
 from opentrons import containers
 
 
@@ -8,7 +7,7 @@ _tracker_state = {}
 _tracker_init_state = {}
 
 
-def event(data):
+def liquid_event(data):
     global _tracker_state
     name = data.get('name')
 
@@ -19,32 +18,37 @@ def event(data):
     volume = data.get('volume')
     pipette_axis = data.get('pipette')
     placeable, _ = containers.unpack_location(location)
-    location = (placeable.get_parent().get_name(), placeable.get_name())
+    if isinstance(placeable, WellSeries):
+        # TODO: alter volumes of each well in WellSeries
+        pass
+
     if name is 'aspirate':
         _tracker_state = aspirate(
-            _tracker_state, volume, pipette_axis, location)
+            _tracker_state, volume, pipette_axis, placeable)
     else:
         _tracker_state = dispense(
-            _tracker_state, volume, pipette_axis, location)
+            _tracker_state, volume, pipette_axis, placeable)
 
 
-trace.EventBroker.get_instance().add(event)
+trace.EventBroker.get_instance().add(liquid_event)
 
 
-def init(state):
+def init(state=None):
     global _tracker_init_state, _tracker_state
-    _tracker_init_state = copy.deepcopy(state)
+    if not state:
+        state = {}
+    _tracker_init_state = state
     reset()
 
 
 def reset():
     global _tracker_init_state, _tracker_state
-    _tracker_state = copy.deepcopy(_tracker_init_state)
+    _tracker_state = _tracker_init_state
 
 
 def state():
     global _tracker_state
-    return copy.deepcopy(_tracker_state)
+    return _tracker_state
 
 
 def ensure_keys(state, path):
@@ -100,28 +104,26 @@ def add(state_1, state_2):
 
 
 def aspirate(state, volume, instrument, source):
-    container, well = source
     state = ensure_keys(state, [instrument])
 
     # if aspirating from non-existent container/well
     # we'll make it known by marking a transfer volume
     volume_dict = {
-        'unknown-from-{}-{}'.format(container, well): volume
+        'unknown-from-{}'.format(source): volume
     }
 
-    if (container in state) and (well in state[container]):
-        new_state, volume_dict = substract(state[container][well], volume)
-        state[container][well] = new_state
+    if source in state:
+        new_state, volume_dict = substract(state[source], volume)
+        state[source] = new_state
 
     state[instrument] = add(volume_dict, state[instrument])
     return state
 
 
 def dispense(state, volume, instrument, destination):
-    container, well = destination
-    state = ensure_keys(state, [container, well])
+    state = ensure_keys(state, [destination])
 
     new_state, volume = substract(state[instrument], volume)
     state[instrument] = new_state
-    state[container][well] = add(volume, state[container][well])
+    state[destination] = add(volume, state[destination])
     return state

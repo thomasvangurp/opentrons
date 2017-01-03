@@ -5,23 +5,19 @@ from opentrons.tracker import tracker
 @pytest.fixture
 def liquids():
     state = {
-        'trough': {
-            'A1': {
-                'red': 1000
-            },
-            'A2': {
-                'green': 1000
-            },
-            'A3': {
-                'blue': 1000
-            }
+        'trough-A1': {
+            'red': 1000
         },
-        'plate': {
-            'A1': {
-                'red': 100,
-                'green': 100,
-                'blue': 100
-            }
+        'trough-A2': {
+            'green': 1000
+        },
+        'trough-A3': {
+            'blue': 1000
+        },
+        'plate-A1': {
+            'red': 100,
+            'green': 100,
+            'blue': 100
         }
     }
 
@@ -78,54 +74,48 @@ def test_add():
 
 
 def test_aspirate():
-    state = tracker.aspirate(liquids(), 100, 'p200', ('trough', 'A1'))
+    state = tracker.aspirate(liquids(), 100, 'p200', 'trough-A1')
 
     assert state['p200'] == {
         'red': 100
     }
-    assert state['trough'] == {
-        'A1': {
-            'red': 900
-        },
-        'A2': {
-            'green': 1000
-        },
-        'A3': {
-            'blue': 1000
-        }
+    assert state['trough-A1'] == {
+        'red': 900
+    }
+    assert state['trough-A2'] == {
+        'green': 1000
+    }
+    assert state['trough-A3'] == {
+        'blue': 1000
     }
 
 
 def test_aspirate_dispense():
-    state = tracker.aspirate(liquids(), 100, 'p200', ('trough', 'A1'))
-    state = tracker.dispense(state, 50, 'p200', ('plate', 'A1'))
+    state = tracker.aspirate(liquids(), 100, 'p200', 'trough-A1')
+    state = tracker.dispense(state, 50, 'p200', 'plate-A1')
 
     assert state['p200'] == {
         'red': 50
     }
-    assert state['plate'] == {
-        'A1': {
-            'red': 150,
-            'green': 100,
-            'blue': 100
-        }
+    assert state['plate-A1'] == {
+        'red': 150,
+        'green': 100,
+        'blue': 100
     }
 
 
 def test_aspirate_multi():
-    state = tracker.aspirate(liquids(), 90, 'p200', ('plate', 'A1'))
+    state = tracker.aspirate(liquids(), 90, 'p200', 'plate-A1')
 
     assert state['p200'] == {
         'red': 30,
         'green': 30,
         'blue': 30
     }
-    assert state['plate'] == {
-        'A1': {
-            'red': 70,
-            'green': 70,
-            'blue': 70
-        }
+    assert state['plate-A1'] == {
+        'red': 70,
+        'green': 70,
+        'blue': 70
     }
 
 
@@ -134,13 +124,11 @@ def test_aspirate_unknown():
         'p200': {
             'red': 100
         },
-        'plate': {
-            'A1': {
-                'red': 100
-            }
+        'plate-A1': {
+            'red': 100
         }
     }
-    res = tracker.aspirate(state, 100, 'p200', ('plate', 'B1'))
+    res = tracker.aspirate(state, 100, 'p200', 'plate-B1')
 
     assert res['p200'] == {
         'red': 100,
@@ -151,23 +139,19 @@ def test_aspirate_unknown():
 def test_concentrations():
     res = tracker.concentrations(liquids())
     expected = {
-        'trough': {
-            'A1': {
-                'red': 1.0
-            },
-            'A2': {
-                'green': 1.0
-            },
-            'A3': {
-                'blue': 1.0
-            }
+        'trough-A1': {
+            'red': 1.0
         },
-        'plate': {
-            'A1': {
-                'red': 0.3333333333333333,
-                'green': 0.3333333333333333,
-                'blue': 0.3333333333333333
-            }
+        'trough-A2': {
+            'green': 1.0
+        },
+        'trough-A3': {
+            'blue': 1.0
+        },
+        'plate-A1': {
+            'red': 0.3333333333333333,
+            'green': 0.3333333333333333,
+            'blue': 0.3333333333333333
         }
     }
     assert res == expected
@@ -185,7 +169,8 @@ def test_ensure_keys():
 
 
 def test_event_traceable():
-    from opentrons import instruments, containers
+    from opentrons import instruments, containers, robot
+    robot.reset()
     plate = containers.load('96-flat', 'A1')
     pipette = instruments.Pipette(axis='b', max_volume=200)
     pipette.aspirate(100, plate[0])

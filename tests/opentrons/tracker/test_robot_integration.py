@@ -1,10 +1,10 @@
 import pytest
 from opentrons.tracker import tracker
+from opentrons import robot, instruments, containers
 
 
 @pytest.fixture
 def get_robot():
-    from opentrons import robot, instruments, containers
     robot.reset()
 
     trough = containers.load('trough-12row', 'A1', 'trough')
@@ -18,17 +18,9 @@ def test_aspirate():
     robot, trough, plate, p200 = get_robot()
 
     tracker.init({
-        'trough': {
-            'A1': {
-                'red': 100
-            },
-            'A2': {
-                'green': 100
-            },
-            'A3': {
-                'blue': 100
-            }
-        }
+        trough['A1']: {'red': 100},
+        trough['A2']: {'green': 100},
+        trough['A3']: {'blue': 100}
     })
 
     p200.aspirate(100, trough['A1']).dispense(100, plate['A1'])
@@ -37,12 +29,35 @@ def test_aspirate():
 
     res = tracker.state()
 
-    assert res['plate']['A1'] == {
+    assert res[plate['A1']] == {
         'red': 50,
         'green': 50
     }
 
-    assert res['plate']['A2'] == {
+    assert res[plate['A2']] == {
         'red': 50,
         'green': 50
     }
+
+    robot.simulate()
+    res = tracker.state()
+
+    assert res[plate['A1']] == {
+        'red': 50,
+        'green': 50
+    }
+
+    assert res[plate['A2']] == {
+        'red': 50,
+        'green': 50
+    }
+
+
+def test_robot_add_liquids():
+    robot, trough, plate, p200 = get_robot()
+
+    robot.add_liquid_state({
+        trough['A1']: {'red': 10000},
+        trough['A2']: {'green': 10000},
+        trough['A3']: {'blue': 10000}
+    })
