@@ -267,7 +267,7 @@ window.intercomSettings = {
 <p>The robot will save calibrated container coordinates from old runs based on the <code class="docutils literal"><span class="pre">container</span></code> and <code class="docutils literal"><span class="pre">slot</span></code> combination. Therefore, if you repeatedly place the same container type in the same slot, the robot will assume your old calibrated coordinates for that container.</p>
 <p>However, if you include the optional third argument <code class="docutils literal"><span class="pre">name</span></code>, the robot will assume coordinates based off the <code class="docutils literal"><span class="pre">name</span></code> and <code class="docutils literal"><span class="pre">slot</span></code> combination. This allows a container to differentiate it&#8217;s saved coordinates from previous protocols.</p>
 <p>The example below declares 3 different containers and assigns them to the appropriate slots on the deck. The trash uses a custom name, so that it doesn not inherit the coordinates of previous &#8220;point&#8221; containers at slot &#8220;C3&#8221;.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tiprack</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tip_rack</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">)</span>
 <span class="n">plate</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-PCR-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;B2&#39;</span><span class="p">)</span>
 <span class="n">trash</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;point&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="s1">&#39;my-weird-trash-container&#39;</span><span class="p">)</span>
 </pre></div>
@@ -363,6 +363,23 @@ This happens when a pipette is created through using it&#8217;s <code class="doc
 </pre></div>
 </div>
 </div>
+<div class="section" id="advanced-tip-commands">
+<h3>Advanced Tip Commands<a class="headerlink" href="#advanced-tip-commands" title="Permalink to this headline">¶</a></h3>
+<p>Only use half a rack of tips and don&#8217;t want to move them all to the front?  Tell your next protocol to start at a specific tip in the tip rack.</p>
+<p><strong>pipette.start_at_tip</strong> (<em>location</em>)</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>location -</strong> tip location to start at</li>
+</ul>
+</div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p200</span><span class="o">.</span><span class="n">start_at_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="p">[</span><span class="s1">&#39;B3&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If your protocol calls for more tips than you have on your deck, the pipette will raise a RuntimeWarning to let you know.</p>
+</div>
+</div>
 <div class="section" id="aspirate">
 <h3>Aspirate<a class="headerlink" href="#aspirate" title="Permalink to this headline">¶</a></h3>
 <p><strong>pipette.aspirate</strong> (<em>volume, location</em>)</p>
@@ -442,11 +459,55 @@ This happens when a pipette is created through using it&#8217;s <code class="doc
 </pre></div>
 </div>
 </div>
+<div class="section" id="position-within-a-well">
+<h3>Position Within a Well<a class="headerlink" href="#position-within-a-well" title="Permalink to this headline">¶</a></h3>
+<p>Want to deposit at the top of a tube?  Pull liquid from the bottom of the well?  It&#8217;s easy with a Well&#8217;s <code class="docutils literal"><span class="pre">top()</span></code> and <code class="docutils literal"><span class="pre">bottom()</span></code> methods.</p>
+<p><strong>container.top</strong> (<em>distance</em>)</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>distance -</strong> (optional) distance above/below top of Well (mm)</li>
+</ul>
+</div></blockquote>
+<p><strong>container.bottom</strong> (<em>distance</em>)</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>distance -</strong> (optional) distance above bottom of Well (mm)</li>
+</ul>
+</div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">well</span> <span class="o">=</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">]</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="n">well</span><span class="o">.</span><span class="n">bottom</span><span class="p">())</span>      <span class="c1"># at the bottom of well</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">mix</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">well</span><span class="o">.</span><span class="n">bottom</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>  <span class="c1"># 5mm above bottom of well</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">well</span><span class="o">.</span><span class="n">top</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span>   <span class="c1"># 3mm below top of well</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="n">well</span><span class="o">.</span><span class="n">top</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>        <span class="c1"># 3mm above top of well</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delay">
+<h3>Delay<a class="headerlink" href="#delay" title="Permalink to this headline">¶</a></h3>
+<p>Delay commands can be called between any movement commands, so you have complete control of exactly where you want the robot to pause.</p>
+<p><strong>delay</strong> (<em>time</em>)</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>time -</strong> duration of delay (seconds)</li>
+</ul>
+</div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="s1">&#39;B2&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="touch-tip">
 <h3>Touch Tip<a class="headerlink" href="#touch-tip" title="Permalink to this headline">¶</a></h3>
 <p>Sometimes you want to touch the tip of the pipette to the sides of the well.  You can link this to one of the commands you just learned.</p>
-<p><strong>touch_tip</strong> ()</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">touch_tip</span><span class="p">()</span>
+<p><strong>touch_tip</strong> (<em>height</em>)</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>height -</strong> height above or below position.top() to touch tip</li>
+</ul>
+</div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">touch_tip</span><span class="p">()</span> <span class="c1"># touches at top() of well</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">touch_tip</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">())</span> <span class="c1"># touches at bottom() of well</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">touch_tip</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># touches 3 mm below top() of previous well</span>
 </pre></div>
 </div>
 </div>
@@ -468,40 +529,28 @@ This happens when a pipette is created through using it&#8217;s <code class="doc
 <p class="last">Since the trash container is given a &#8220;point&#8221; labware name, it has no wells inside it. Therefore there is no need to call a position within the container.</p>
 </div>
 </div>
-<div class="section" id="delay">
-<h3>Delay<a class="headerlink" href="#delay" title="Permalink to this headline">¶</a></h3>
-<p>Delay commands can be called between any movement commands, so you have complete control of exactly where you want the robot to pause.</p>
-<p><strong>delay</strong> (<em>time</em>)</p>
-<blockquote>
-<div><ul class="simple">
-<li><strong>time -</strong> duration of delay (seconds)</li>
+<div class="section" id="air-gap">
+<h3>Air Gap<a class="headerlink" href="#air-gap" title="Permalink to this headline">¶</a></h3>
+<p>You can instruct the robot to pull up an extra volume of air after it aspirates liquid.</p>
+<dl class="docutils">
+<dt><strong>air_gap</strong> (<em>volume, height</em>)</dt>
+<dd><ul class="first last simple">
+<li><strong>volume -</strong> volume of air to pull up</li>
+<li><strong>height -</strong> how far to move above the well</li>
 </ul>
-</div></blockquote>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="s1">&#39;B2&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
-<span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;B2&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="position-within-a-well">
-<h3>Position Within a Well<a class="headerlink" href="#position-within-a-well" title="Permalink to this headline">¶</a></h3>
-<p>Want to deposit at the top of a tube?  Pull liquid from the bottom of the well?  It&#8217;s easy with a Well&#8217;s <code class="docutils literal"><span class="pre">top()</span></code> and <code class="docutils literal"><span class="pre">bottom()</span></code> methods.</p>
-<p><strong>container.top</strong> (<em>distance</em>)</p>
-<blockquote>
-<div><ul class="simple">
-<li><strong>distance -</strong> (optional) distance above/below top of Well (mm)</li>
-</ul>
-</div></blockquote>
-<p><strong>container.bottom</strong> (<em>distance</em>)</p>
-<blockquote>
-<div><ul class="simple">
-<li><strong>distance -</strong> (optional) distance above bottom of Well (mm)</li>
-</ul>
-</div></blockquote>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">well</span> <span class="o">=</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">]</span>
-<span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="n">well</span><span class="o">.</span><span class="n">top</span><span class="p">())</span>         <span class="c1"># at the top of well</span>
-<span class="n">p200</span><span class="o">.</span><span class="n">mix</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">well</span><span class="o">.</span><span class="n">bottom</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>  <span class="c1"># 5mm above bottom of well</span>
-<span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="n">well</span><span class="o">.</span><span class="n">top</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span>       <span class="c1"># 3mm below top of well</span>
+</dd>
+</dl>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">air_gap</span><span class="p">()</span>      <span class="c1"># moves 20 mm above well and aspirates air until pipette is full</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">()</span>
+
+<span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">air_gap</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>    <span class="c1"># moves 20 mm above well and aspirates 50 uL</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">()</span>
+
+<span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">air_gap</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># moves 5 mm above well and aspirates 25 uL</span>
+<span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
