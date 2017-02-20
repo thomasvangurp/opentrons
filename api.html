@@ -1202,7 +1202,7 @@ and who&#8217;s values are int or float (Example: <cite>{&#8220;aspirate&#8221;:
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.touch_tip">
-<code class="descname">touch_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.touch_tip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">touch_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>radius=1.0</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.touch_tip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Touch the <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref any py py-class docutils literal"><span class="pre">Pipette</span></code></a> tip to the sides of a well,
 with the intent of removing left-over droplets</p>
 <p class="rubric">Notes</p>
@@ -1216,6 +1216,11 @@ from it&#8217;s current position.</p>
 <li><strong>location</strong> (<code class="xref any docutils literal"><span class="pre">Placeable</span></code> or tuple(<code class="xref any docutils literal"><span class="pre">Placeable</span></code>, <code class="xref any docutils literal"><span class="pre">Vector</span></code>)) &#8211; The <code class="xref any docutils literal"><span class="pre">Placeable</span></code> (<code class="xref any docutils literal"><span class="pre">Well</span></code>) to perform the touch_tip.
 Can also be a tuple with first item <code class="xref any docutils literal"><span class="pre">Placeable</span></code>,
 second item relative <code class="xref any docutils literal"><span class="pre">Vector</span></code></li>
+<li><strong>radius</strong> (<em>float</em>) &#8211; Radius is a floating point number between 0.0 and 1.0, describing
+the percentage of a well&#8217;s radius. When radius=1.0,
+<a class="reference internal" href="#opentrons.instruments.Pipette.touch_tip" title="opentrons.instruments.Pipette.touch_tip"><code class="xref any py py-meth docutils literal"><span class="pre">touch_tip()</span></code></a> will move to 100% of the wells radius. When
+radius=0.5, <a class="reference internal" href="#opentrons.instruments.Pipette.touch_tip" title="opentrons.instruments.Pipette.touch_tip"><code class="xref any py py-meth docutils literal"><span class="pre">touch_tip()</span></code></a> will move to 50% of the wells
+radius.</li>
 <li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
 to the robots list of commands for executing during
 <a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
