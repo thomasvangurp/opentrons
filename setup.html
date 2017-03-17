@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Code Environment &#8212; Opentrons API v2.0</title>
+    <title>Setup &#8212; Opentrons API v2.0</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -28,9 +28,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="Opentrons API v2.0" href="index.html" />
-    <link rel="next" title="Writing a Protocol" href="getting_started.html" />
-    <link rel="prev" title="Updating Firmware" href="updating_firmware.html" />  
+    <link rel="top" title="Opentrons API v2.0" href="index.html" />  
 <link rel="stylesheet" href="_static/custom.css" type="text/css" />  
 <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 <!-- INTERCOM -->
@@ -167,29 +165,19 @@ window.intercomSettings = {
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
 <h3><a href="index.html">Table Of Contents</a></h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="updating_firmware.html">Updating Firmware</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Code Environment</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#jupyter-code-environment">Jupyter Code Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#install-opentrons-api">Install Opentrons API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#saving-file-to-run">Saving File to Run</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Writing a Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="well_access.html">Container Well Access</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Opentrons API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_containers.html">Custom Containers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="running_app.html">Using the App</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tips_and_tricks.html">Advanced Use Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Developer Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">API Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="updating_firmware.html" title="previous chapter">Updating Firmware</a></li>
-      <li>Next: <a href="getting_started.html" title="next chapter">Writing a Protocol</a></li>
   </ul></li>
 </ul>
 </div>
@@ -216,84 +204,303 @@ window.intercomSettings = {
         <div class="bodywrapper">
             <div class="body" role="main">
                 
-  <div class="section" id="code-environment">
-<span id="setup"></span><h1>Code Environment<a class="headerlink" href="#code-environment" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="jupyter-code-environment">
-<h2>Jupyter Code Environment<a class="headerlink" href="#jupyter-code-environment" title="Permalink to this headline">¶</a></h2>
-<p>Jupyter is an interactive programming environment that runs in the browser. Jupyter can support multiple programming languages but we will only be using it for Python 3.5.</p>
-<div class="section" id="install-anaconda-and-python-3">
-<h3>Install Anaconda and Python 3<a class="headerlink" href="#install-anaconda-and-python-3" title="Permalink to this headline">¶</a></h3>
-<p>To run Opentrons you will need to ensure you have Python 3.5 installed. We recommend you install <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a> before going any further, this will install Python for you. We recommend you use the <cite>Graphical Installer</cite> for <cite>Python3.5</cite>.</p>
+  <div class="section" id="setup">
+<span id="id1"></span><h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
+<p>There are a few things to consider when beginning a new Python protocol. In this section, we exlain the Opentrons API&#8217;s <code class="docutils literal"><span class="pre">containers</span></code>, <code class="docutils literal"><span class="pre">instruments</span></code>, and <code class="docutils literal"><span class="pre">robot</span></code> modules, and how they are used to setup and control your Python protocol.</p>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#containers">Containers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#list">List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load">Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create">Create</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#instruments">Instruments</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#axis-and-max-volume">Axis and Max Volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minimum-volume">Minimum Volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#channels">Channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plunger-speeds">Plunger Speeds</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#robot">Robot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-containers">Get Containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-instruments">Get Instruments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#commands">Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clear-commands">Clear Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#comment">Comment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulate">Simulate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reset">Reset</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 </div>
-<div class="section" id="install-jupyter">
-<h3>Install Jupyter<a class="headerlink" href="#install-jupyter" title="Permalink to this headline">¶</a></h3>
-<p>After Anaconda and Python 3 are installed, you can get started installing Jupyter by following the official <a class="reference external" href="http://jupyter.readthedocs.io/en/latest/install.html">Jupyter Installation Guide</a>.</p>
-</div>
-<div class="section" id="launch-jupyter-notebook-app">
-<h3>Launch Jupyter Notebook App<a class="headerlink" href="#launch-jupyter-notebook-app" title="Permalink to this headline">¶</a></h3>
-<dl class="docutils">
-<dt>With GUI &#8211; <em>Reccomended for Beginners</em>:</dt>
-<dd><ol class="first last arabic simple">
-<li>Install and open the Anaconda Navagator App you just downloaded.</li>
-<li>Click &#8216;Launch&#8217; under Jupyter Notebook.</li>
-<li>A new Jupyter Notebook will open in a new browser window.</li>
-</ol>
-</dd>
-<dt>In Terminal:</dt>
-<dd><ol class="first last arabic simple">
-<li>Click on spotlight, type <cite>terminal</cite> to open a terminal window.</li>
-<li>Create and Enter the startup folder by typing <cite>mkdir some_folder_name &amp;&amp; cd some_folder_name</cite>.</li>
-<li>Type <cite>jupyter notebook</cite> to launch the Jupyter Notebook App (it will appear in a new browser window or tab).</li>
-</ol>
-</dd>
-</dl>
-</div>
-<div class="section" id="programming-in-jupyter-notebook-hello-world">
-<h3>Programming in Jupyter Notebook: Hello World!<a class="headerlink" href="#programming-in-jupyter-notebook-hello-world" title="Permalink to this headline">¶</a></h3>
-<p>When the Jupyter Notebook App is launched on your browser, follow these steps to open a <cite>Notebook</cite></p>
-<blockquote>
-<div><ol class="arabic simple">
-<li>Navigate towards the <cite>New</cite> dropdown menu button towards the top right hand side of the screen Jupyter Notebook App.</li>
-<li>Click the <cite>New</cite> menu button and scroll down and click <cite>python [conda root]</cite>.</li>
-</ol>
-</div></blockquote>
-<p>A new tab should open in your browser and you should have an empty text box.</p>
-<blockquote>
-<div><ol class="arabic simple" start="3">
-<li>Type <cite>print(&#8216;hello world&#8217;)</cite> in the text box.</li>
-<li>Scroll to the top menu bar and press they <a href="#id1"><span class="problematic" id="id2">`</span></a>play button &gt;| ` to execute the code in the text box. This will cause Jupyter to execute the code in the text box and return you the computed result, which should be &#8216;Hello World&#8217;.</li>
-</ol>
-</div></blockquote>
-</div>
-</div>
-<div class="section" id="install-opentrons-api">
-<h2>Install Opentrons API<a class="headerlink" href="#install-opentrons-api" title="Permalink to this headline">¶</a></h2>
-<p>Before running any code, you need to install the Opentrons API.</p>
-<p>If you are running Anaconda, open Anaconda Navigator. On Home screen click <cite>Channels</cite> and add <cite>opentrons</cite>. This will allow you to install <cite>opentrons</cite> package from our channel.</p>
-<p>In Jupyter click <cite>Conda</cite>. Find and install <cite>opentrons</cite> package. Make sure to check for updates!</p>
-<p>If you are not using Anaconda copy and paste the following code into the first cell of your notebook. This only needs to be done the first time you use Jupyter, so feel free to comment it out after it successfully installs.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>!pip install --upgrade opentrons
+<hr class="docutils" />
+<div class="section" id="containers">
+<h2>Containers<a class="headerlink" href="#containers" title="Permalink to this headline">¶</a></h2>
+<p>The containers module allows you to load common labware into your protocol. <a class="reference external" href="https://andysigler.github.io/ot-api-containerviz/">Go here</a> to see a visualization of all built-in containers.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Examples in this section require the following</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">containers</span>
 </pre></div>
 </div>
-<p>After this step you should be able to run:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>import opentrons
-opentrons.__version__
+<div class="section" id="list">
+<h3>List<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
+<p>Once the container module is loaded, you can see a list of all containers currently inside the API by calling <code class="docutils literal"><span class="pre">containers.list()</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Which should return the version of opentrons package installed.</p>
-<p>If you made it this far without any errors then you are done! You should treat yourself well tonight and celebrate your successes generously!</p>
-<p>If you want to learn more about Jupyter Notebook Navigation <a class="reference external" href="http://nbviewer.jupyter.org/github/jupyter/notebook/blob/master/docs/source/examples/Notebook/Notebook%20Basics.ipynb">check this out</a>.</p>
 </div>
-<div class="section" id="saving-file-to-run">
-<h2>Saving File to Run<a class="headerlink" href="#saving-file-to-run" title="Permalink to this headline">¶</a></h2>
-<p>Our app supports python (.py) files and JSON files.</p>
-<div class="section" id="py-file">
-<h3>.py File<a class="headerlink" href="#py-file" title="Permalink to this headline">¶</a></h3>
-<p>You can download any jupyter notebook files as a .py file, and the app will ignore everything except the containers and commands.</p>
+<div class="section" id="load">
+<h3>Load<a class="headerlink" href="#load" title="Permalink to this headline">¶</a></h3>
+<p>Labware is loaded with two arguments: 1) the container type, and 2) the deck slot it will be placed in on the robot.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="json-file">
-<h3>JSON File<a class="headerlink" href="#json-file" title="Permalink to this headline">¶</a></h3>
-<p>Old JSON files can still be run in 2.0, and still need their deck, head, ingredients and instruction section.  However, we recommend writing all protocols using our new API as they will enable you to do a lot more with the robot - don&#8217;t hesitate to reach out if you have trouble translating your files!</p>
+<p>A third optional argument can be used to give a container a unique name.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">,</span> <span class="s1">&#39;any-name-you-want&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Unique names are useful in a few scenarios. First, they allow the container to have independant calibration data from other containers in the same slot. In the example above, the container named &#8216;any-name-you-want&#8217; will assume different calibration data from the unnamed plate, even though they are the same type and in the same slot.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Calibration data refers to the saved positions for each container on deck, and is a part of the <a class="reference external" href="https://opentrons.com/getting-started/calibrate-deck">Opentrons App calibration procedure</a>.</p>
+</div>
+<p>Names can also be used to place multiple containers in the same slot all at once. For example, the flasks below are all placed in slot D1. So in order for the Opentrons API to tell them apart, we have given them each a unique name.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fa</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;T25-flask&#39;</span><span class="p">,</span> <span class="s1">&#39;D1&#39;</span><span class="p">,</span> <span class="s1">&#39;flask_a&#39;</span><span class="p">)</span>
+<span class="n">fb</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;T25-flask&#39;</span><span class="p">,</span> <span class="s1">&#39;D1&#39;</span><span class="p">,</span> <span class="s1">&#39;flask_b&#39;</span><span class="p">)</span>
+<span class="n">fc</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;T25-flask&#39;</span><span class="p">,</span> <span class="s1">&#39;D1&#39;</span><span class="p">,</span> <span class="s1">&#39;flask_c&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create">
+<h3>Create<a class="headerlink" href="#create" title="Permalink to this headline">¶</a></h3>
+<p>In addition to the default containers that come with the Opentrons API, you can create your own custom containers.</p>
+<p>Through the API&#8217;s call containers.create(), you can create simple grid containers, which consist of circular wells arranged in columns and rows.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="s1">&#39;3x6_plate&#39;</span><span class="p">,</span>                    <span class="c1"># name of you container</span>
+    <span class="n">grid</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>                    <span class="c1"># specify amount of (columns, rows)</span>
+    <span class="n">spacing</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>               <span class="c1"># distances (mm) between each (column, row)</span>
+    <span class="n">diameter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>                     <span class="c1"># diameter (mm) of each well on the plate</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>                       <span class="c1"># depth (mm) of each well on the plate</span>
+</pre></div>
+</div>
+<p>When you create your custom container, then it will be saved for later use under the name you&#8217;ve given it. This means you can use containers.load() to use the custom container you&#8217;ve created in this and any future protocol.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">custom_plate</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;3x6_plate&#39;</span><span class="p">,</span> <span class="s1">&#39;D1&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">well</span> <span class="ow">in</span> <span class="n">custom_plate</span><span class="o">.</span><span class="n">wells</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">well</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will print out...</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>&lt;Well A1&gt;
+&lt;Well B1&gt;
+&lt;Well C1&gt;
+&lt;Well A2&gt;
+&lt;Well B2&gt;
+&lt;Well C2&gt;
+&lt;Well A3&gt;
+&lt;Well B3&gt;
+&lt;Well C3&gt;
+&lt;Well A4&gt;
+&lt;Well B4&gt;
+&lt;Well C4&gt;
+&lt;Well A5&gt;
+&lt;Well B5&gt;
+&lt;Well C5&gt;
+&lt;Well A6&gt;
+&lt;Well B6&gt;
+&lt;Well C6&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="instruments">
+<h2>Instruments<a class="headerlink" href="#instruments" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">instruments</span></code> module gives your protocol access to the <code class="docutils literal"><span class="pre">Pipette</span></code>, which is what you will be primarily using to create protocol commands.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Examples in this section require the following</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">instruments</span>
+</pre></div>
+</div>
+<div class="section" id="axis-and-max-volume">
+<h3>Axis and Max Volume<a class="headerlink" href="#axis-and-max-volume" title="Permalink to this headline">¶</a></h3>
+<p>To create a <code class="docutils literal"><span class="pre">Pipette</span></code>, you must give it an axis and a max_volume. The axis can be either <code class="docutils literal"><span class="pre">'a'</span></code> or <code class="docutils literal"><span class="pre">'b'</span></code>, and the volume is whatever your hand pipette is calibrated for. In this example, we are using a 200uL pipette.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-p200&#39;</span><span class="p">,</span>
+    <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="minimum-volume">
+<h3>Minimum Volume<a class="headerlink" href="#minimum-volume" title="Permalink to this headline">¶</a></h3>
+<p>The minimum allowed volume can be set for each pipette. If your protocol attempts to aspirate or dispense a volume below this volume, the API will give you a warning.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-p200&#39;</span><span class="p">,</span>
+    <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">min_volume</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="channels">
+<h3>Channels<a class="headerlink" href="#channels" title="Permalink to this headline">¶</a></h3>
+<p>Pipettes can also be assigned a number of channels, either <code class="docutils literal"><span class="pre">channel=1</span></code> or <code class="docutils literal"><span class="pre">channel=8</span></code>. If you do not specify, it will default to <code class="docutils literal"><span class="pre">channel=1</span></code> channel.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-p200-multichannel&#39;</span><span class="p">,</span>
+    <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">min_volume</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">channels</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plunger-speeds">
+<h3>Plunger Speeds<a class="headerlink" href="#plunger-speeds" title="Permalink to this headline">¶</a></h3>
+<p>The speeds at which the pipette will aspirate and dispense can be set through <code class="docutils literal"><span class="pre">aspirate_speed</span></code> and <code class="docutils literal"><span class="pre">dispense_speed</span></code>. The values are in millimeters/minute, and default to <code class="docutils literal"><span class="pre">aspirate_speed=300</span></code> and <code class="docutils literal"><span class="pre">dispense_speed=500</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipeipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-p200-multichannel&#39;</span><span class="p">,</span>
+    <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">min_volume</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">channels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">aspirate_speed</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">dispense_speed</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="robot">
+<h2>Robot<a class="headerlink" href="#robot" title="Permalink to this headline">¶</a></h2>
+<p>The robot module can be thought of as the parent for all aspects of the Opentrons API. All containers, instruments, and protocol commands are added to and controlled by robot.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Examples in this section require the following</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">robot</span><span class="p">,</span> <span class="n">containers</span><span class="p">,</span> <span class="n">instruments</span>
+
+<span class="n">plate</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">,</span> <span class="s1">&#39;my-plate&#39;</span><span class="p">)</span>
+<span class="n">tiprack</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">,</span> <span class="s1">&#39;my-rack&#39;</span><span class="p">)</span>
+
+<span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-pipette&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="get-containers">
+<h3>Get Containers<a class="headerlink" href="#get-containers" title="Permalink to this headline">¶</a></h3>
+<p>When containers are loaded, they are automatically added to the <code class="docutils literal"><span class="pre">robot</span></code>. You can see all currently held containers by calling <code class="docutils literal"><span class="pre">robot.get_containers()</span></code>, which returns a <a class="reference external" href="https://docs.python.org/3.5/tutorial/datastructures.html#more-on-lists">Python list</a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">robot</span><span class="o">.</span><span class="n">get_containers</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">container</span><span class="o">.</span><span class="n">get_type</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>will print out...</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>my-plate 96-flat
+my-rack tiprack-200ul
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-instruments">
+<h3>Get Instruments<a class="headerlink" href="#get-instruments" title="Permalink to this headline">¶</a></h3>
+<p>When instruments are created, they are automatically added to the <code class="docutils literal"><span class="pre">robot</span></code>. You can see all currently held instruments by calling <code class="docutils literal"><span class="pre">robot.get_instruments()</span></code>, which returns a <a class="reference external" href="https://docs.python.org/3.5/tutorial/datastructures.html#more-on-lists">Python list</a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">axis</span><span class="p">,</span> <span class="n">pipette</span> <span class="ow">in</span> <span class="n">robot</span><span class="o">.</span><span class="n">get_instruments</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pipette</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will print out...</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>my-pipette B
+</pre></div>
+</div>
+</div>
+<div class="section" id="commands">
+<h3>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h3>
+<p>When commands are called on a pipette, they are automatically enqueued to the <code class="docutils literal"><span class="pre">robot</span></code> in the order they are called. You can see all currently held commands by calling <code class="docutils literal"><span class="pre">robot.commands()</span></code>, which returns a <a class="reference external" href="https://docs.python.org/3.5/tutorial/datastructures.html#more-on-lists">Python list</a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">drop_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">robot</span><span class="o">.</span><span class="n">commands</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will print out...</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>Picking up tip from &lt;Deck&gt;&lt;Slot A1&gt;&lt;Container my-rack&gt;&lt;Well A1&gt;
+Drop_tip at &lt;Deck&gt;&lt;Slot A1&gt;&lt;Container my-rack&gt;&lt;Well A1&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="clear-commands">
+<h3>Clear Commands<a class="headerlink" href="#clear-commands" title="Permalink to this headline">¶</a></h3>
+<p>Once commands are enqueued to the <code class="docutils literal"><span class="pre">robot</span></code>, we can erase those commands by calling <code class="docutils literal"><span class="pre">robot.clear_commands()</span></code>. Any previously created instruments and containers will still be inside robot, but all commands are erased.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">robot</span><span class="o">.</span><span class="n">clear_commands</span><span class="p">()</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;There is&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">commands</span><span class="p">()),</span> <span class="s1">&#39;command&#39;</span><span class="p">)</span>
+
+<span class="n">robot</span><span class="o">.</span><span class="n">clear_commands</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;There are now&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">commands</span><span class="p">()),</span> <span class="s1">&#39;commands&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will print out...</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>There is 1 command
+There are now 0 commands
+</pre></div>
+</div>
+</div>
+<div class="section" id="comment">
+<h3>Comment<a class="headerlink" href="#comment" title="Permalink to this headline">¶</a></h3>
+<p>You can add a custom message to the list of command descriptions you see when running <code class="docutils literal"><span class="pre">robot.commands()</span></code>. This command is <code class="docutils literal"><span class="pre">robot.comment()</span></code>, and it allows you to print out any information you want at the point in your protocol</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">robot</span><span class="o">.</span><span class="n">clear_commands</span><span class="p">()</span>
+
+<span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span>
+<span class="n">robot</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span><span class="s2">&quot;Hello, just picked up tip A1&quot;</span><span class="p">)</span>
+
+<span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span>
+<span class="n">robot</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span><span class="s2">&quot;Goodbye, just dropped tip A1&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">robot</span><span class="o">.</span><span class="n">commands</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will print out...</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>Picking up tip from &lt;Deck&gt;&lt;Slot A1&gt;&lt;Container my-rack&gt;&lt;Well A1&gt;
+Hello, just picked up tip A1
+Picking up tip from &lt;Deck&gt;&lt;Slot A1&gt;&lt;Container my-rack&gt;&lt;Well A1&gt;
+Goodbye, just dropped tip A1
+</pre></div>
+</div>
+</div>
+<div class="section" id="simulate">
+<h3>Simulate<a class="headerlink" href="#simulate" title="Permalink to this headline">¶</a></h3>
+<p>Once commands have been enqueued to the <code class="docutils literal"><span class="pre">robot</span></code>, we can simulate their execution by calling <code class="docutils literal"><span class="pre">robot.simulate()</span></code>. This helps us debug our protocol, and to see if the robots gives us any warnings.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">robot</span><span class="o">.</span><span class="n">simulate</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will print out...</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>pick_up_tip called with no reference to a tip
+</pre></div>
+</div>
+</div>
+<div class="section" id="reset">
+<h3>Reset<a class="headerlink" href="#reset" title="Permalink to this headline">¶</a></h3>
+<p>Calling <code class="docutils literal"><span class="pre">robot.reset()</span></code> will remove everything from the robot. Any previously added containers, pipettes, or commands will be erased.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">get_containers</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">get_instruments</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">commands</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>will print out...</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>[]
+[]
+[]
+</pre></div>
+</div>
 </div>
 </div>
 </div>

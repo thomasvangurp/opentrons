@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Updating Firmware &#8212; Opentrons API v2.0</title>
+    <title>Firmware Updates &#8212; Opentrons API v2.0</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,8 +29,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="Opentrons API v2.0" href="index.html" />
-    <link rel="next" title="Code Environment" href="setup.html" />
-    <link rel="prev" title="Opentrons API: Simple Biology Lab Protocol Coding" href="index.html" />  
+    <link rel="prev" title="API Reference" href="api.html" />  
 <link rel="stylesheet" href="_static/custom.css" type="text/css" />  
 <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 <!-- INTERCOM -->
@@ -168,7 +167,13 @@ window.intercomSettings = {
             </a></p>
 <h3><a href="index.html">Table Of Contents</a></h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Updating Firmware</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Opentrons API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">API Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Firmware Updates</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#download-files">Download Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#open-the-smoothie-s-drive">Open the Smoothie&#8217;s Drive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#copy-over-firmware">Copy Over Firmware</a></li>
@@ -176,29 +181,19 @@ window.intercomSettings = {
 <li class="toctree-l2"><a class="reference internal" href="#restart">Restart</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Code Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Writing a Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="well_access.html">Container Well Access</a></li>
-<li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_containers.html">Custom Containers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="running_app.html">Using the App</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tips_and_tricks.html">Advanced Use Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Developer Interface</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Opentrons API:<br /> Simple Biology Lab Protocol Coding</a></li>
-      <li>Next: <a href="setup.html" title="next chapter">Code Environment</a></li>
+      <li>Previous: <a href="api.html" title="previous chapter">API Reference</a></li>
   </ul></li>
 </ul>
 </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/updating_firmware.txt"
+      <li><a href="_sources/firmware.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -218,8 +213,8 @@ window.intercomSettings = {
         <div class="bodywrapper">
             <div class="body" role="main">
                 
-  <div class="section" id="updating-firmware">
-<span id="id1"></span><h1>Updating Firmware<a class="headerlink" href="#updating-firmware" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="firmware-updates">
+<span id="firmware"></span><h1>Firmware Updates<a class="headerlink" href="#firmware-updates" title="Permalink to this headline">¶</a></h1>
 <p>The motorcontroller inside all Opentrons liquid handlers (called Smoothieboard or just Smoothie) will need it&#8217;s firmware updated if you are planning to use the Opentrons API and accompanying 2.0 app. The process is simple, and can be done from your computer in under a minute.</p>
 <p>To summarize, there are two files on your Smoothie that must be replaced; <code class="docutils literal"><span class="pre">FIRMWARE.CUR</span></code> and <code class="docutils literal"><span class="pre">config</span></code>.</p>
 <div class="section" id="download-files">

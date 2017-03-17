@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Custom Containers &#8212; Opentrons API v2.0</title>
+    <title>Modules &#8212; Opentrons API v2.0</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,8 +29,8 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="Opentrons API v2.0" href="index.html" />
-    <link rel="next" title="Using the App" href="running_app.html" />
-    <link rel="prev" title="Labware Library" href="labware_library.html" />  
+    <link rel="next" title="API Reference" href="api.html" />
+    <link rel="prev" title="Calibration UI" href="calibration.html" />  
 <link rel="stylesheet" href="_static/custom.css" type="text/css" />  
 <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 <!-- INTERCOM -->
@@ -168,30 +168,31 @@ window.intercomSettings = {
             </a></p>
 <h3><a href="index.html">Table Of Contents</a></h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="updating_firmware.html">Updating Firmware</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Code Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Writing a Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="well_access.html">Container Well Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Opentrons API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Custom Containers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="running_app.html">Using the App</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tips_and_tricks.html">Advanced Use Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Developer Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">API Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration UI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#heat-deck">Heat Deck</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#magbead">Magbead</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="labware_library.html" title="previous chapter">Labware Library</a></li>
-      <li>Next: <a href="running_app.html" title="next chapter">Using the App</a></li>
+      <li>Previous: <a href="calibration.html" title="previous chapter">Calibration UI</a></li>
+      <li>Next: <a href="api.html" title="next chapter">API Reference</a></li>
   </ul></li>
 </ul>
 </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/custom_containers.txt"
+      <li><a href="_sources/modules.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -211,106 +212,66 @@ window.intercomSettings = {
         <div class="bodywrapper">
             <div class="body" role="main">
                 
-  <div class="section" id="custom-containers">
-<span id="id1"></span><h1>Custom Containers<a class="headerlink" href="#custom-containers" title="Permalink to this headline">¶</a></h1>
-<p>To create a custom container, you need to create a JSON file that defines the shape of the container.
-Here is an example of a custom container that represents a plate with only 3 circular wells.</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s2">&quot;containers&quot;</span> <span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;tuberack-custom&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s2">&quot;locations&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;A1&quot;</span><span class="o">:</span> <span class="p">{</span>
-          <span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;y&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;z&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;depth&quot;</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
-          <span class="s2">&quot;diameter&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-          <span class="s2">&quot;total-liquid-volume&quot;</span><span class="o">:</span> <span class="mi">500</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;B1&quot;</span><span class="o">:</span> <span class="p">{</span>
-          <span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
-          <span class="s2">&quot;y&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;z&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;depth&quot;</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
-          <span class="s2">&quot;diameter&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-          <span class="s2">&quot;total-liquid-volume&quot;</span><span class="o">:</span> <span class="mi">500</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;C1&quot;</span><span class="o">:</span> <span class="p">{</span>
-          <span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
-          <span class="s2">&quot;y&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;z&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;depth&quot;</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
-          <span class="s2">&quot;diameter&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-          <span class="s2">&quot;total-liquid-volume&quot;</span><span class="o">:</span> <span class="mi">500</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+  <div class="section" id="modules">
+<span id="id1"></span><h1>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h1>
+<hr class="docutils" />
+<div class="section" id="heat-deck">
+<h2>Heat Deck<a class="headerlink" href="#heat-deck" title="Permalink to this headline">¶</a></h2>
+<p>The heat deck runs off the opensource platform Arduino, which is how you can control it&#8217;s temperature. Our heat decks come automatically set to reach a temperature of 55 deg Celsius, but you can edit this value by editing the Arduino file.</p>
+<p>Find our Heat Deck source code <a class="reference external" href="https://github.com/OpenTrons/opentrons-modules">on GitHub here</a>, and download.</p>
+<p>Also download and install the <a class="reference external" href="https://www.arduino.cc/en/main/software">Arduino IDE</a>.</p>
+<p>Open the file, and you will see detailed instruction for how to update the temperature. The overiew is that you simply set the number for what temperature you want, then upload that code to the Heat Deck.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="magbead">
+<h2>Magbead<a class="headerlink" href="#magbead" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setting-up-hardware">
+<h3>Setting up Hardware<a class="headerlink" href="#setting-up-hardware" title="Permalink to this headline">¶</a></h3>
+<p>Use your included DIY Mag Bead kit to configure the motor control board (see kit instructions).</p>
+</div>
+<div class="section" id="initializing-module-in-api">
+<h3>Initializing Module in API<a class="headerlink" href="#initializing-module-in-api" title="Permalink to this headline">¶</a></h3>
+<p>Just like a pipette, you need to set up and name your module.</p>
+<p><strong>instruments.Magbead</strong> (<em>mofset, name</em>)</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>mosfet -</strong> integer 0-5 (defaults to 0)</li>
+<li><strong>name -</strong> the name you want to call your module</li>
+</ul>
+</div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mag_deck</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Magbead</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mag_deck&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The first key, &#8220;containers&#8221;, is required in every container file. The next key, &#8220;tuberack-custom&#8221;, is the name of your custom container.
-Inside &#8220;locations&#8221; you can define the x, y, z, depth, diameter, and total-liquid-volume (a volume tracking feature is coming soon).</p>
-<p>If you would like to create a container with rectangular wells, simple replace the &#8220;diameter&#8221; attribute with a &#8220;length&#8221; and &#8220;width&#8221; attribute, like so:</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s2">&quot;containers&quot;</span> <span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;trash-square&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s2">&quot;locations&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;A1&quot;</span><span class="o">:</span> <span class="p">{</span>
-          <span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;y&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;z&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;depth&quot;</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span>
-          <span class="s2">&quot;diameter&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-          <span class="s2">&quot;total-liquid-volume&quot;</span><span class="o">:</span> <span class="mi">500</span>
-        <span class="p">},</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+</div>
+<div class="section" id="activate-and-deactivate-magnets">
+<h3>Activate and Deactivate Magnets<a class="headerlink" href="#activate-and-deactivate-magnets" title="Permalink to this headline">¶</a></h3>
+<p>To activate the magnets and raise the module&#8217;s platform, run <code class="docutils literal"><span class="pre">.engage()</span></code>:</p>
+<p><strong>module.engage</strong> ()</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mag_deck</span><span class="o">.</span><span class="n">engage</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>In addition, you can include any number of custom containers in a container file - simply add more containers as values of the &#8220;containers&#8221; key. For example:</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s2">&quot;containers&quot;</span> <span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;trash-square&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s2">&quot;locations&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;A1&quot;</span><span class="o">:</span> <span class="p">{</span>
-          <span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;y&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;z&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="s2">&quot;depth&quot;</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span>
-          <span class="s2">&quot;diameter&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
-          <span class="s2">&quot;total-liquid-volume&quot;</span><span class="o">:</span> <span class="mi">500</span>
-        <span class="p">},</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;trash-square&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s2">&quot;locations&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;A1&quot;</span><span class="o">:</span> <span class="p">{</span>
-          <span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-          <span class="s2">&quot;y&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
-          <span class="s2">&quot;z&quot;</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
-          <span class="s2">&quot;depth&quot;</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
-          <span class="s2">&quot;length&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-          <span class="s2">&quot;width&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
-          <span class="s2">&quot;total-liquid-volume&quot;</span><span class="o">:</span> <span class="mi">538</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<p>To deactivate the magnets and lower the module&#8217;s platform, run <code class="docutils literal"><span class="pre">.disengage()</span></code>:</p>
+<p><strong>module.disengage</strong> ()</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mag_deck</span><span class="o">.</span><span class="n">disengage</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Lastly, to load a custom container into your app, click &#8220;File&#8221; and then &#8220;Open Containers Folder&#8221;. Then, drag or copy and paste in the custom container file you wrote in order to access it through a Python or JSON protocol.</p>
-<p>Here is an example of loading into a Python protocol the custom trash container that I defined above.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">opentrons</span> <span class="kn">import</span> <span class="n">containers</span>
+</div>
+<div class="section" id="chain-other-commands">
+<h3>Chain Other Commands<a class="headerlink" href="#chain-other-commands" title="Permalink to this headline">¶</a></h3>
+<p>Just like <code class="docutils literal"><span class="pre">aspirate()</span></code> and <code class="docutils literal"><span class="pre">dispense()</span></code> can be chained, you can chain <code class="docutils literal"><span class="pre">engage()</span></code> and <code class="docutils literal"><span class="pre">disengage()</span></code>, as well as the <code class="docutils literal"><span class="pre">delay()</span></code> if you don&#8217;t want to do anything between engaging and disengaging the magnets.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mag_deck</span><span class="o">.</span><span class="n">engage</span><span class="p">()</span>
+<span class="n">mag_deck</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">mag_deck</span><span class="o">.</span><span class="n">disengage</span><span class="p">()</span>
 
-<span class="n">custom_trash</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
-    <span class="s1">&#39;trash-square&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;B2&#39;</span>
-<span class="p">)</span>
+<span class="n">mag_deck</span><span class="o">.</span><span class="n">engage</span><span class="p">()</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span><span class="o">.</span><span class="n">disengage</span><span class="p">()</span>
 </pre></div>
+</div>
+<p>You can call <code class="docutils literal"><span class="pre">delay()</span></code> with a <code class="docutils literal"><span class="pre">Pipette</span></code> or a <code class="docutils literal"><span class="pre">Magbead</span></code> module.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">p200</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">mag_deck</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 

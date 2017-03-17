@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using the App &#8212; Opentrons API v2.0</title>
+    <title>API Tutorials &#8212; Opentrons API v2.0</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,8 +29,8 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="Opentrons API v2.0" href="index.html" />
-    <link rel="next" title="Advanced Use Cases" href="tips_and_tricks.html" />
-    <link rel="prev" title="Custom Containers" href="custom_containers.html" />  
+    <link rel="next" title="Calibration UI" href="calibration.html" />
+    <link rel="prev" title="Labware Library" href="labware_library.html" />  
 <link rel="stylesheet" href="_static/custom.css" type="text/css" />  
 <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 <!-- INTERCOM -->
@@ -168,38 +168,34 @@ window.intercomSettings = {
             </a></p>
 <h3><a href="index.html">Table Of Contents</a></h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="updating_firmware.html">Updating Firmware</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Code Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Writing a Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="well_access.html">Container Well Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Opentrons API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_containers.html">Custom Containers</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Using the App</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#download-app">Download App</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#connect-to-robot">Connect to Robot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#upload-protocol">Upload Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#jogging">Jogging</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#calibrate">Calibrate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#run-protocol">Run Protocol</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#python-setup">Python Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wells">Wells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pipettes">Pipettes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transfer">Transfer</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tips_and_tricks.html">Advanced Use Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Developer Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="custom_containers.html" title="previous chapter">Custom Containers</a></li>
-      <li>Next: <a href="tips_and_tricks.html" title="next chapter">Advanced Use Cases</a></li>
+      <li>Previous: <a href="labware_library.html" title="previous chapter">Labware Library</a></li>
+      <li>Next: <a href="calibration.html" title="next chapter">Calibration UI</a></li>
   </ul></li>
 </ul>
 </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/running_app.txt"
+      <li><a href="_sources/tutorials.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -219,91 +215,32 @@ window.intercomSettings = {
         <div class="bodywrapper">
             <div class="body" role="main">
                 
-  <div class="section" id="using-the-app">
-<span id="running-app"></span><h1>Using the App<a class="headerlink" href="#using-the-app" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="download-app">
-<h2>Download App<a class="headerlink" href="#download-app" title="Permalink to this headline">¶</a></h2>
-<p>You can download the latest version of the app from <a class="reference external" href="https://opentrons.com/getting-started/download-app">our website</a>.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>If running on Linux:
-The user will need to be given permissions to open the robot&#8217;s serial port. This requires <cite>sudo</cite> privileges.
-In a terminal window, run the following command</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo usermod -a -G dialout <span class="nv">$USER</span>
-</pre></div>
+  <div class="section" id="api-tutorials">
+<span id="tutorials"></span><h1>API Tutorials<a class="headerlink" href="#api-tutorials" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="python-setup">
+<h2>Python Setup<a class="headerlink" href="#python-setup" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="./setup.html">click here for tutorial</a></p>
+<p>There are a few things to consider when beginning a new Python protocol. In this section, we exlain the Opentrons API&#8217;s <code class="docutils literal"><span class="pre">containers</span></code>, <code class="docutils literal"><span class="pre">instruments</span></code>, and <code class="docutils literal"><span class="pre">robot</span></code> modules, and how they are used to setup and control your Python protocol.</p>
 </div>
-<p>If you are running this command from an administrative account that will not be running the app (in order to get <cite>sudo</cite> privileges),
-replace $USER with the username of the account that will be running the app (this username can be found by typing</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="nv">$USER</span>
-</pre></div>
+<div class="section" id="wells">
+<h2>Wells<a class="headerlink" href="#wells" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="./wells.html">click here for tutorial</a></p>
+<p>We spend a fair amount of time organizing and counting wells when writing Python protocols. This section describes the different ways we can access wells and groups of wells.</p>
 </div>
-<p>in the account that will be running the app.</p>
-<p class="last">Finally, logout and log back in as the user to activate the change.</p>
-</div>
-</div>
-<div class="section" id="connect-to-robot">
-<h2>Connect to Robot<a class="headerlink" href="#connect-to-robot" title="Permalink to this headline">¶</a></h2>
-<p>Make sure your robot is turned on, and your laptop is connected via USB cable.</p>
-<p>Go to the select port drop down, and refresh if no ports are shown.  Once the port shows up, click it and the robot will jog up and down.</p>
-<img alt="_images/ports.png" src="_images/ports.png" />
-<img alt="_images/connected.png" src="_images/connected.png" />
-<div class="admonition important">
-<p class="first admonition-title">Important</p>
-<p class="last">Every time you connect to the robot, you need to home all axes before doing anything else.</p>
-</div>
-</div>
-<div class="section" id="upload-protocol">
-<h2>Upload Protocol<a class="headerlink" href="#upload-protocol" title="Permalink to this headline">¶</a></h2>
-<p>Click to upload your protocol file (please refer to <a class="reference internal" href="running_a_protocol.html"><span class="doc">Saving Your Protocol</span></a>)</p>
-</div>
-<div class="section" id="jogging">
-<h2>Jogging<a class="headerlink" href="#jogging" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="xyz">
-<h3>XYZ<a class="headerlink" href="#xyz" title="Permalink to this headline">¶</a></h3>
-<p>Move in the X, Y and Z by selecting your desired increment, and then clicking an arrow button.</p>
-<img alt="_images/pipette-jog.png" src="_images/pipette-jog.png" />
-</div>
-<div class="section" id="slot-button">
-<h3>Slot Button<a class="headerlink" href="#slot-button" title="Permalink to this headline">¶</a></h3>
-<p>New to 2.0, the slot button moves exactly one slot over in either X or Y, depending on which arrow you choose.  This is particularly useful when calibrating multiple containers of the same type (eg an entire deck of 96 well plates).  There is no slot Z, the robot will just move 1 mm.</p>
-</div>
-<div class="section" id="ab-plungers">
-<h3>AB Plungers<a class="headerlink" href="#ab-plungers" title="Permalink to this headline">¶</a></h3>
-<p>Use the plunger jog to move the plunger up and down.  If you have selected a container or the pipette for the B axis, then the B axis will move, and if you have selected a container or the pipette for the A axis, it will move.</p>
-<p>The app automatically toggles between pipettes (unlike 1.2)</p>
-</div>
-<div class="section" id="move-to-slot">
-<h3>Move to Slot<a class="headerlink" href="#move-to-slot" title="Permalink to this headline">¶</a></h3>
-<p>Jump to any slot on the deck with the Move to Slot buttons.  The deck will automatically react and change between a 3x5 layout and a 2x5 layout based on which robot you are connected to (Hood vs. Pro/Standard)</p>
-<img alt="_images/move-to-slot.png" src="_images/move-to-slot.png" />
-</div>
-</div>
-<div class="section" id="calibrate">
-<h2>Calibrate<a class="headerlink" href="#calibrate" title="Permalink to this headline">¶</a></h2>
-<p>Once each container or pipette is calibrated, a check mark will appear next to it in the container list.</p>
-<img alt="_images/container-list.png" src="_images/container-list.png" />
-<div class="section" id="tipracks">
-<h3>Tipracks<a class="headerlink" href="#tipracks" title="Permalink to this headline">¶</a></h3>
-<p>Jog the pipette down into the first tip in the tip rack.  It should be firmly pushed into the tip, and the pick up tip button can be used to test its seating.</p>
-<p>Calling the pick up tip button from anywhere on the deck will direct the robot back to the tiprack to pick up a tip.  Drop tip will send the tip to the trash.</p>
-<img alt="_images/container-calibration.png" src="_images/container-calibration.png" />
-</div>
-<div class="section" id="containers">
-<h3>Containers<a class="headerlink" href="#containers" title="Permalink to this headline">¶</a></h3>
-<p>With a tip on the pipette, calibrate to the bottom of the first well or tube in the container. Use the diagrams in the app to guide calibration.</p>
+<div class="section" id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="./tips.html">click here for tutorial</a></p>
+<p>When we handle liquids with a pipette, we are constantly exchanging old, used tips for new ones to prevent cross-contamination between our wells. To help with this constant need, we describe in this section a few methods for getting new tips, and removing tips from a pipette.</p>
 </div>
 <div class="section" id="pipettes">
-<h3>Pipettes<a class="headerlink" href="#pipettes" title="Permalink to this headline">¶</a></h3>
-<p>Four calibrations positions need to be set for each pipette: Top, Bottom, Blow Out and Drop Tip.  Make sure your pipette is manually set to its highest volume (or ~5 uL higher) for accurate calibration.</p>
-<img alt="_images/pipette-calibration.png" src="_images/pipette-calibration.png" />
-<p>Once these positions are all saved, you can test your calibrations. This is most easily done gravimetrically using a small scale. Use the aspirate and dispense buttons to pick up liquid and eject it onto the scale. If this volume isn&#8217;t exactly what you expect, maybe 203 uL instead of 200, no big deal! You can go input the value into the max volume box. The robot will adjust its calculations accordingly and will then be able to dispense the correct volumes during experiments.</p>
-<p>The drop tip screw may need to be adjusted up or down if you cannot accurately calibrate Bottom.</p>
+<h2>Pipettes<a class="headerlink" href="#pipettes" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="./pipettes.html">click here for tutorial</a></p>
+<p>This is the fun section, where we get to move things around and pipette! This section describes the <code class="docutils literal"><span class="pre">Pipette</span></code> object&#8217;s many liquid-handling commands, as well as how to move the <code class="docutils literal"><span class="pre">robot</span></code>.</p>
 </div>
-</div>
-<div class="section" id="run-protocol">
-<h2>Run Protocol<a class="headerlink" href="#run-protocol" title="Permalink to this headline">¶</a></h2>
-<p>Once all your positions are saved, you can run your protocol.  A progress will keep track of what percentage of your protocol has been done.  Protocols can be paused, or they can be stopped entirely.  We recommend homing after all protocols have been completed or stopped.</p>
-<img alt="_images/running-protocol.png" src="_images/running-protocol.png" />
+<div class="section" id="transfer">
+<h2>Transfer<a class="headerlink" href="#transfer" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="./transfer.html">click here for tutorial</a></p>
+<p>The Transfer command is a nice way to wrap up the most common liquid-handling actions we take. Instead of having to write a <code class="docutils literal"><span class="pre">loop</span></code> or <code class="docutils literal"><span class="pre">if</span></code> statements, we can simply use the <code class="docutils literal"><span class="pre">transfer()</span></code> command, making Python protocol both easier to write and read!</p>
 </div>
 </div>
 

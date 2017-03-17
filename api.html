@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Developer Interface &#8212; Opentrons API v2.0</title>
+    <title>API Reference &#8212; Opentrons API v2.0</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +29,8 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="Opentrons API v2.0" href="index.html" />
-    <link rel="prev" title="Modules" href="module.html" />  
+    <link rel="next" title="Firmware Updates" href="firmware.html" />
+    <link rel="prev" title="Modules" href="modules.html" />  
 <link rel="stylesheet" href="_static/custom.css" type="text/css" />  
 <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 <!-- INTERCOM -->
@@ -167,26 +168,24 @@ window.intercomSettings = {
             </a></p>
 <h3><a href="index.html">Table Of Contents</a></h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="updating_firmware.html">Updating Firmware</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Code Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Writing a Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="well_access.html">Container Well Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Opentrons API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_containers.html">Custom Containers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="running_app.html">Using the App</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tips_and_tricks.html">Advanced Use Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module.html">Modules</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Interface</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">API Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#robot">Robot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-opentrons.instruments">Pipette</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="module.html" title="previous chapter">Modules</a></li>
+      <li>Previous: <a href="modules.html" title="previous chapter">Modules</a></li>
+      <li>Next: <a href="firmware.html" title="next chapter">Firmware Updates</a></li>
   </ul></li>
 </ul>
 </div>
@@ -214,7 +213,7 @@ window.intercomSettings = {
             <div class="body" role="main">
                 
   <div class="section" id="module-opentrons">
-<span id="developer-interface"></span><span id="api"></span><h1>Developer Interface<a class="headerlink" href="#module-opentrons" title="Permalink to this headline">¶</a></h1>
+<span id="api-reference"></span><span id="api"></span><h1>API Reference<a class="headerlink" href="#module-opentrons" title="Permalink to this headline">¶</a></h1>
 <p>If you are reading this, you are probably looking for an in-depth explanation of API classes and methods to fully master your protocol development skills.</p>
 <div class="section" id="robot">
 <h2>Robot<a class="headerlink" href="#robot" title="Permalink to this headline">¶</a></h2>
@@ -350,7 +349,7 @@ the list of options to be passed to <code class="xref py py-func docutils litera
 <dl class="method">
 <dt id="opentrons.Robot.containers">
 <code class="descname">containers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.Robot.containers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the list of the containers on the deck.</p>
+<dd><p>Returns the dict with all of the containers on the deck.</p>
 </dd></dl>
 
 <dl class="method">

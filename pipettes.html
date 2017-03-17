@@ -1,0 +1,525 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pipettes &#8212; Opentrons API v2.0</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="https://opentrons.com/css/master.css" type="text/css" />
+    <link rel="stylesheet" href="_static/override_master.css" type="text/css" />
+    <link rel="stylesheet" href="_static/override_sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Opentrons API v2.0" href="index.html" />  
+<link rel="stylesheet" href="_static/custom.css" type="text/css" />  
+<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+<!-- INTERCOM -->
+<script>
+window.intercomSettings = {
+    app_id: "ukpodv2l"
+};
+</script>
+<script>
+(function() {
+    var w = window;
+    var ic = w.Intercom;
+    if (typeof ic === "function") {
+        ic('reattach_activator');
+        ic('update', intercomSettings);
+    } else {
+        var d = document;
+        var i = function() {
+            i.c(arguments)
+        };
+        i.q = [];
+        i.c = function(args) {
+            i.q.push(args)
+        };
+        w.Intercom = i;
+
+        function l() {
+            var s = d.createElement('script');
+            s.type = 'text/javascript';
+            s.async = true;
+            s.src = 'https://widget.intercom.io/widget/ukpodv2l';
+            var x = d.getElementsByTagName('script')[0];
+            x.parentNode.insertBefore(s, x);
+        }
+        if (w.attachEvent) {
+            w.attachEvent('onload', l);
+        } else {
+            w.addEventListener('load', l, false);
+        }
+    }
+})()
+</script>
+
+  </head>
+  <body role="document">
+<header>
+    <a href="https://opentrons.com" class="brand">
+        <img class="top-nav-logo" src="https://s3.amazonaws.com/opentrons-images/website/ot_logo_full.png" alt="OpenTrons Logo Home" />
+    </a>
+    <div id="nav-collapse">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+    </div>
+    <nav>
+        <ul id="main">
+            <li>
+                <a href="https://opentrons.com/robots" class="menu-toggle" data-dropdown=".products">Products</a>
+            </li>
+            <li>
+                <a href="https://opentrons.com/about" class="menu-toggle" data-dropdown=".company">Company</a>
+            </li>
+            <li>
+                <a href="https://opentrons.com/getting-started/" class="menu-toggle" data-dropdown=".resources">Resources</a>
+            </li>
+            <li>
+                <a href="https://shop.opentrons.com/">Buy</a>
+            </li>
+        </ul>
+        <section id="dropdown">
+            <ul class="products">
+                <li class="mobile">Products</li>
+                <li><a href="https://opentrons.com/robots">Robots</a></li>
+                <li><a href="https://opentrons.com/ot-app">OT App</a></li>
+                <li><a href="https://opentrons.com/protocol-library/">Protocol Library</a></li>
+                <li>&nbsp;</li>
+            </ul>
+            <ul class="company">
+                <li class="mobile">Company</li>
+                <li><a href="https://opentrons.com/about">About</a></li>
+                <li><a href="https://opentrons.com/team">Team</a></li>
+                <li><a href="https://blog.opentrons.com" target="_blank">Blog</a></li>
+                <li><a href="https://opentrons.com/contact">Contact Us</a></li>
+            </ul>
+            <ul class="resources">
+                <li class="mobile">Resources</li>
+                <li><a href="https://opentrons.com/getting-started/">Getting Started</a></li>
+                <li><a href="http://docs.opentrons.com/" target="_blank">Opentrons API</a></li>
+                <li><a href="https://opentrons.com/faqs">FAQ</a></li>
+                <li><a href="https://github.com/OpenTrons/otone_docs/blob/master/Open_Source.md" target="_blank">Open Source</a></li>
+            </ul>
+        </section>
+    </nav>
+    <br style="clear:both">
+    <script type="text/javascript">
+    $(function() {
+
+        $('#dropdown').slideUp(0);
+
+        $('#nav-collapse').click(function(event) {
+            $(this).toggleClass('change');
+            $('#dropdown').slideToggle(500);
+        });
+
+        $('.menu-toggle').mouseenter(function(event) {
+            event.preventDefault();
+            var target = $(this).attr('data-dropdown');
+
+            $('*').removeClass('active');
+            $(this).addClass('active');
+            $(target).addClass('active');
+
+            $('#dropdown').slideDown(300);
+
+            $('.brand').addClass('open');
+            $('#nav-spacer').addClass('nav-open');
+
+
+        });
+        $('header').mouseleave(function(event) {
+            $('#dropdown').slideUp(300);
+            $('.brand').removeClass('open');
+            $('#nav-spacer').removeClass('nav-open');
+        });
+    });
+    </script>
+</header>
+<div id="nav-spacer">&nbsp;</div>
+<div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Opentrons API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">API Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pipettes.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+    <div class="documentwrapper">
+        <div class="bodywrapper">
+            <div class="body" role="main">
+                
+  <div class="section" id="pipettes">
+<span id="id1"></span><h1>Pipettes<a class="headerlink" href="#pipettes" title="Permalink to this headline">¶</a></h1>
+<p>This is the fun section, where we get to move things around and pipette! This section describes the <code class="docutils literal"><span class="pre">Pipette</span></code> object&#8217;s many liquid-handling commands, as well as how to move the <code class="docutils literal"><span class="pre">robot</span></code>.</p>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pipettes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#liquid-control">Liquid Control</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aspirate">Aspirate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dispense">Dispense</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blow-out">Blow Out</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#touch-tip">Touch Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mix">Mix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#air-gap">Air Gap</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#moving">Moving</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#head-speed">Head Speed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#move-to">Move To</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delay">Delay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#homing">Homing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="liquid-control">
+<h2>Liquid Control<a class="headerlink" href="#liquid-control" title="Permalink to this headline">¶</a></h2>
+<p>Demonstrates the usage for liquid-handling specific commands</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Examples in this section expect the following</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">containers</span><span class="p">,</span> <span class="n">instruments</span>
+
+<span class="n">plate</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">)</span>
+<span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="aspirate">
+<h3>Aspirate<a class="headerlink" href="#aspirate" title="Permalink to this headline">¶</a></h3>
+<p>To aspirate is to pull liquid up into the pipette&#8217;s tip. When calling aspirate on a pipette, we can specify how many micoliters, and at which location, to draw liquid from:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>  <span class="c1"># aspirate 50uL from plate:A1</span>
+</pre></div>
+</div>
+<p>Now our pipette&#8217;s tip is holding 50uL.</p>
+<p>We can also simply specify how many microliters to aspirate, and not mention a location. The pipette in this circumstance will aspirate from it&#8217;s current location (which we previously set as <code class="docutils literal"><span class="pre">plate.wells('A1'))</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>                     <span class="c1"># aspirate 50uL from current position</span>
+</pre></div>
+</div>
+<p>Now our pipette&#8217;s tip is holding 100uL.</p>
+<p>We can also specify only the location to aspirate from. If we do not tell the pipette how many micoliters to aspirate, it will by default fill up the remaining volume in it&#8217;s tip. In this example, since we already have 100uL in the tip, the pipette will aspirate another 100uL</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A2&#39;</span><span class="p">))</span>      <span class="c1"># aspirate until pipette fills from plate:A2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dispense">
+<h3>Dispense<a class="headerlink" href="#dispense" title="Permalink to this headline">¶</a></h3>
+<p>To dispense is to push out liquid from the pipette&#8217;s tip. It&#8217;s usage in the Opentrons API is nearly identical to <code class="docutils literal"><span class="pre">aspirate()</span></code>, in that you can specify microliters and location, only microliters, or only a location:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;B1&#39;</span><span class="p">))</span> <span class="c1"># dispense 50uL to plate:B1</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>                    <span class="c1"># dispense 50uL to current position</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;B2&#39;</span><span class="p">))</span>     <span class="c1"># dispense until pipette empties to plate:B2</span>
+</pre></div>
+</div>
+<p>That final dispense without specifying a micoliter amount will dispense all remaining liquids in the tip to <code class="docutils literal"><span class="pre">plate.wells('B2')</span></code>, and now our pipette is empty.</p>
+</div>
+<div class="section" id="blow-out">
+<h3>Blow Out<a class="headerlink" href="#blow-out" title="Permalink to this headline">¶</a></h3>
+<p>To blow out is to push an extra amount of air through the pipette&#8217;s tip, so as to make sure that any remaining droplets are expelled.</p>
+<p>When calling <code class="docutils literal"><span class="pre">blow_out()</span></code> on a pipette, we have the option to specify a location to blow out the remaining liquid. If no location is specified, the pipette will blow out from it&#8217;s current position.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">blow_out</span><span class="p">()</span>                  <span class="c1"># blow out over current location</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">blow_out</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;B3&#39;</span><span class="p">))</span> <span class="c1"># blow out over current plate:B3</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="touch-tip">
+<h3>Touch Tip<a class="headerlink" href="#touch-tip" title="Permalink to this headline">¶</a></h3>
+<p>To touch tip is to move the pipette&#8217;s currently attached tip to the edges of a well, for the purpose of knocking off any droplets that might be hanging from the tip.</p>
+<p>When calling <code class="docutils literal"><span class="pre">touch_tip()</span></code> on a pipette, we have the option to specify a location where the tip will touch the inner walls. If no location is specified, the pipette will touch tip inside it&#8217;s current location.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">touch_tip</span><span class="p">()</span>                  <span class="c1"># touch tip within current location</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">touch_tip</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>                <span class="c1"># touch tip 2mm below the top of the current location</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">touch_tip</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;B1&#39;</span><span class="p">))</span> <span class="c1"># touch tip within plate:B1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mix">
+<h3>Mix<a class="headerlink" href="#mix" title="Permalink to this headline">¶</a></h3>
+<p>Mixing is simply performing a series of <code class="docutils literal"><span class="pre">aspirate()</span></code> and <code class="docutils literal"><span class="pre">dispense()</span></code> commands in a row on a single location. However, instead of having to write those commands out every time, the Opentrons API allows you to simply say <code class="docutils literal"><span class="pre">mix()</span></code>.</p>
+<p>The mix command takes three arguments: <code class="docutils literal"><span class="pre">mix(repetitions,</span> <span class="pre">volume,</span> <span class="pre">location)</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">mix</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A2&#39;</span><span class="p">))</span>   <span class="c1"># mix 4 times, 100uL, in plate:A2</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">mix</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>                       <span class="c1"># mix 3 times, 50uL, in current location</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">mix</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>                           <span class="c1"># mix 2 times, pipette&#39;s max volume, in current location</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="air-gap">
+<h3>Air Gap<a class="headerlink" href="#air-gap" title="Permalink to this headline">¶</a></h3>
+<p>Some liquids need an extra amount of air in the pipette&#8217;s tip to prevent it from sliding out. A call to <code class="docutils literal"><span class="pre">air_gap()</span></code> with a microliter amount will aspirate that much air into the tip.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;B4&#39;</span><span class="p">))</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">air_gap</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="moving">
+<h2>Moving<a class="headerlink" href="#moving" title="Permalink to this headline">¶</a></h2>
+<p>Demonstrates the different ways to control the movement of the Opentrons liquid handler during a protocol run.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Examples in this section expect the following</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">containers</span><span class="p">,</span> <span class="n">instruments</span><span class="p">,</span> <span class="n">robot</span>
+
+<span class="n">tiprack</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">)</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">)</span>
+
+<span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="head-speed">
+<h3>Head Speed<a class="headerlink" href="#head-speed" title="Permalink to this headline">¶</a></h3>
+<p>The maximum speed of the robot&#8217;s head can be set using <code class="docutils literal"><span class="pre">robot.head_speed()</span></code>. The value we set the speed to is in millimeters-per-second (mm/sec).</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">robot</span><span class="o">.</span><span class="n">head_speed</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Setting the head speed to above <code class="docutils literal"><span class="pre">6000</span> <span class="pre">mm/sec</span></code> may cause your robot to &#8220;skip&#8221;, which means the motors will lose their grip and make a loud vibrating noise. We recommend you try out different speed values on your robot, and see what works and what doesn&#8217;t.</p>
+</div>
+</div>
+<div class="section" id="move-to">
+<h3>Move To<a class="headerlink" href="#move-to" title="Permalink to this headline">¶</a></h3>
+<p>Pipette&#8217;s are able to <code class="docutils literal"><span class="pre">move_to()</span></code> any location on the deck. Any call to <code class="docutils literal"><span class="pre">move_to()</span></code> will be enqueued, meaning that it will not execute until calling <code class="docutils literal"><span class="pre">robot.run()</span></code>.</p>
+<p>For example, we can enqueue a movement to the first tip in our tip rack:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>You can also specify at what height you would like the robot to move to inside of a location using <code class="docutils literal"><span class="pre">top()</span></code> and <code class="docutils literal"><span class="pre">bottom()</span></code> methods on that location.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">bottom</span><span class="p">())</span>  <span class="c1"># move to the bottom of well A1</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">top</span><span class="p">())</span>     <span class="c1"># move to the top of well A1</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">bottom</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># move to 2mm above the bottom of well A1</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">top</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>   <span class="c1"># move to 2mm below the top of well A1</span>
+</pre></div>
+</div>
+<p>The above commands will cause the robot&#8217;s head to first move upwards, then over to above the target location, then finally downwards until the target location is reached. If instead you would like the robot to mive in a straight line to the target location, you can set the movement strategy to <code class="docutils literal"><span class="pre">'direct'</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">),</span> <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;direct&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Moving with <code class="docutils literal"><span class="pre">strategy='direct'</span></code> will run the risk of colliding with things on your deck. Be very careful when using the option.</p>
+</div>
+<p>Usually the <code class="docutils literal"><span class="pre">strategy='direct'</span></code> option is useful when moving inside of a well. Take a look at the below sequence of movements, which first move the head to a well, and use &#8216;direct&#8217; movements inside that well, then finally move on to a different well.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">bottom</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;direct&#39;</span><span class="p">)</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">top</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;direct&#39;</span><span class="p">)</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delay">
+<h3>Delay<a class="headerlink" href="#delay" title="Permalink to this headline">¶</a></h3>
+<p>To have your protocol pause for any given number of minutes or seconds, simply call <code class="docutils literal"><span class="pre">delay()</span></code> on your pipette. The value passed into <code class="docutils literal"><span class="pre">delay()</span></code> is the number of minutes or seconds the robot will wait until moving on to the next commands.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>             <span class="c1"># pause for 2 seconds</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>             <span class="c1"># pause for 5 minutes</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># pause for 5 minutes and 2 seconds</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="homing">
+<h3>Homing<a class="headerlink" href="#homing" title="Permalink to this headline">¶</a></h3>
+<p>You can enqueue a <code class="docutils literal"><span class="pre">home()</span></code> command to your protocol, by giving it the <code class="docutils literal"><span class="pre">enqueue=True</span></code> option. Without passing the enqueue option, the home command will run immediately.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span> <span class="c1"># move to well A1</span>
+<span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">(</span><span class="n">enqueue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>           <span class="c1"># home the robot on all axis</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;B1&#39;</span><span class="p">))</span> <span class="c1"># move to well B1</span>
+<span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">enqueue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>      <span class="c1"># home the Z axis only</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="clearer"></div>
+</div>
+<footer>
+    <div class="get-in-touch">
+        <h1 class="title">Get In Touch</h1>
+        <p class="caption">
+            We'd love to hear from you!
+            <br> Reach us here or get in touch with us live via <span style="cursor:pointer" id="chat">chat</span>.
+        </p>
+        <form class="footerForm">
+            <div class="input-wrapper">
+                <input type="text" name="name" value="" id="name" placeholder="Name">
+                <input type="email" name="email" value="" id="email" placeholder="Email">
+            </div>
+            <textarea name="message" id="message" placeholder="Message"></textarea>
+            <input type="hidden" name="type" value="message"></input>
+            <button class="gray" type="submit" name="get-in-touch">Submit</button>
+        </form>
+    </div>
+    <div class="nav-link-group">
+        <div class="nav-link products">
+            <span class="link-title">PRODUCTS</span>
+            <ul class="products-list">
+                <li><a href="https://opentrons.com/robots">Robots</a></li>
+                <li><a href="https://opentrons.com/ot-app">OT App</a></li>
+                <li><a href="https://opentrons.com/protocol-library/">Protocol Library</a></li>
+            </ul>
+        </div>
+        <div class="nav-link-divider"></div>
+        <div class="nav-link company">
+            <span class="link-title">COMPANY</span>
+            <ul class="company-list">
+                <li><a href="https://opentrons.com/about">About</a></li>
+                <li><a href="https://opentrons.com/team">Team</a></li>
+                <li><a href="https://blog.opentrons.com" target="_blank">Blog</a></li>
+                <li><a href="https://opentrons.com/contact">Contact Us</a></li>
+                <!-- <li>Privacy Policy</li> -->
+            </ul>
+        </div>
+        <div class="nav-link-divider"></div>
+        <div class="nav-link resources">
+            <span class="link-title">RESOURCES</span>
+            <ul class="resources-list">
+                <li><a href="https://opentrons.com/getting-started/">Getting Started</a></li>
+                <li><a href="https://opentrons.com/faqs">FAQ</a></li>
+                <li><a href="https://github.com/OpenTrons/otone_docs/blob/master/Open_Source.md" target="_blank">Open Source</a></li>
+            </ul>
+        </div>
+        <div class="nav-link-divider"></div>
+        <div class="nav-link buy-button">
+            <a href="https://shop.opentrons.com/" target="_blank">BUY</a>
+        </div>
+        <div class="social-group">
+            <p class="social-links">
+                <a href="https://www.facebook.com/OpenTrons-Labworks/" target="_blank"><img src="https://s3.amazonaws.com/opentrons-images/website/logo_facebook.png" alt="facebook logo" /></a>
+                <a href="https://twitter.com/OpenTrons_" target="_blank"><img src="https://s3.amazonaws.com/opentrons-images/website/logo_twitter.png" alt="twitter logo" /></a>
+                <a href="https://www.instagram.com/opentronslab/" target="_blank"><img src="https://s3.amazonaws.com/opentrons-images/website/logo_instagram.png" alt="instagram logo" /></a>
+                <!--     <a href="https://www.instagram.com/opentronslab/" target="_blank"><img src="https://s3.amazonaws.com/opentrons-images/website/logo_instagram.png" alt="instagram logo" /></a> -->
+                <a href="https://www.youtube.com/channel/UCvMRmXIxnHs3AutkVhuqaQg" target="_blank"><img src="https://s3.amazonaws.com/opentrons-images/website/logo_youtube.png" alt="youtube logo" /></a>
+            </p>
+            <p class="ot-newsletter">
+                Subscribe to our newsletter
+                <br>
+                <!-- <input type="email" name="email" placeholder="Email"></input>
+      <button class="gray subscribe" type="button" name="button">Subscribe</button> -->
+                <div id="mc_embed_signup">
+                    <form action="//opentrons.us8.list-manage.com/subscribe/post?u=000595683fb96c5fb3c54cf53&amp;id=ba66060a9c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                        <div id="mc_embed_signup_scroll">
+                            <input type="email" value="" name="EMAIL" class="email-newsletter" id="mce-EMAIL" placeholder="email address" required>
+                            <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                                <input type="text" name="b_000595683fb96c5fb3c54cf53_ba66060a9c" tabindex="-1" value="">
+                            </div>
+                            <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="gray subscribe">
+                        </div>
+                    </form>
+                </div>
+            </p>
+        </div>
+        <span class="ot-copyright">&#169;&nbsp;OPENTRONS 2016</span>
+    </div>
+</footer>
+<script>
+$(document).ready(function() {
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-83820700-1', 'auto');
+ga('send', 'pageview');
+
+  $(".footerForm").submit(function(event) {
+    event.preventDefault();
+    var data = {};
+    $(".footerForm").serializeArray().map(function(x){data[x.name] = x.value;});
+    ga('send', 'event', 'Contact - Email', 'Clicked Email Submit', window.location.href, { 'dimension1': data.email });
+    console.log(data)
+
+    $.ajax({
+      type: "POST",
+      url: "https://email.opentrons.com:3000",
+      dataType: "json",
+      contentType : "application/json",
+      data: JSON.stringify(data),
+      success: function(res) {
+        console.log(`success: ${res}`);
+        $(".footerForm").fadeOut("slow");
+        $(".caption")[0].innerHTML = "Thanks for contacting us! We'll get back to you as quick as we can.";
+      },
+      error: function(err) { console.log(`err: ${JSON.stringify(err)}`) },
+    });
+
+    
+    return false;
+  });
+
+  $("form.validate").submit(function(event) {
+    var data = {};
+    $("form.validate").serializeArray().map(function(x){data[x.name] = x.value;});
+    // ga('send', 'event', 'Newsletter', 'Signup', window.location.href, { 'dimension1': data.EMAIL })
+  });
+
+  $('#chat').on('click', () => {
+    Intercom('showNewMessage');
+  })
+});
+</script>
+
+
+ 
+  </body>
+</html>
