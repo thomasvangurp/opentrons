@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Pipettes &#8212; Opentrons API v2.0</title>
+    <title>Liquid Handling &#8212; Opentrons API v2.0</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -28,7 +28,9 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="Opentrons API v2.0" href="index.html" />  
+    <link rel="top" title="Opentrons API v2.0" href="index.html" />
+    <link rel="next" title="Transfer Shortcuts" href="transfer.html" />
+    <link rel="prev" title="Containers" href="containers.html" />  
 <link rel="stylesheet" href="_static/custom.css" type="text/css" />  
 <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 <!-- INTERCOM -->
@@ -156,84 +158,210 @@ window.intercomSettings = {
     });
     </script>
 </header>
-<div id="nav-spacer">&nbsp;</div>
-<div class="document">
-    
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/logo.png" alt="Logo"/>
-            </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Opentrons API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">API Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a></li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/pipettes.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+<div id="nav-spacer">&nbsp;</div>   
+
+    <div class="document">
     <div class="documentwrapper">
         <div class="bodywrapper">
             <div class="body" role="main">
                 
-  <div class="section" id="pipettes">
-<span id="id1"></span><h1>Pipettes<a class="headerlink" href="#pipettes" title="Permalink to this headline">¶</a></h1>
-<p>This is the fun section, where we get to move things around and pipette! This section describes the <code class="docutils literal"><span class="pre">Pipette</span></code> object&#8217;s many liquid-handling commands, as well as how to move the <code class="docutils literal"><span class="pre">robot</span></code>.</p>
-<div class="toctree-wrapper compound">
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Pipettes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#liquid-control">Liquid Control</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#aspirate">Aspirate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dispense">Dispense</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#blow-out">Blow Out</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#touch-tip">Touch Tip</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#mix">Mix</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#air-gap">Air Gap</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#moving">Moving</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#head-speed">Head Speed</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#move-to">Move To</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#delay">Delay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#homing">Homing</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="liquid-handling">
+<span id="pipettes"></span><h1>Liquid Handling<a class="headerlink" href="#liquid-handling" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal"><span class="pre">instruments</span></code> module gives your protocol access to the <code class="docutils literal"><span class="pre">Pipette</span></code>, which is what you will be primarily using to create protocol commands.</p>
+<hr class="docutils" />
+<div class="section" id="creating-a-pipette">
+<h2>Creating a Pipette<a class="headerlink" href="#creating-a-pipette" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Examples in this section require the following</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">instruments</span>
+</pre></div>
+</div>
+<div class="section" id="axis-and-max-volume">
+<h3>Axis and Max Volume<a class="headerlink" href="#axis-and-max-volume" title="Permalink to this headline">¶</a></h3>
+<p>To create a <code class="docutils literal"><span class="pre">Pipette</span></code>, you must give it an axis and a max_volume. The axis can be either <code class="docutils literal"><span class="pre">'a'</span></code> or <code class="docutils literal"><span class="pre">'b'</span></code>, and the volume is whatever your hand pipette is calibrated for. In this example, we are using a 200uL pipette.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-p200&#39;</span><span class="p">,</span>
+    <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="minimum-volume">
+<h3>Minimum Volume<a class="headerlink" href="#minimum-volume" title="Permalink to this headline">¶</a></h3>
+<p>The minimum allowed volume can be set for each pipette. If your protocol attempts to aspirate or dispense a volume below this volume, the API will give you a warning.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-p200&#39;</span><span class="p">,</span>
+    <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">min_volume</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="channels">
+<h3>Channels<a class="headerlink" href="#channels" title="Permalink to this headline">¶</a></h3>
+<p>Pipettes can also be assigned a number of channels, either <code class="docutils literal"><span class="pre">channel=1</span></code> or <code class="docutils literal"><span class="pre">channel=8</span></code>. If you do not specify, it will default to <code class="docutils literal"><span class="pre">channel=1</span></code> channel.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-p200-multichannel&#39;</span><span class="p">,</span>
+    <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">min_volume</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">channels</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plunger-speeds">
+<h3>Plunger Speeds<a class="headerlink" href="#plunger-speeds" title="Permalink to this headline">¶</a></h3>
+<p>The speeds at which the pipette will aspirate and dispense can be set through <code class="docutils literal"><span class="pre">aspirate_speed</span></code> and <code class="docutils literal"><span class="pre">dispense_speed</span></code>. The values are in millimeters/minute, and default to <code class="docutils literal"><span class="pre">aspirate_speed=300</span></code> and <code class="docutils literal"><span class="pre">dispense_speed=500</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipeipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-p200-multichannel&#39;</span><span class="p">,</span>
+    <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">min_volume</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">channels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">aspirate_speed</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">dispense_speed</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="tip-handling">
+<h2>Tip Handling<a class="headerlink" href="#tip-handling" title="Permalink to this headline">¶</a></h2>
+<p>When we handle liquids with a pipette, we are constantly exchanging old, used tips for new ones to prevent cross-contamination between our wells. To help with this constant need, we describe in this section a few methods for getting new tips, and removing tips from a pipette.</p>
+<hr class="docutils" />
+<p>This section demonstrates the options available for controlling tips</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Examples in this section expect the following</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">containers</span><span class="p">,</span> <span class="n">instruments</span>
+
+<span class="n">trash</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;point&#39;</span><span class="p">,</span> <span class="s1">&#39;D2&#39;</span><span class="p">)</span>
+<span class="n">tiprack</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">)</span>
+
+<span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="pick-up-tip">
+<h3>Pick Up Tip<a class="headerlink" href="#pick-up-tip" title="Permalink to this headline">¶</a></h3>
+<p>Before any liquid handling can be done, your pipette must have a tip on it. The command <code class="docutils literal"><span class="pre">pick_up_tip()</span></code> will move the pipette over to the specified tip, the press down into it to create a vacuum seal. The below example picks up the tip at location <code class="docutils literal"><span class="pre">'A1'</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drop-tip">
+<h3>Drop Tip<a class="headerlink" href="#drop-tip" title="Permalink to this headline">¶</a></h3>
+<p>Once finished with a tip, the pipette will autonomously remove the tip when we call <code class="docutils literal"><span class="pre">drop_tip()</span></code>. We can specify where to drop the tip by passing in a location. The below example drops the tip back at its originating location on the tip rack.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">drop_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Instead of returning a tip to the tip rack, we can also drop it in a trash container.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A2&#39;</span><span class="p">))</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">drop_tip</span><span class="p">(</span><span class="n">trash</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="return-tip">
+<h3>Return Tip<a class="headerlink" href="#return-tip" title="Permalink to this headline">¶</a></h3>
+<p>When we need to return the tip to its originating location on the tip rack, we can simply call <code class="docutils literal"><span class="pre">return_tip()</span></code>. The example below will automatically return the tip to <code class="docutils literal"><span class="pre">'A3'</span></code> on the tip rack.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A3&#39;</span><span class="p">))</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">return_tip</span><span class="p">()</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="tips-iterating">
+<h3>Tips Iterating<a class="headerlink" href="#tips-iterating" title="Permalink to this headline">¶</a></h3>
+<p>Automatically iterate through tips and drop tip in trash by attaching containers to a pipette</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Examples in this section expect the following</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">containers</span><span class="p">,</span> <span class="n">instruments</span>
+
+<span class="n">trash</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;point&#39;</span><span class="p">,</span> <span class="s1">&#39;D2&#39;</span><span class="p">)</span>
+<span class="n">tip_rack_1</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">)</span>
+<span class="n">tip_rack_2</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;B2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="attach-tip-rack-to-pipette">
+<h4>Attach Tip Rack to Pipette<a class="headerlink" href="#attach-tip-rack-to-pipette" title="Permalink to this headline">¶</a></h4>
+<p>Tip racks and trash containers can be &#8220;attached&#8221; to a pipette when the pipette is created. This give the pipette the ability to automatically iterate through tips, and to automatically send the tip to the trash container.</p>
+<p>Trash containers can be attached with the option <code class="docutils literal"><span class="pre">trash_container=TRASH_CONTAINER</span></code>.</p>
+<p>Multiple tip racks are can be attached with the option <code class="docutils literal"><span class="pre">tip_racks=[RACK_1,</span> <span class="pre">RACK_2,</span> <span class="pre">etc...</span> <span class="pre">]</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+    <span class="n">tip_racks</span><span class="o">=</span><span class="p">[</span><span class="n">tip_rack_1</span><span class="p">,</span> <span class="n">tip_rack_2</span><span class="p">],</span>
+    <span class="n">trash_container</span><span class="o">=</span><span class="n">trash</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The <code class="docutils literal"><span class="pre">tip_racks=</span></code> option expects us to give it a Python list, containing each tip rack we want to attach. If we are only attaching one tip rack, then the list will have a length of one, like the following:</p>
+<p class="last"><code class="docutils literal"><span class="pre">tip_racks=[tiprack]</span></code></p>
+</div>
+</div>
+<div class="section" id="iterating-through-tips">
+<h4>Iterating Through Tips<a class="headerlink" href="#iterating-through-tips" title="Permalink to this headline">¶</a></h4>
+<p>Now that we have two tip racks attached to the pipette, we can automatically step through each tip whenever we call <code class="docutils literal"><span class="pre">pick_up_tip()</span></code>. We then have the option to either <code class="docutils literal"><span class="pre">return_tip()</span></code> to the tip rack, or we can <code class="docutils literal"><span class="pre">drop_tip()</span></code> to remove the tip in the attached trash container.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">()</span>  <span class="c1"># picks up tip_rack_1:A1</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">return_tip</span><span class="p">()</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">()</span>  <span class="c1"># picks up tip_rack_1:A2</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">drop_tip</span><span class="p">()</span>     <span class="c1"># automatically drops in trash</span>
+
+<span class="c1"># use loop to pick up tips tip_rack_1:A3 through tip_rack_2:H12</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">94</span> <span class="o">+</span> <span class="mi">96</span><span class="p">):</span>
+    <span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">()</span>
+    <span class="n">pipette</span><span class="o">.</span><span class="n">return_tip</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If we try to <code class="docutils literal"><span class="pre">pick_up_tip()</span></code> again when all the tips have been used, the Opentrons API will show you an error.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you run the cell above, and then uncomment and run the cell below, you will get an error because the pipette is out of tips.</p>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># this will raise an exception if run after the previous code block</span>
+<span class="c1"># pipette.pick_up_tip()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="select-starting-tip">
+<h4>Select Starting Tip<a class="headerlink" href="#select-starting-tip" title="Permalink to this headline">¶</a></h4>
+<p>Calls to <code class="docutils literal"><span class="pre">pick_up_tip()</span></code> will by default start at the attached tip rack&#8217;s <code class="docutils literal"><span class="pre">'A1'</span></code> location. If you however want to start automatic tip iterating at a different tip, you can use <code class="docutils literal"><span class="pre">start_at_tip()</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="n">pipette</span><span class="o">.</span><span class="n">start_at_tip</span><span class="p">(</span><span class="n">tip_rack_1</span><span class="p">[</span><span class="s1">&#39;C3&#39;</span><span class="p">])</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">()</span>  <span class="c1"># pick up C3 from &quot;tip_rack_1&quot;</span>
+<span class="n">pipette</span><span class="o">.</span><span class="n">return_tip</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-current-tip">
+<h4>Get Current Tip<a class="headerlink" href="#get-current-tip" title="Permalink to this headline">¶</a></h4>
+<p>Get the source location of the pipette&#8217;s current tip by calling <code class="docutils literal"><span class="pre">current_tip()</span></code>. If the tip was from the <code class="docutils literal"><span class="pre">'A1'</span></code> position on our tip rack, <code class="docutils literal"><span class="pre">current_tip()</span></code> will return that position.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">pipette</span><span class="o">.</span><span class="n">current_tip</span><span class="p">())</span>  <span class="c1"># is holding no tip</span>
+
+<span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pipette</span><span class="o">.</span><span class="n">current_tip</span><span class="p">())</span>  <span class="c1"># is holding the next available tip</span>
+
+<span class="n">pipette</span><span class="o">.</span><span class="n">return_tip</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pipette</span><span class="o">.</span><span class="n">current_tip</span><span class="p">())</span>  <span class="c1"># is holding no tip</span>
+</pre></div>
+</div>
+<p>will print out...</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>None
+&lt;Well D3&gt;
+None
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 <hr class="docutils" />
 <div class="section" id="liquid-control">
 <h2>Liquid Control<a class="headerlink" href="#liquid-control" title="Permalink to this headline">¶</a></h2>
-<p>Demonstrates the usage for liquid-handling specific commands</p>
+<p>This is the fun section, where we get to move things around and pipette! This section describes the <code class="docutils literal"><span class="pre">Pipette</span></code> object&#8217;s many liquid-handling commands, as well as how to move the <code class="docutils literal"><span class="pre">robot</span></code>.</p>
+<hr class="docutils" />
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Examples in this section expect the following</span>
 <span class="sd">&#39;&#39;&#39;</span>
@@ -323,17 +451,6 @@ window.intercomSettings = {
 <span class="n">pipette</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="head-speed">
-<h3>Head Speed<a class="headerlink" href="#head-speed" title="Permalink to this headline">¶</a></h3>
-<p>The maximum speed of the robot&#8217;s head can be set using <code class="docutils literal"><span class="pre">robot.head_speed()</span></code>. The value we set the speed to is in millimeters-per-second (mm/sec).</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">robot</span><span class="o">.</span><span class="n">head_speed</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Setting the head speed to above <code class="docutils literal"><span class="pre">6000</span> <span class="pre">mm/sec</span></code> may cause your robot to &#8220;skip&#8221;, which means the motors will lose their grip and make a loud vibrating noise. We recommend you try out different speed values on your robot, and see what works and what doesn&#8217;t.</p>
-</div>
-</div>
 <div class="section" id="move-to">
 <h3>Move To<a class="headerlink" href="#move-to" title="Permalink to this headline">¶</a></h3>
 <p>Pipette&#8217;s are able to <code class="docutils literal"><span class="pre">move_to()</span></code> any location on the deck. Any call to <code class="docutils literal"><span class="pre">move_to()</span></code> will be enqueued, meaning that it will not execute until calling <code class="docutils literal"><span class="pre">robot.run()</span></code>.</p>
@@ -373,16 +490,6 @@ window.intercomSettings = {
 </pre></div>
 </div>
 </div>
-<div class="section" id="homing">
-<h3>Homing<a class="headerlink" href="#homing" title="Permalink to this headline">¶</a></h3>
-<p>You can enqueue a <code class="docutils literal"><span class="pre">home()</span></code> command to your protocol, by giving it the <code class="docutils literal"><span class="pre">enqueue=True</span></code> option. Without passing the enqueue option, the home command will run immediately.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span> <span class="c1"># move to well A1</span>
-<span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">(</span><span class="n">enqueue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>           <span class="c1"># home the robot on all axis</span>
-<span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;B1&#39;</span><span class="p">))</span> <span class="c1"># move to well B1</span>
-<span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">enqueue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>      <span class="c1"># home the Z axis only</span>
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 
@@ -390,8 +497,84 @@ window.intercomSettings = {
             </div>
         </div>
     </div>
-    <div class="clearer"></div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="writing.html">Design with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="containers.html">Containers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Liquid Handling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-pipette">Creating a Pipette</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#axis-and-max-volume">Axis and Max Volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minimum-volume">Minimum Volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#channels">Channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plunger-speeds">Plunger Speeds</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tip-handling">Tip Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pick-up-tip">Pick Up Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drop-tip">Drop Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#return-tip">Return Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tips-iterating">Tips Iterating</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#liquid-control">Liquid Control</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aspirate">Aspirate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dispense">Dispense</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blow-out">Blow Out</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#touch-tip">Touch Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mix">Mix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#air-gap">Air Gap</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#moving">Moving</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#move-to">Move To</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delay">Delay</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transfer.html">Transfer Shortcuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="robot.html">Advanced Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Hardware Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">How to Calibrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="containers.html" title="previous chapter">Containers</a></li>
+      <li>Next: <a href="transfer.html" title="next chapter">Transfer Shortcuts</a></li>
+  </ul></li>
+</ul>
 </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pipettes.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
 <footer>
     <div class="get-in-touch">
         <h1 class="title">Get In Touch</h1>

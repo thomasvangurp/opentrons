@@ -29,7 +29,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="Opentrons API v2.0" href="#" />
-    <link rel="next" title="Opentrons API" href="introduction.html" />  
+    <link rel="next" title="Design with Python" href="writing.html" />  
 <link rel="stylesheet" href="_static/custom.css" type="text/css" />  
 <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 <!-- INTERCOM -->
@@ -157,51 +157,9 @@ window.intercomSettings = {
     });
     </script>
 </header>
-<div id="nav-spacer">&nbsp;</div>
-<div class="document">
-    
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="#">
-              <img class="logo" src="_static/logo.png" alt="Logo"/>
-            </a></p>
-<h3><a href="#">Table Of Contents</a></h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Opentrons API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">API Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration UI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a></li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="introduction.html" title="next chapter">Opentrons API</a></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/index.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+<div id="nav-spacer">&nbsp;</div>   
+
+    <div class="document">
     <div class="documentwrapper">
         <div class="bodywrapper">
             <div class="body" role="main">
@@ -239,42 +197,6 @@ Transfer 100uL from the plate&#39;s &#39;A1&#39; well to it&#39;s &#39;A2&#39; w
 <span class="c1"># commands</span>
 <span class="n">pipette</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">),</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;B1&#39;</span><span class="p">))</span>
 </pre></div>
-</div>
-</div>
-<hr class="docutils" />
-<div class="section" id="how-to-use">
-<h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h2>
-<p>Writing protocols in Python requires some up-front design before seeing your liquid handling automation in action. At a high-level, writing protocols with the Opentrons API looks like:</p>
-<ol class="arabic simple">
-<li>Write a Python protocol</li>
-<li>Test the code for errors</li>
-<li>Repeat steps 1 &amp; 2</li>
-<li>Calibrate containers and pipettes</li>
-<li>Run your protocol</li>
-</ol>
-<p>Currently, we recommend writing your protocols in one of two ways:</p>
-<div class="section" id="text-editor">
-<h3>Text Editor<a class="headerlink" href="#text-editor" title="Permalink to this headline">¶</a></h3>
-<p>Using a popular and free code editor, like <a class="reference external" href="https://www.sublimetext.com/3">Sublime Text 3</a>, is a common method for writing Python protocols. Download onto your computer, and you can now write and save Python scripts.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>Make sure that when saving a protocol file, it ends with the <code class="docutils literal"><span class="pre">.py</span></code> file extension. This will ensure the App and other programs are able to properly read it.</p>
-<p class="last">For example, <code class="docutils literal"><span class="pre">my_protocol_file.py</span></code></p>
-</div>
-</div>
-<div class="section" id="jupyter-notebook">
-<h3>Jupyter Notebook<a class="headerlink" href="#jupyter-notebook" title="Permalink to this headline">¶</a></h3>
-<p>For a more interactive environment to write and debug using some of our API tools, we recommend using Jupyter Notebook. To begin, just install <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a>, which comes with Jupyter Notebook.</p>
-<p>Once installed, launch Jupyter Notebook, and install the Opentrons API by doing the following:</p>
-<ol class="arabic simple">
-<li>Create a new Python notebook</li>
-<li>Run the command <code class="docutils literal"><span class="pre">!pip</span> <span class="pre">install</span> <span class="pre">--upgrade</span> <span class="pre">opentrons</span></code> in a cell</li>
-<li>Restart your notebook&#8217;s Kernel, and API will be installed</li>
-</ol>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Be sure to download the <strong>Python 3.6 version</strong> if Anaconda, and Python 2.7 will not work with the Opentrons API.</p>
-</div>
 </div>
 </div>
 <hr class="docutils" />
@@ -328,45 +250,149 @@ Transfer 100uL from the plate&#39;s &#39;A1&#39; well to it&#39;s &#39;A2&#39; w
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Opentrons API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#how-it-looks">How it Looks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#how-to-use">How to Use</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#how-it-s-organized">How it&#8217;s Organized</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing.html">Design with Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="writing.html#python-for-beginners">Python for Beginners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing.html#working-with-python">Working with Python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="writing.html#text-editor">Text Editor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="writing.html#jupyter-notebook">Jupyter Notebook</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="labware_library.html">Labware Library</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="labware_library.html#point">Point</a></li>
-<li class="toctree-l2"><a class="reference internal" href="labware_library.html#tipracks">Tipracks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="labware_library.html#troughs">Troughs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="labware_library.html#tube-racks">Tube Racks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="labware_library.html#plates">Plates</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">API Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials.html#python-setup">Python Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials.html#wells">Wells</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials.html#tips">Tips</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials.html#pipettes">Pipettes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials.html#transfer">Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="containers.html">Containers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="containers.html#labware-library">Labware Library</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#point">Point</a></li>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#tipracks">Tipracks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#troughs">Troughs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#tube-racks">Tube Racks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#plates">Plates</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="calibration.html">Calibration UI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="calibration.html#download-app">Download App</a></li>
-<li class="toctree-l2"><a class="reference internal" href="calibration.html#connect-to-robot">Connect to Robot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="calibration.html#upload-protocol">Upload Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="calibration.html#jogging">Jogging</a></li>
-<li class="toctree-l2"><a class="reference internal" href="calibration.html#calibrate">Calibrate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="calibration.html#run-protocol">Run Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers.html#id3">Containers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#list">List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#load">Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#create">Create</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="containers.html#accessing-wells">Accessing Wells</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#individual-wells">Individual Wells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="containers.html#multiple-wells">Multiple Wells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pipettes.html">Liquid Handling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipettes.html#creating-a-pipette">Creating a Pipette</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#axis-and-max-volume">Axis and Max Volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#minimum-volume">Minimum Volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#channels">Channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#plunger-speeds">Plunger Speeds</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipettes.html#tip-handling">Tip Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#pick-up-tip">Pick Up Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#drop-tip">Drop Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#return-tip">Return Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#tips-iterating">Tips Iterating</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipettes.html#liquid-control">Liquid Control</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#aspirate">Aspirate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#dispense">Dispense</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#blow-out">Blow Out</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#touch-tip">Touch Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#mix">Mix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#air-gap">Air Gap</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipettes.html#moving">Moving</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#move-to">Move To</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipettes.html#delay">Delay</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transfer.html">Transfer Shortcuts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="transfer.html#id1">Transfer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#basic">Basic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#large-volumes">Large Volumes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#multiple-wells">Multiple Wells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#one-to-many">One to Many</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#few-to-many">Few to Many</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#list-of-volumes">List of Volumes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#volume-gradient">Volume Gradient</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="transfer.html#distribute-and-consolidate">Distribute and Consolidate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#consolidate">Consolidate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#distribute">Distribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#disposal-volume">Disposal Volume</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="transfer.html#transfer-options">Transfer Options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#always-get-a-new-tip">Always Get a New Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#never-get-a-new-tip">Never Get a New Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#trash-or-return-tip">Trash or Return Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#touch-tip">Touch Tip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#blow-out">Blow Out</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#mix-before-after">Mix Before/After</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transfer.html#air-gap">Air Gap</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robot.html">Advanced Control</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robot.html#head-speed">Head Speed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.html#homing">Homing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.html#commands">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.html#clear-commands">Clear Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.html#comment">Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.html#simulate">Simulate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.html#get-containers">Get Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.html#get-instruments">Get Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.html#reset">Reset</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Hardware Modules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#heat-deck">Heat Deck</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#magbead">Magbead</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#magbead">Magbead</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#setting-up-hardware">Setting up Hardware</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#basic-transfer">Basic Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#loops">Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#multiple-air-gaps">Multiple Air Gaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#dilution">Dilution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#plate-mapping">Plate Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#precision-pipetting">Precision Pipetting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#robot">Robot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-opentrons.instruments">Pipette</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">How to Calibrate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html#download-app">Download App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html#connect-to-robot">Connect to Robot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html#upload-protocol">Upload Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html#jogging">Jogging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="calibration.html#xyz">XYZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calibration.html#slot-button">Slot Button</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calibration.html#ab-plungers">AB Plungers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calibration.html#move-to-slot">Move to Slot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html#calibrate">Calibrate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="calibration.html#tipracks">Tipracks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calibration.html#containers">Containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calibration.html#pipettes">Pipettes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html#run-protocol">Run Protocol</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a><ul>
@@ -386,8 +412,53 @@ Transfer 100uL from the plate&#39;s &#39;A1&#39; well to it&#39;s &#39;A2&#39; w
             </div>
         </div>
     </div>
-    <div class="clearer"></div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="#">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="writing.html">Design with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="containers.html">Containers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipettes.html">Liquid Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transfer.html">Transfer Shortcuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="robot.html">Advanced Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Hardware Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calibration.html">How to Calibrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware Updates</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="writing.html" title="next chapter">Design with Python</a></li>
+  </ul></li>
+</ul>
 </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
 <footer>
     <div class="get-in-touch">
         <h1 class="title">Get In Touch</h1>
