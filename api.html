@@ -385,7 +385,7 @@ the list of options to be passed to <code class="xref py py-func docutils litera
 
 <dl class="method">
 <dt id="opentrons.Robot.head_speed">
-<code class="descname">head_speed</code><span class="sig-paren">(</span><em>rate</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.Robot.head_speed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">head_speed</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.Robot.head_speed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the XY axis speeds of the robot, set in millimeters per minute</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -400,9 +400,7 @@ to skip step, be careful when using this method</td>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">robot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;Virtual Smoothie&#39;</span><span class="p">)</span>
-<span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>
-<span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">head_speed</span><span class="p">(</span><span class="mi">4500</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">move_head</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 </pre></div>
@@ -436,9 +434,7 @@ error and it is recommended to home it. In this scenario, add
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">Robot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;Virtual Smoothie&#39;</span><span class="p">)</span>
-<span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>
-<span class="go">True</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -475,9 +471,7 @@ avoiding obstacles.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> 
 <span class="go">&lt;opentrons.robot.robot.Robot object at ...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;Virtual Smoothie&#39;</span><span class="p">)</span>
-<span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>
-<span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plate</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">add_container</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">,</span> <span class="s1">&#39;plate&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">top</span><span class="p">())</span>
@@ -525,9 +519,7 @@ it will execute similar to <a class="reference internal" href="#opentrons.Robot.
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> 
 <span class="go">&lt;opentrons.robot.robot.Robot object at ...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;Virtual Smoothie&#39;</span><span class="p">)</span>
-<span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>
-<span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plate</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">add_container</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">,</span> <span class="s1">&#39;plate&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
