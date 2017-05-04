@@ -878,7 +878,7 @@ method will skip the command queue and execute immediately</li>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.drop_tip">
-<code class="descname">drop_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.drop_tip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">drop_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>home_after=True</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.drop_tip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop the pipette&#8217;s current tip</p>
 <p class="rubric">Notes</p>
 <p>If no location is passed, the pipette defaults to its <cite>trash_container</cite>
@@ -1094,7 +1094,7 @@ method will skip the command queue and execute immediately</li>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.return_tip">
-<code class="descname">return_tip</code><span class="sig-paren">(</span><em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.return_tip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">return_tip</code><span class="sig-paren">(</span><em>home_after=True</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.return_tip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop the pipette&#8217;s current tip to it&#8217;s originating tip rack</p>
 <p class="rubric">Notes</p>
 <p>This method requires one or more tip-rack <code class="xref any docutils literal"><span class="pre">Container</span></code>
