@@ -183,32 +183,31 @@ window.intercomSettings = {
 <div class="section" id="download-files">
 <h2>Download Files<a class="headerlink" href="#download-files" title="Permalink to this headline">¶</a></h2>
 <p>Download the zipped files from here:</p>
-<p><a class="reference external" href="https://github.com/OpenTrons/smoothie-config/archive/1.2.0.zip">https://github.com/OpenTrons/smoothie-config/archive/1.2.0.zip</a></p>
-<p>After downloading, unpack the zip file to view its contents.</p>
+<p><a class="reference external" href="https://github.com/OpenTrons/smoothie-config/archive/2.0.0.zip">https://github.com/OpenTrons/smoothie-config/archive/2.0.0.zip</a></p>
+<p>After downloading, unpack the zip file to view its contents. The latest firmware files are found in folder &#8220;v2.0.0&#8221;.</p>
 </div>
-<div class="section" id="open-the-smoothie-s-drive">
-<h2>Open the Smoothie&#8217;s Drive<a class="headerlink" href="#open-the-smoothie-s-drive" title="Permalink to this headline">¶</a></h2>
-<p>Power on and plug in your Opentrons liquid handler, and make sure you do not have the app open. You will notice the Smoothieboard shows up on the computer as a Mass Storage Device, like an external hard drive or flash drive.</p>
+<div class="section" id="open-the-smoothie-s-microsd-card">
+<h2>Open the Smoothie&#8217;s MicroSD Card<a class="headerlink" href="#open-the-smoothie-s-microsd-card" title="Permalink to this headline">¶</a></h2>
+<p>Power OFF and unplug your Opentrons liquid handler&#8217;s USB cable. Remove the microSD card from Smoothieboard (just above the USB connector on the robot), and connect it to your personal computer or laptop. It will show up as a storage device on your computer.</p>
 <img alt="_images/firmware_files.png" src="_images/firmware_files.png" />
-<p>Open the Smoothie&#8217;s storage device to see it&#8217;s <code class="docutils literal"><span class="pre">FIRMWARE.CUR</span></code> and <code class="docutils literal"><span class="pre">config</span></code> files. There might be other files there, but the two you need to worry about are <code class="docutils literal"><span class="pre">FIRMWARE.CUR</span></code> and <code class="docutils literal"><span class="pre">config</span></code>, because these are what we will be replacing.</p>
-</div>
-<div class="section" id="copy-over-firmware">
-<h2>Copy Over Firmware<a class="headerlink" href="#copy-over-firmware" title="Permalink to this headline">¶</a></h2>
-<p>From the folder you downloaded from GitHub, find the <code class="docutils literal"><span class="pre">firmware.bin</span></code> file.</p>
-<img alt="_images/SelectFirmwareBin.png" src="_images/SelectFirmwareBin.png" />
-<p>Drag <code class="docutils literal"><span class="pre">firmware.bin</span></code> to the Smoothie&#8217;s drive. Your drive should now look like the following:</p>
-<img alt="_images/dragFirmwareBin.png" src="_images/dragFirmwareBin.png" />
+<p>Open the microSD storage device to see it&#8217;s <code class="docutils literal"><span class="pre">FIRMWARE.CUR</span></code> and <code class="docutils literal"><span class="pre">config</span></code> files. There might be other files there, but the two you need to worry about are <code class="docutils literal"><span class="pre">FIRMWARE.CUR</span></code> and <code class="docutils literal"><span class="pre">config</span></code>, because these are what we will be replacing.</p>
 </div>
 <div class="section" id="select-your-model-s-config">
 <h2>Select Your Model&#8217;s Config<a class="headerlink" href="#select-your-model-s-config" title="Permalink to this headline">¶</a></h2>
-<p>Opentrons <a class="reference external" href="https://opentrons.com/robots">come in three models</a>, the Standard, Pro, and Hood. Each model requires a unique <code class="docutils literal"><span class="pre">config</span></code> file to go along with it. Find the config file that matches your robot (the folders are named after each model).</p>
+<p>Opentrons <a class="reference external" href="https://opentrons.com/robots">come in three models</a>, the Standard, Pro, and Hood. Each model requires a unique <code class="docutils literal"><span class="pre">config</span></code> and <code class="docutils literal"><span class="pre">firmware.bin</span></code> file to go along with it. Find the files that matches your robot (the folders are named after each model).</p>
+<p>** Note: We have release a &#8220;Plus&#8221; version of our robots, which have faster motors. If you received a robot after April 2017, and if your robot&#8217;s Z motor is all black (no silver on the outside) than you have a &#8220;Plus&#8221; model.</p>
 <img alt="_images/SelectConfigFile.png" src="_images/SelectConfigFile.png" />
-<p>Drag the <code class="docutils literal"><span class="pre">config</span></code> file from the correct folder onto the Smoothie&#8217;s drive. You will be overwriting the old <code class="docutils literal"><span class="pre">config</span></code> file, so your computer may ask if you would like to proceed with replacing it.</p>
+</div>
+<div class="section" id="copy-over-files">
+<h2>Copy Over Files<a class="headerlink" href="#copy-over-files" title="Permalink to this headline">¶</a></h2>
+<p>Drag both the <code class="docutils literal"><span class="pre">config</span></code> file and <code class="docutils literal"><span class="pre">firmware.bin</span></code> from the correct folder onto the microSD card. You will be overwriting the old <code class="docutils literal"><span class="pre">config</span></code> file, so your computer may ask if you would like to proceed with replacing it.</p>
 <img alt="_images/replaceConfig.png" src="_images/replaceConfig.png" />
+<p>The contents of the microSD card should now look like this:</p>
+<img alt="_images/dragFirmwareBin.png" src="_images/dragFirmwareBin.png" />
 </div>
 <div class="section" id="restart">
 <h2>Restart<a class="headerlink" href="#restart" title="Permalink to this headline">¶</a></h2>
-<p>Unmount the Smoothie&#8217;s driver from your computer, and power cycle the robot. When the Smoothieboard powers on, it will read the <code class="docutils literal"><span class="pre">firmware.bin</span></code> file, then save it as <code class="docutils literal"><span class="pre">FIRMWARE.CUR</span></code>. It will then read the new <code class="docutils literal"><span class="pre">config</span></code> file, and your liquid handler now has updated firmware.</p>
+<p>Unmount the Smoothie&#8217;s microSD card from your computer, and connect it back to your powered OFF robot. When the robot powers on, it will read the <code class="docutils literal"><span class="pre">firmware.bin</span></code> file, then save it as <code class="docutils literal"><span class="pre">FIRMWARE.CUR</span></code>. It will then read the new <code class="docutils literal"><span class="pre">config</span></code> file, and your liquid handler now has updated firmware.</p>
 </div>
 </div>
 
@@ -234,9 +233,9 @@ window.intercomSettings = {
 <li class="toctree-l1"><a class="reference internal" href="calibration.html">How to Calibrate</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Firmware Updates</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#download-files">Download Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#open-the-smoothie-s-drive">Open the Smoothie&#8217;s Drive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#copy-over-firmware">Copy Over Firmware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#open-the-smoothie-s-microsd-card">Open the Smoothie&#8217;s MicroSD Card</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#select-your-model-s-config">Select Your Model&#8217;s Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#copy-over-files">Copy Over Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#restart">Restart</a></li>
 </ul>
 </li>
