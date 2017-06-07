@@ -8,6 +8,26 @@ import sys
 DEFAULT_PORT = "/dev/tty.usbmodem1421"
 command = namedtuple('command', 'action code')
 
+test_command = (command('MOVE', 'G0'),command('GET_TARGET', 'M114.4'))
+
+ONE_LINE_COMMANDS = (command('MOVE', 'G0'),
+			command('SET_ZERO', 'G28.3'),
+			command('GET_POSITION', 'M114.2'),
+			command('GET_TARGET', 'M114.4'),
+			command('GET_ENDSTOPS', 'M119'),
+			command('CALM_DOWN', 'M999'),
+			command('SET_SPEED', 'M203.1'),
+			command('DWELL', 'G4'),
+			command('SET_ACCELERATION', 'M204'),
+			command('MOTORS_ON', 'M17'),
+			command('MOTORS_OFF', 'M18'),
+			command('AXIS_AMPERAGE', 'M907'),
+			command('STEPS_PER_MM', 'M92'),
+			command('POP_SPEED', 'M121'),
+			command('ABSOLUTE_POSITIONING', 'G90'),
+			command('RELATIVE_POSITIONING', 'G91'),
+			command('POP_SPEED', 'M121')
+	)
 
 COMMANDS = (command('MOVE', 'G0'),
 			command('version', 'version'),
@@ -28,7 +48,7 @@ COMMANDS = (command('MOVE', 'G0'),
 			command('ABSOLUTE_POSITIONING', 'G90'),
 			command('RELATIVE_POSITIONING', 'G91'),
 			command('POP_SPEED', 'M121'),
-			command('CONFIG_VERSION_GET', 'cat /sd/config'),
+			command('CONFIG_VERSION_GET', 'cat /sd/config')
 		)
 
 OTHER_COMMANDS = (command('RESET', 'reset'), #Turns off the board
@@ -38,12 +58,12 @@ OTHER_COMMANDS = (command('RESET', 'reset'), #Turns off the board
 	)
 
 #NOTE: Check for discrepencies between Unix and windows newlines
-def write_and_read(command):
+def write_and_sleepRead(command):
 	serial_device = robot._driver.connection.device()
 	command_string = ("%s\n" % command).encode('utf-8')
 	print("CODE: %s" % command_string)
 	write_serial(serial_device, command_string)
-	response = read_serial(serial_device)
+	response = sleepRead_serial(serial_device)
 	return response
 
 def write_serial(serial_device, command_string):
@@ -53,16 +73,43 @@ def write_serial(serial_device, command_string):
 		print("ERROR: command '%s' is of length %d while %d bytes were written to the serial device\n" % 
 			(command_string, len(command_string), bytes_written)) 
 
-def read_serial(serial_device):
+def sleepRead_serial(serial_device):
 	return serial_device.readall()
+
+def write_and_blockRead(command):
+	serial_device = robot._driver.connection.device()
+	command_string = ("%s\n" % command).encode('utf-8')
+	print("CODE: %s" % command_string)
+	write_serial(serial_device, command_string)
+	response = blockRead_serial()
+	return response
+
+def blockRead_serial():
+	response = robot._driver.readline_from_serial()
+	return response
+
+@profile
+def test_block_and_sleep():
+	for command in ONE_LINE_COMMANDS:
+		print("SLEEP ACTION: %s" % command.action)
+		response = write_and_sleepRead(command.code)
+		print("SLEEP RESPONSE: %s\n" % response)
+
+		print("BLOCK ACTION: %s" % command.action)
+		response = write_and_blockRead(command.code)
+		print("BLOCK RESPONSE: %s\n" % response)
+
+
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
 		serial_port = sys.argv[1]
 	else:
 		serial_port = DEFAULT_PORT
+
 	robot.connect(serial_port)
-	for command in COMMANDS:
-		print("ACTION: %s" % command.action)
-		response = write_and_read(command.code)
-		print("RESPONSE: %s\n" % response)
+	test_block_and_sleep()
+
+
+
+
