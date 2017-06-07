@@ -58,6 +58,8 @@ OTHER_COMMANDS = (command('RESET', 'reset'), #Turns off the board
 	)
 
 #NOTE: Check for discrepencies between Unix and windows newlines
+
+@profile
 def write_and_sleepRead(command):
 	serial_device = robot._driver.connection.device()
 	command_string = ("%s\n" % command).encode('utf-8')
@@ -65,17 +67,17 @@ def write_and_sleepRead(command):
 	write_serial(serial_device, command_string)
 	response = sleepRead_serial(serial_device)
 	return response
-
+@profile
 def write_serial(serial_device, command_string):
 	bytes_written = serial_device.write(command_string)
 	serial_device.flush() #flush() should wait until the write completes
 	if not bytes_written == len(command_string):
 		print("ERROR: command '%s' is of length %d while %d bytes were written to the serial device\n" % 
 			(command_string, len(command_string), bytes_written)) 
-
+@profile
 def sleepRead_serial(serial_device):
 	return serial_device.readall()
-
+@profile
 def write_and_blockRead(command):
 	serial_device = robot._driver.connection.device()
 	command_string = ("%s\n" % command).encode('utf-8')
@@ -83,7 +85,7 @@ def write_and_blockRead(command):
 	write_serial(serial_device, command_string)
 	response = blockRead_serial()
 	return response
-
+@profile
 def blockRead_serial():
 	response = robot._driver.readline_from_serial()
 	return response
