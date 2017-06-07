@@ -1,0 +1,8 @@
+ACTION: move
+CODE: b'G0\n'
+RESPONSE: b'ok\r\n'
+
+ACTION: version
+CODE: b'version\n'
+RESPONSE: b'Build version: edge-1c222d9NOMSD, Build date: Mar 18 2017 19:01:47, MCU: LPC1769, System Clock: 120MHz\r\n  CNC Build   NOMSD Build\r\n6 axis\n'
+
