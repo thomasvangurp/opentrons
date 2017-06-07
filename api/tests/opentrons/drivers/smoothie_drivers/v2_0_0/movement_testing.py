@@ -2,37 +2,66 @@
 
 from opentrons import robot
 from collections import namedtuple
+import sys
 
 
 DEFAULT_PORT = "/dev/tty.usbmodem1421"
 command = namedtuple('command', 'action code')
 
 
-COMMANDS = (command('move', 'G0'), command('version', 'version'))
+COMMANDS = (command('MOVE', 'G0'),
+			command('version', 'version'),
+			command('SET_ZERO', 'G28.3'),
+			command('GET_POSITION', 'M114.2'),
+			command('GET_TARGET', 'M114.4'),
+			command('GET_ENDSTOPS', 'M119'),
+			command('HALT', 'M112'),
+			command('CALM_DOWN', 'M999'),
+			command('SET_SPEED', 'M203.1'),
+			command('DWELL', 'G4'),
+			command('SET_ACCELERATION', 'M204'),
+			command('MOTORS_ON', 'M17'),
+			command('MOTORS_OFF', 'M18'),
+			command('AXIS_AMPERAGE', 'M907'),
+			command('STEPS_PER_MM', 'M92'),
+			command('POP_SPEED', 'M121'),
+			command('ABSOLUTE_POSITIONING', 'G90'),
+			command('RELATIVE_POSITIONING', 'G91'),
+			command('POP_SPEED', 'M121'),
+			command('CONFIG_VERSION_GET', 'cat /sd/config'),
+		)
 
+OTHER_COMMANDS = (command('RESET', 'reset'), #Turns off the board
+				command('HOME', 'G28.2'), #Need motors since it's looking for switches
+				command('OT_VERSION', 'ot_version') #Does not actually interact with serial connection
 
-
+	)
 
 #NOTE: Check for discrepencies between Unix and windows newlines
 def write_and_read(command):
 	serial_device = robot._driver.connection.device()
 	command_string = ("%s\n" % command).encode('utf-8')
-	
 	print("CODE: %s" % command_string)
+	write_serial(serial_device, command_string)
+	response = read_serial(serial_device)
+	return response
+
+def write_serial(serial_device, command_string):
 	bytes_written = serial_device.write(command_string)
 	serial_device.flush() #flush() should wait until the write completes
 	if not bytes_written == len(command_string):
 		print("ERROR: command '%s' is of length %d while %d bytes were written to the serial device\n" % 
 			(command_string, len(command_string), bytes_written)) 
+
+def read_serial(serial_device):
 	return serial_device.readall()
 
-
-
-
-
-
 if __name__ == "__main__":
-	robot.connect(DEFAULT_PORT)
+	if len(sys.argv) > 1:
+		serial_port = sys.argv[1]
+	else:
+		serial_port = DEFAULT_PORT
+	robot.connect(serial_port)
 	for command in COMMANDS:
 		print("ACTION: %s" % command.action)
 		response = write_and_read(command.code)
