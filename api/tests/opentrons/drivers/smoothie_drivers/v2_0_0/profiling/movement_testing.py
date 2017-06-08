@@ -3,6 +3,7 @@
 from opentrons import robot
 from collections import namedtuple
 import sys
+import time
 
 
 DEFAULT_PORT = "/dev/tty.usbmodem1421"
@@ -104,12 +105,29 @@ def test_block_and_sleep():
 
 def main():
 	if len(sys.argv) > 1:
-		serial_port = sys.argv[1]
+		test = sys.argv[1]
+		serial_port = sys.argv[2]
 	else:
-		serial_port = DEFAULT_PORT
+		print ("USAGE: movement_testing -testing_method [-sb for block/sleep | -sm for standard movement]  serial port [serial_port_path]")
+		exit(0) 
 
 	robot.connect(serial_port)
-	test_block_and_sleep()
+	while robot.is_simulating():
+		time.sleep(.1)
+	if test == '-sb':
+	    test_block_and_sleep()
+	elif test == '-sm':
+		standard_move_cycle()
+
+
+def standard_move_cycle():
+	for X in range(50, 100, 10):
+		for Y in range(50, 100, 10):
+			for Z in range(0,40,10):
+				robot.move_head(x=X, y=Y, z=Z)
+				print("moving to %d:%d:%d" % (X,Y,Z))
+
+
 
 
 if __name__ == "__main__":

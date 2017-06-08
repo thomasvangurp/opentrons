@@ -2,15 +2,16 @@ import json
 import math
 import time
 from threading import Event
-
 from opentrons.util.log import get_logger
 from opentrons.util.vector import Vector
 from opentrons.drivers.smoothie_drivers import VirtualSmoothie, SmoothieDriver
 
 from opentrons.util import trace
-
+import numpy as np
 
 log = get_logger(__name__)
+
+
 
 
 class SmoothieDriver_2_0_0(SmoothieDriver):
@@ -69,6 +70,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         {True: 'M51', False: 'M50'}
     ]
 
+
     """
     Serial port connection to talk to the device.
     """
@@ -84,19 +86,16 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         self.do_not_pause = Event()
         self.resume()
         self.current_commands = []
-
         self.SMOOTHIE_SUCCESS = 'Success'
         self.SMOOTHIE_ERROR = 'Received unexpected response from Smoothie'
         self.STOPPED = 'Received a STOP signal and exited from movements'
-
+        self.current_position = None
         self.ignore_smoothie_sd = False
-
         self.config_dict = {}
-
         self.default_speeds = {}
         self.ot_one_dimensions = {}
         self.speeds = {}
-
+        self.config_cache = {}
         self.smoothie_player = None
 
         self._apply_defaults(defaults)
@@ -109,6 +108,15 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         if not self.connection:
             return
         return self.connection.name()
+
+    def make_keys_uppercase(self, dictionary):
+        upper_dict = {a.upper(): b for a,b in dictionary.items()}
+        return upper_dict
+
+    def get_vector(self):
+        blank_coords = { coord: 0 for coord in ['X','Y','Z','A','B']}
+        blank_coords['DUMMY'] = 1
+        return blank_coords
 
     def disconnect(self):
         if self.connection:
@@ -159,13 +167,24 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         self.connection.flush_input()
 
     def wait_for_ok(self):
-        res = self.readline_from_serial()
-        if res != 'ok':
+        res = self.SLEEP_readline_from_serial()
+        if 'ok' not in res:
             raise RuntimeError(
                 '{0}: {1}'.format(self.SMOOTHIE_ERROR, res))
 
     def ignore_next_line(self):
         self.connection.readline_string()
+
+    def SLEEP_readline_from_serial(self, timeout=3):
+        serial_device = self.connection.device()
+        if not serial_device.port == 'Virtual Smoothie':
+            response = serial_device.readall().decode('ascii')
+        else:
+            print("VIRTUAL")
+            response = self.connection.readline_string()
+        log.debug("Read: {}".format(response))
+        self.detect_smoothie_error(str(response))
+        return response
 
     def readline_from_serial(self, timeout=3):
         """
@@ -280,6 +299,46 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             error_msg = 'Robot Error: limit switch hit'
             log.debug(error_msg)
             raise RuntimeWarning(error_msg)
+    
+    def get_absolute_position_goal(self, goal_position_dict, mode):
+        target_pos  = self.blank_coords().update(goal_position_dict)
+        if mode == 'absolute':
+            transformation_matrix = np.negative(np.identity(6))
+            transformation_matrix[0, 0] = 1
+            transformation_matrix[-1, -1] = 1
+
+            transformation_matrix[:,6] = np.fromiter(self.ot_one_dimensions[self.ot_version], int)
+            result = transformation_matrix.dot(target_pos)
+            return result[:,6][:5]
+
+
+    def SLEEP_move(self, mode='absolute', **kwargs):
+        #TODO: make the globalCoord to robotCoord transformation matrix
+        self.SLEEP_set_coordinate_system(mode)
+        self.SLEEP_set_speed()
+        movements = make_keys_uppercase(kwargs)
+
+        #current = self.SLEEP_get_head_position()['target'] WHY WAS TARGET USED HERE?
+        #REFACTOR BELOW AFTER FOR X Y Z A B
+        goal = get_absolute_position_goal(kwargs, mode)
+        goal.update({"F": max(list(self.speeds.values()))})
+
+        self.check_paused_stopped()
+        self.send_command(self.MOVE, **args)
+        self.wait_for_ok()
+        self.wait_for_arrival()
+
+        arguments = {
+            'name': 'move-finished',
+            'position': {
+                'head': self.get_head_position()["current"],
+                'plunger': self.get_plunger_positions()["current"]
+            },
+            'class': type(self.connection).__name__
+        }
+        trace.EventBroker.get_instance().notify(arguments)
+
+
 
     def move(self, mode='absolute', **kwargs):
         self.set_coordinate_system(mode)
@@ -369,8 +428,46 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         diff_b = abs(diff.get('b', 0))
         return max(diff_head, diff_a, diff_b)
 
-    def home(self, *axis):
+    def SLEEP_home(self, *axis):
 
+        self.calm_down()
+
+        axis_to_home = ''
+        for a in axis:
+            ax = ''.join(sorted(a)).upper()
+            if ax in 'ABXYZ':
+                axis_to_home += ax
+        if not axis_to_home:
+            return
+
+        try:
+            self.send_command(self.HOME + axis_to_home, read_after=False)
+            self.connection.wait_for_data(timeout=20)
+            self.connection.flush_input()
+
+            #why do we need to set to 0?
+            self.send_command(self.SET_ZERO + axis_to_home, read_after=False)
+            self.connection.wait_for_data(timeout=20)
+            self.connection.flush_input()
+            self.current_position = np.identity(6)
+        except Exception:
+            raise RuntimeWarning(
+                'HOMING ERROR: Check switches are being pressed and connected')
+
+        self.prevent_squeal_after_home(axis_to_home)
+
+        arguments = {
+            'name': 'home',
+            'axis': axis_to_home,
+            'position': {
+                'head': self.get_head_position()["current"],
+                'plunger': self.get_plunger_positions()["current"]
+            }
+        }
+        trace.EventBroker.get_instance().notify(arguments)
+
+
+    def home(self, *axis):
         self.calm_down()
 
         axis_to_home = ''
@@ -403,6 +500,22 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             }
         }
         trace.EventBroker.get_instance().notify(arguments)
+
+
+    def SLEEP_set_coordinate_system(self, mode):
+        if ('coordinate_system' in config_cache and 
+                config_cache['coordinate_system'] == mode):
+            return 
+
+        if mode == 'absolute':
+            self.send_command(self.ABSOLUTE_POSITIONING)
+            config_cache['coordinate_system'] = mode
+        elif mode == 'relative':
+            self.send_command(self.RELATIVE_POSITIONING)
+            config_cache['coordinate_system'] == mode
+        else:
+            raise ValueError('Invalid coordinate mode: ' + mode)
+        self.wait_for_ok()
 
     def set_coordinate_system(self, mode):
         if mode == 'absolute':
@@ -515,6 +628,21 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         if len(args) > 0:
             self.speeds.update({'x': args[0], 'y': args[0]})
         self.speeds.update({l: kwargs[l] for l in 'xyzab' if l in kwargs})
+        if self.is_connected():
+            kwargs = {
+                key.upper(): int(val / 60)  # M203.1 is in mm/sec (not mm/min)
+                for key, val in self.speeds.items()
+            }
+            self.send_command(self.SET_SPEED, **kwargs)
+            self.wait_for_ok()
+
+    def SLEEP_set_speed(self, *args, **kwargs):
+        old_speeds = self.speeds.values()
+        if len(args) > 0:
+            self.speeds.update({'x': args[0], 'y': args[0]})
+        self.speeds.update({l: kwargs[l] for l in 'xyzab' if l in kwargs})
+        if self.speeds.values == old_speeds:
+            return
         if self.is_connected():
             kwargs = {
                 key.upper(): int(val / 60)  # M203.1 is in mm/sec (not mm/min)
