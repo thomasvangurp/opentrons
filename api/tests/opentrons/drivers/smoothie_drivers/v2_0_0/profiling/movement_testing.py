@@ -124,8 +124,8 @@ def standard_move_cycle():
 	for X in range(50, 100, 10):
 		for Y in range(50, 100, 10):
 			for Z in range(0,40,10):
-				robot.move_head(x=X, y=Y, z=Z)
-				print("moving to %d:%d:%d" % (X,Y,Z))
+				robot.p(x=X, z=Z)
+				print("moving to %d:%d" % (X,Z))
 
 
 
