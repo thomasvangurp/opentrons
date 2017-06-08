@@ -1,0 +1,175 @@
+
+ROBOT.PY:435
+def move_head(self, *args, **kwargs):
+    self._driver.move_head(*args, **kwargs)
+
+DRIVER.PY:325
+def move_head(self, mode='absolute', **kwargs):
+	self.move(mode, **kwargs)
+
+DRIVER.PY:284
+def move(self, mode='absolute', **kwargs):
+        self.set_coordinate_system(mode)
+        self.set_speed()
+
+        current = self.get_head_position()['target']
+        target_point = {
+
+        	#get the target position 
+            axis: kwargs.get(
+                axis,
+                0 if mode == 'relative' else current[axis]
+            )
+            for axis in 'xyz'
+        }
+
+        flipped_vector = self.flip_coordinates(
+            Vector(target_point), mode)
+        for axis in 'xyz':
+            kwargs[axis] = flipped_vector[axis]
+
+        args = {axis.upper(): kwargs.get(axis)
+                for axis in 'xyzab'
+                if axis in kwargs}
+        args.update({"F": max(list(self.speeds.values()))})
+
+        self.check_paused_stopped()
+        self.send_command(self.MOVE, **args)
+        self.wait_for_ok()
+        self.wait_for_arrival()
+
+        arguments = {
+            'name': 'move-finished',
+            'position': {
+                'head': self.get_head_position()["current"],
+                'plunger': self.get_plunger_positions()["current"]
+            },
+            'class': type(self.connection).__name__
+        }
+        trace.EventBroker.get_instance().notify(arguments)
+
+DRIVER.PY:407
+def set_coordinate_system(self, mode):
+    if mode == 'absolute':
+        self.send_command(self.ABSOLUTE_POSITIONING)
+    elif mode == 'relative':
+        self.send_command(self.RELATIVE_POSITIONING)
+    else:
+        raise ValueError('Invalid coordinate mode: ' + mode)
+    self.wait_for_ok()
+
+DRIVER.PY:514
+def set_speed(self, *args, **kwargs):
+    if len(args) > 0:
+        self.speeds.update({'x': args[0], 'y': args[0]})
+    self.speeds.update({l: kwargs[l] for l in 'xyzab' if l in kwargs})
+    if self.is_connected():
+        kwargs = {
+            key.upper(): int(val / 60)  # M203.1 is in mm/sec (not mm/min)
+            for key, val in self.speeds.items()
+        }
+        self.send_command(self.SET_SPEED, **kwargs)
+        self.wait_for_ok()
+
+DRIVER.PY:469
+def get_head_position(self):
+    coords = self.get_position()
+    coords['current'] = self.flip_coordinates(Vector(coords['current']))
+    coords['target'] = self.flip_coordinates(Vector(coords['target']))
+
+    return coords
+
+DRIVER.PY:487 - 503
+def get_position(self):
+        return {
+            'current': self.get_current_position(),
+            'target': self.get_target_position()
+        }
+def get_current_position(self):
+    # ok MCS: X:0.0000 Y:0.0000 Z:0.0000 A:0.0000 B:0.0000 C:0.0000
+    current_string = self.send_command(self.GET_POSITION)
+    self.wait_for_ok()
+    return self._parse_axis_values(current_string)
+def get_target_position(self):
+    # ok MP: X:0.0000 Y:0.0000 Z:0.0000 A:0.0000 B:0.0000 C:0.0000
+    target_string = self.send_command(self.GET_TARGET)
+    self.wait_for_ok()
+    return self._parse_axis_values(target_string)
+
+DRIVER.PY:328 #I THINK THIS SHOULD BE CHANGED TO PANDAS or NUMPY
+def flip_coordinates(self, coordinates, mode='absolute'):
+    if not self.ot_version:
+        self.get_ot_version()
+    coordinates = Vector(coordinates) * Vector(1, -1, -1)
+    if mode == 'absolute':
+        offset = Vector(0, 1, 1) * self.ot_one_dimensions[self.ot_version]
+        coordinates += offset
+    return coordinates
+
+DRIVER.PY:204
+def check_paused_stopped(self):
+    self.do_not_pause.wait()
+    if self.stopped.is_set():
+        if self.halted.is_set():
+            self.send_halt_command()
+            self.calm_down()
+        self.resume()
+        raise RuntimeWarning(self.STOPPED)
+
+DRIVER.PY:161
+def wait_for_ok(self):
+    res = self.readline_from_serial()
+    if res != 'ok':
+        raise RuntimeError(
+            '{0}: {1}'.format(self.SMOOTHIE_ERROR, res))
+
+DRIVER.PY:170
+def readline_from_serial(self, timeout=3):
+    """
+    Attempt to read a line of data from serial port
+
+    Raises RuntimeWarning if read fails on serial port
+    """
+    self.connection.wait_for_data(timeout=timeout)
+    msg = self.connection.readline_string()
+    if msg:
+        log.debug("Read: {}".format(msg))
+        self.detect_smoothie_error(str(msg))
+    return msg
+
+CONNECTION.PY:47
+def wait_for_data(self, timeout=30):
+    end_time = time.time() + timeout
+    while end_time > time.time():
+        if self.data_available():
+            return
+    raise RuntimeWarning(
+        'No data after {} second(s)'.format(timeout))
+
+DRIVER.PY:337
+def wait_for_arrival(self, tolerance=1):
+    target = self.get_target_position()
+
+    prev_diff = 0
+    did_move_timestamp = time.time()
+
+    while True:
+        self.check_paused_stopped()
+        try:
+            current = self.get_current_position()
+            diff = self._get_difference(current, target)
+            if diff < tolerance:
+                return
+            if diff != prev_diff:
+                did_move_timestamp = time.time()
+            prev_diff = diff
+            if diff > tolerance * 5:
+                self.connection.serial_pause() #sleeps for connection_timeout
+        except Exception:
+            self.connection.serial_pause()
+            self.connection.flush_input()
+
+        if time.time() - did_move_timestamp > 1.0:
+            raise RuntimeError('Expected robot to move, please reconnect')
+
+
