@@ -7,7 +7,6 @@ from opentrons.util.vector import Vector
 from opentrons.drivers.smoothie_drivers import VirtualSmoothie, SmoothieDriver
 
 from opentrons.util import trace
-import numpy as np
 
 log = get_logger(__name__)
 
@@ -302,14 +301,14 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
     
     def get_absolute_position_goal(self, goal_position_dict, mode):
         target_pos  = self.blank_coords().update(goal_position_dict)
-        if mode == 'absolute':
-            transformation_matrix = np.negative(np.identity(6))
-            transformation_matrix[0, 0] = 1
-            transformation_matrix[-1, -1] = 1
+        #if mode == 'absolute':
+            #transformation_matrix = np.negative(np.identity(6))
+            #transformation_matrix[0, 0] = 1
+            #transformation_matrix[-1, -1] = 1
 
-            transformation_matrix[:,6] = np.fromiter(self.ot_one_dimensions[self.ot_version], int)
-            result = transformation_matrix.dot(target_pos)
-            return result[:,6][:5]
+            #transformation_matrix[:,6] = np.fromiter(self.ot_one_dimensions[self.ot_version], int)
+            #result = transformation_matrix.dot(target_pos)
+            #return result[:,6][:5]
 
 
     def SLEEP_move(self, mode='absolute', **kwargs):
@@ -449,7 +448,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             self.send_command(self.SET_ZERO + axis_to_home, read_after=False)
             self.connection.wait_for_data(timeout=20)
             self.connection.flush_input()
-            self.current_position = np.identity(6)
+            #self.current_position = np.identity(6)
         except Exception:
             raise RuntimeWarning(
                 'HOMING ERROR: Check switches are being pressed and connected')
