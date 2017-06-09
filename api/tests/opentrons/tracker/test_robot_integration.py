@@ -18,7 +18,7 @@ def get_robot():
 def test_aspirate():
     robot, trough, plate, p200 = get_robot()
 
-    tracker.init({
+    robot.set_liquid_state({
         trough['A1']: {'red': 100},
         trough['A2']: {'green': 100},
         trough['A3']: {'blue': 100}
@@ -41,6 +41,20 @@ def test_aspirate():
     }
 
     from pprint import pprint
+    pprint(tracker.state())
+    res = tracker.state()
+
+    assert res[plate['A1']] == {
+        'red': 50,
+        'green': 50
+    }
+
+    assert res[plate['A2']] == {
+        'red': 50,
+        'green': 50
+    }
+
+    robot.simulate()
     pprint(tracker.state())
     res = tracker.state()
 
