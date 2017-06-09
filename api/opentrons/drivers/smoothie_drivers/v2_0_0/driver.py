@@ -42,6 +42,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
 
     ABSOLUTE_POSITIONING = 'G90'
     RELATIVE_POSITIONING = 'G91'
+    RETURN_AFTER_MOVE_COMPLETE = 'M400'
 
     COMMANDS_TO_RECORD = [
         ABSOLUTE_POSITIONING, RELATIVE_POSITIONING, MOVE, DWELL, HOME,
@@ -167,6 +168,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
     def ignore_next_line(self):
         self.connection.readline_string()
 
+    #DEPRECATED
     def readline_from_serial(self, timeout=3):
         """
         Attempt to read a line of data from serial port
@@ -180,6 +182,24 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             self.detect_smoothie_error(str(msg))
         return msg
 
+    def readall_from_serial(self):
+        """
+        Attempt to read all data from serial port
+
+        Raises RuntimeWarning if read fails on serial port
+        """
+        try:
+            serial_device = self.connection.device()
+        except Exception:
+            raise RuntimeWarning("ERROR: could not get serial_device connection for read")
+
+        response = serial_device .readall()
+        if response:
+            log.debug("Read: {}".format(response))
+            self.detect_smoothie_error(str(response))
+        return response
+
+    
     # THREADING
     def pause(self):
         self.halted.clear()
@@ -267,6 +287,30 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         if read_after:
             return self.readline_from_serial(timeout=timeout)
 
+    def send_command_and_get_response(self, command, **kwargs):
+        """
+        Sends a GCode command, check for error, return smoothie response, 
+        raise error if invalid command
+
+        send_command(self.MOVE, x=100 y=100)
+        G0 X100 Y100
+        """
+
+        if not self.is_connected():
+            self.toggle_port()
+
+        args = ' '.join(['{}{}'.format(k, v) for k, v in kwargs.items()])
+        gcode_command = '{} {}\r\n'.format(command, args)
+        gcode_line = gcode_command + ' ' + self.RETURN_AFTER_MOVE_COMPLETE
+        
+        log.debug("Write: {}".format(gcode_line))
+
+        #self.connection.flush_input()
+        self.connection.write_string(gcode_line)
+        self.record(command, gcode_line)
+        return self.readall_from_serial()
+
+
     def detect_smoothie_error(self, msg):
         """
         Detect if it hit a home switch
@@ -277,9 +321,13 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             self.calm_down()
             time.sleep(0.2)  # pause for Smoothie's internal state change
             self.calm_down()
-            error_msg = 'Robot Error: limit switch hit'
+            error_msg = 'Robot Error: limit switch hit\n RESPONSE: ' + msg + '\n'
             log.debug(error_msg)
             raise RuntimeWarning(error_msg)
+        # if 'ok' not in msg:
+        #     error_msg = 'Robot Error: "ok" not found in response. RESPONSE: ' + msg + '\n'
+        #     log.debug(error_msg)
+        #     raise RuntimeWarning(error_msg)
 
     def move(self, mode='absolute', **kwargs):
         self.set_coordinate_system(mode)
@@ -305,9 +353,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         args.update({"F": max(list(self.speeds.values()))})
 
         self.check_paused_stopped()
-        self.send_command(self.MOVE, **args)
-        self.wait_for_ok()
-        self.wait_for_arrival()
+        self.send_command_and_get_response(self.MOVE, **args)
 
         arguments = {
             'name': 'move-finished',

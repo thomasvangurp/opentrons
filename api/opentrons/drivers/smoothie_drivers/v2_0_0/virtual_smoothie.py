@@ -358,6 +358,14 @@ class VirtualSmoothie_2_0_0(VirtualSmoothie):
         else:
             return b''
 
+    def readall(self):
+        res = b''
+        if not self.isOpen():
+            raise RuntimeError('Virtual Smoothie not currently connected')
+        while len(self.responses) > 0:
+            res += self.responses.pop().encode('utf-8')
+        return res
+
     def flush(self):
         pass
 
