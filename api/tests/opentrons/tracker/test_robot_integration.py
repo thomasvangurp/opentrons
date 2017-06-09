@@ -1,5 +1,3 @@
-from pprint import pprint
-import pytest
 from opentrons import Robot, instruments, containers
 
 
