@@ -121,14 +121,14 @@ def main():
 
 
 def standard_move_cycle():
-	# for X in range(50, 100, 10):
-	# 	for Y in range(50, 100, 10):
-	# 		for Z in range(0,40,10):
-	# 			robot.move_head(x=X, z=Z)
-	# 			print("moving to %d:%d" % (X,Z))
-	for i in range(100):
-		robot._driver.connection.write_string('G91G0X1\r\n')
-		robot._driver.connection.serial_port.readall()
+	for X in range(50, 100, 10):
+		for Y in range(50, 100, 10):
+			for Z in range(0,40,10):
+				robot.move_head(x=X, z=Z)
+				print("moving to %d:%d" % (X,Z))
+	# for i in range(100):
+	# 	robot._driver.connection.write_string('G91G0X1\r\n')
+	# 	robot._driver.connection.serial_port.readall()
 
 
 

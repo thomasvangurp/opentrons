@@ -69,4 +69,3 @@ class Connection(object):
 
     def write_string(self, data_string):
         self.serial_port.write(data_string.encode())
-        self.serial_port.flush()
