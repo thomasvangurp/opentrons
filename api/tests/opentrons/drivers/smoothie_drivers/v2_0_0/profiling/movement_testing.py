@@ -36,7 +36,6 @@ COMMANDS = (command('MOVE', 'G0'),
 			command('GET_POSITION', 'M114.2'),
 			command('GET_TARGET', 'M114.4'),
 			command('GET_ENDSTOPS', 'M119'),
-			command('HALT', 'M112'),
 			command('CALM_DOWN', 'M999'),
 			command('SET_SPEED', 'M203.1'),
 			command('DWELL', 'G4'),
@@ -54,8 +53,8 @@ COMMANDS = (command('MOVE', 'G0'),
 
 OTHER_COMMANDS = (command('RESET', 'reset'), #Turns off the board
 				command('HOME', 'G28.2'), #Need motors since it's looking for switches
-				command('OT_VERSION', 'ot_version') #Does not actually interact with serial connection
-
+				command('OT_VERSION', 'ot_version'), #Does not actually interact with serial connection
+				command('HALT', 'M112')
 	)
 
 #NOTE: Check for discrepencies between Unix and windows newlines
@@ -118,6 +117,13 @@ def main():
 	    test_block_and_sleep()
 	elif test == '-sm':
 		standard_move_cycle()
+	elif test == '-cmd':
+		for action, code in (COMMANDS + ONE_LINE_COMMANDS):
+			print(action)
+			command_string = ("%s\n" % code)
+			print("COMMAND: %s" % command_string)
+			response = robot._driver.send_command_and_get_response(command_string)
+			print(action + " : " + response)
 
 
 def standard_move_cycle():

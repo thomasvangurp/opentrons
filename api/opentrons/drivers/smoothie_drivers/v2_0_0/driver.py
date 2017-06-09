@@ -42,7 +42,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
 
     ABSOLUTE_POSITIONING = 'G90'
     RELATIVE_POSITIONING = 'G91'
-    RETURN_AFTER_MOVE_COMPLETE = 'M400'
+    RETURN_AFTER_COMPLETE = 'M400'
 
     COMMANDS_TO_RECORD = [
         ABSOLUTE_POSITIONING, RELATIVE_POSITIONING, MOVE, DWELL, HOME,
@@ -193,11 +193,12 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         except Exception:
             raise RuntimeWarning("ERROR: could not get serial_device connection for read")
 
-        response = serial_device .readall()
+        response = serial_device.readall()
+        print("HEARD RESPONSE: %s" % response)
         if response:
             log.debug("Read: {}".format(response))
             self.detect_smoothie_error(str(response))
-        return response
+        return response.decode('utf-8')
 
     
     # THREADING
@@ -300,8 +301,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             self.toggle_port()
 
         args = ' '.join(['{}{}'.format(k, v) for k, v in kwargs.items()])
-        gcode_command = '{} {}\r\n'.format(command, args)
-        gcode_line = gcode_command + ' ' + self.RETURN_AFTER_MOVE_COMPLETE
+        gcode_line = '{} {} {}\r\n'.format(command, args, self.RETURN_AFTER_COMPLETE)
         
         log.debug("Write: {}".format(gcode_line))
 
