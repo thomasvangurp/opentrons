@@ -181,8 +181,6 @@ class Robot(object, metaclass=Singleton):
                 options={'limit_switches': True}
             )
         }
-        self.starting_liquid_state = {}
-        self.set_liquid_state()
         self._driver = None
         self.arc_height = 5
         self.set_connection('simulate')
@@ -232,7 +230,7 @@ class Robot(object, metaclass=Singleton):
         self._deck = containers.Deck()
         self.setup_deck()
 
-        tracker.init()
+        self.set_liquid_state(None)
         self._instruments = {}
 
         self.axis_homed = {
@@ -241,9 +239,15 @@ class Robot(object, metaclass=Singleton):
         return self
 
     def set_liquid_state(self, liquid_state=None):
-        if liquid_state:
-            self.starting_liquid_state = liquid_state
-        tracker.init(self.starting_liquid_state)
+        tracker.init(liquid_state)
+
+    def reset_liquid_state(self):
+        tracker.reset()
+
+    def get_liquid_state(self, key=None):
+        if key is not None:
+            return tracker.state().get(key)
+        return tracker.state()
 
     def add_instrument(self, axis, instrument):
         """
@@ -647,7 +651,7 @@ class Robot(object, metaclass=Singleton):
         for instrument in self._instruments.values():
             instrument.reset()
 
-        tracker.reset()
+        self.reset_liquid_state()
 
     def run(self, **kwargs):
         """
@@ -747,8 +751,6 @@ class Robot(object, metaclass=Singleton):
             self.set_connection('simulate')
         for instrument in self._instruments.values():
             instrument.setup_simulate()
-
-        self.set_liquid_state()
 
         self.run()
 
