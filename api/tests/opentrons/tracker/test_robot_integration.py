@@ -42,10 +42,7 @@ def test_aspirate():
 
     from pprint import pprint
     pprint(tracker.state())
-    robot.simulate()
     res = tracker.state()
-
-    pprint(tracker.state())
 
     assert res[plate['A1']] == {
         'red': 50,
@@ -93,8 +90,6 @@ def test_robot_add_liquids():
     }
 
     from pprint import pprint
-    pprint(tracker.state())
-    robot.simulate()
     pprint(tracker.state())
 
     assert tracker.state() == {
