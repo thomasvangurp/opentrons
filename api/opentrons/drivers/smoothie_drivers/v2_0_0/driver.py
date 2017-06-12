@@ -98,6 +98,9 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         self.ot_one_dimensions = {}
         self.speeds = {}
 
+        #TODO: Starting at 0's should not be done. These should be NONE values until homing has occured.
+        self.position = {x: 0, y: 0, z: 0, a:0, b:0}
+
         self.smoothie_player = None
 
         self._apply_defaults(defaults)
@@ -330,10 +333,9 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         #     raise RuntimeWarning(error_msg)
 
     def move(self, mode='absolute', **kwargs):
-        self.set_coordinate_system(mode)
         self.set_speed()
-
-        current = self.get_head_position()['target']
+        current = self.position
+        
         target_point = {
             axis: kwargs.get(
                 axis,
@@ -341,6 +343,8 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             )
             for axis in 'xyz'
         }
+
+        self.position.update(target_point)
 
         flipped_vector = self.flip_coordinates(
             Vector(target_point), mode)
@@ -358,8 +362,8 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         arguments = {
             'name': 'move-finished',
             'position': {
-                'head': self.get_head_position()["current"],
-                'plunger': self.get_plunger_positions()["current"]
+                'head': self.position,
+                'plunger': self.position #Just haven't implemented local tracking of plunger yet
             },
             'class': type(self.connection).__name__
         }
@@ -450,6 +454,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         }
         trace.EventBroker.get_instance().notify(arguments)
 
+    #DEPRECATED
     def set_coordinate_system(self, mode):
         if mode == 'absolute':
             self.send_command(self.ABSOLUTE_POSITIONING)
@@ -558,16 +563,16 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         self.wait_for_ok()
 
     def set_speed(self, *args, **kwargs):
+        old_speeds = self.speeds
         if len(args) > 0:
             self.speeds.update({'x': args[0], 'y': args[0]})
         self.speeds.update({l: kwargs[l] for l in 'xyzab' if l in kwargs})
-        if self.is_connected():
+        if self.is_connected() and not old_speeds == self.speeds:
             kwargs = {
                 key.upper(): int(val / 60)  # M203.1 is in mm/sec (not mm/min)
                 for key, val in self.speeds.items()
             }
-            self.send_command(self.SET_SPEED, **kwargs)
-            self.wait_for_ok()
+            self.send_command_and_get_response(self.SET_SPEED, **kwargs)
 
     def set_plunger_speed(self, rate, axis):
         if axis.lower() not in 'ab':
