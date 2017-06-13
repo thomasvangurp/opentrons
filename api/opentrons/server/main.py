@@ -42,7 +42,7 @@ app = Flask(__name__,
 CORS(app)
 app.jinja_env.autoescape = False
 app.config['ALLOWED_EXTENSIONS'] = set(['json', 'py'])
-socketio = SocketIO(app, async_mode='threading')
+socketio = SocketIO(app, async_mode='gevent')
 
 filename = "N/A"
 last_modified = "N/A"
