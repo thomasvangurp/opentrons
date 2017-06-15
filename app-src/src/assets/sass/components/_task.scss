@@ -10,6 +10,9 @@ section#volume-view {
 
 section#volume-view {
     position: relative;
+    p{
+        font-size: 14px;
+    }
     button {
         width: $btn-size*3;
         text-transform: uppercase;
@@ -18,6 +21,11 @@ section#volume-view {
         position: absolute;
         bottom: 50px;
         right: 50px;
+    }
+    button.redo{
+        position: absolute;
+        bottom: 50px;
+        left: 50px; 
     }
     button.close {
         font-size: 24px;
@@ -28,6 +36,33 @@ section#volume-view {
         float: right;
         color: $btn-jog;
         border: 2px solid $btn-jog;
+    }
+    input[type="text"]{
+        width: $btn-size;
+    }
+    div.current, div.choose, div.vol{
+        min-height:50px;
+        width:350px;
+        margin: 0 auto;
+        padding-top: 20px;
+        //text-align: center;
+        label{
+            font-size: 16px;
+            min-width: 150px;
+            //text-align: right;
+            margin-right: 10px;
+        }
+    }
+    div.current{
+        margin-top:50px;
+
+        
+    }
+    div.choose{
+        border-top:1px solid #efefef;
+    }
+    div.vol{
+        margin-top:100px;
     }
 }
 

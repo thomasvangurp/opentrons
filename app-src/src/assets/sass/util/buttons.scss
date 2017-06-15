@@ -190,11 +190,12 @@ label {
         position: absolute;
         width: 1px;
     }
-    input[type="radio"] + span,
+    
     input[type="checkbox"] + span {
         text-align: center;
         margin-right: 10px;
-        &:before {
+
+        &:after {
             content: '';
             display: inline-block;
             width: $radius;
@@ -202,29 +203,29 @@ label {
             vertical-align: -$radius/4;
             border-radius: $radius/2;
             border: 2px solid #fff;
-            box-shadow: 0 0 0 2px #000;
-            margin-right: 10px;
+            box-shadow: 0 0 0 2px #999;
+            margin-left: 25px;
             transition: 0.5s ease all;
         }
     }
-    input[type="checkbox"] + span:before {
+    input[type="checkbox"] + span:after {
         border-radius: 6px;
     }
-    input:checked + span:before {
+    input:checked + span:after {
         background: $primary-brand;
-        box-shadow: 0 0 0 4px #000;
-        font-size: 18px;
+        box-shadow: 0 0 0 2px #000;
+        //font-size: 18px;
     }
-    input[type="checkbox"]:checked + span:before {
-        content: '\2713';
+    input[type="checkbox"]:checked + span:after {
+        // content: '\2713';
         color: white;
     }
-    input[type="checkbox"]:focus + span:before {
+    input[type="checkbox"]:focus + span:after {
         outline: none;
         margin-top: 0px;
     }
     input[type="checkbox"] + span{
-        font-size: 14px;
+        font-size: 16px;
 
 
     }
