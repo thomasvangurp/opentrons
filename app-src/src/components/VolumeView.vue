@@ -12,45 +12,63 @@
   
       <div class="source" v-if="currentStep == 'source'">
         <h2>Select source Container/Well</h2>
-        <br>
+        <div class="current">
+<!--         <p>Jog to a location of your choosing and select the use current location option</p> -->
+
         <label for="currentSource">
             <input type="checkbox" value="true" name="currentSource" id="currentSource" v-model="useCurrentSource">
             <span>Use Current Location</span>
         </label>
+        </div>
 
-        <h3>or</h3>
+        <div class="choose" v-if="useCurrentSource === false">
+        <!-- <p>Choose a location based on your calibrated deck:</p> --> 
+        <label>Source Container</label>
         <select v-model='sourceContainer'>
           <option value='Select Source Container'>Select Source Container</option>
           <option v-for='container in deck'> {{ container.slot + ' :: ' + container.label }}</option>
         </select>
-        <label>Enter Well Location</label>
+        <br>
+        <label>Source Well</label>
         <input type="text" v-model="sourceWell" value="">
+        </div>
+        
+
+        
+        
         <button class="btn-vol next" @click="aspirate">Aspirate</button>
       </div>
 
       <div class="destination" v-if="currentStep == 'destination'">
         <h2>Select destination Container/Well</h2>
-        <br>
+        <div class="current">
         <label for="currentDestination">
             <input type="checkbox" value="true" name="currentDestination" id="currentDestination" v-model="useCurrentDestination">
             <span>Use Current Location</span>
         </label>
-        <h3>or</h3>
+        </div>
+        <div class="choose" v-if="useCurrentDestination == false">
+        <label>Destination Container</label>
         <select v-model='destinationContainer'>
           <option value='Select Destination Container'>Select Destination Container</option>
+
           <option v-for='container in deck'> {{ container.slot + ' :: ' + container.label }}</option>
         </select>
+        <br><br>
         <label>Enter Well Location</label>
         <input type="text" v-model="destinationWell" value="">
+        </div>
         <button class="btn-vol next" @click="dispense">Dispense</button>
       </div>
 
 
       <div class="enter-volume" v-if="currentStep == 'enter-volume'">
         <h2>Enter volume (or redo)</h2>
-        <button class="btn-vol" @click="currentStep = 'source'">Redo</button>
+        <div class="vol">
+        <label>Current: {{ instrument.max_volume }} uL </label>
         <input type="number" v-model="volume">
-        Current: {{ instrument.max_volume }} uL
+        </div>
+        <button class="btn-vol redo" @click="currentStep = 'source'">Redo</button>
         <button class="btn-vol next" @click="maxVolume">Enter Calibration</button>
       </div>
       
@@ -69,8 +87,8 @@
         sourceWell: '',
         destinationContainer: 'Select Destination Container',
         destinationWell: '',
-        useCurrentSource: 'false',
-        useCurrentDestination: 'false'
+        useCurrentSource: false,
+        useCurrentDestination: false
       }
     },
     computed: {
@@ -101,7 +119,7 @@
       aspirate () {
         let axis = this.instrument.axis
         let slot, label, well
-        if (!this.useCurrentSource || this.useCurrentSource === 'false') {
+        if (!this.useCurrentSource || this.useCurrentSource === false) {
           let temp = this.sourceContainer.split(' :: ')
           slot = temp[0]
           label = temp[1]
@@ -113,7 +131,7 @@
       dispense () {
         let axis = this.instrument.axis
         let slot, label, well
-        if (!this.useCurrentDestination || this.useCurrentDestination === 'false') {
+        if (!this.useCurrentDestination || this.useCurrentDestination === false) {
           let temp = this.destinationContainer.split(' :: ')
           slot = temp[0]
           label = temp[1]
