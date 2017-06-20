@@ -13,6 +13,8 @@
   
       <div class="source" v-if="currentStep == 'source'">
         <h2>Select source Container/Well</h2>
+        <img src="../assets/img/asipirate.gif" id="aspirate">
+        <div class="form-wrapper">
         <div class="current">
 <!--         <p>Jog to a location of your choosing and select the use current location option</p> -->
 
@@ -34,7 +36,7 @@
         <input type="text" v-model="sourceWell" value="">
         </div>
         
-
+        </div>
         
         
         <button class="btn-vol next" @click="aspirate">Aspirate</button>
@@ -42,6 +44,8 @@
 
       <div class="destination" v-if="currentStep == 'destination'">
         <h2>Select destination Container/Well</h2>
+        <img src="../assets/img/dispense.gif" id="dispense">
+        <div class="form-wrapper">
         <div class="current">
         <label for="currentDestination">
             <input type="checkbox" value="true" name="currentDestination" id="currentDestination" v-model="useCurrentDestination">
@@ -58,6 +62,7 @@
         <br><br>
         <label>Enter Well Location</label>
         <input type="text" v-model="destinationWell" value="">
+        </div>
         </div>
         <button class="btn-vol next" @click="dispense">Dispense</button>
       </div>
@@ -150,5 +155,20 @@
     margin-left: 100px;
     max-height: 250px;
     width: auto;
+  }
+
+  img#aspirate, img#dispense{
+    display: inline-block;
+    max-height: 350px;
+    width: auto;
+
+    margin: 10px 50px;
+    vertical-align: top;
+  }
+
+  div.form-wrapper{
+    width: 350px;
+    display: inline-block;
+    vertical-align: top;
   }
 </style>
