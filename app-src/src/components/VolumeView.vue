@@ -13,7 +13,7 @@
   
       <div class="source" v-if="currentStep == 'source'">
         <h2>Select source Container/Well</h2>
-        <img src="../assets/img/asipirate.gif" id="aspirate">
+        <img src="../assets/img/aspirate.gif" id="aspirate">
         <div class="form-wrapper">
         <div class="current">
 <!--         <p>Jog to a location of your choosing and select the use current location option</p> -->
