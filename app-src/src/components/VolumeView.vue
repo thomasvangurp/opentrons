@@ -2,8 +2,8 @@
 
     <section id="volume-view">
     <button class="close" @click="close()">X</button>
-      <div class="add-tip" v-if="currentStep == 'add-tip'">
-        <h2>Place tip on pipette</h2>
+      <div class="add-tip" v-if="currentStep == 'add-tip'" key="add-tip">
+        <h2 key="add-tip-deading">Place tip on pipette</h2>
         <p>The "max_volume" of your pipette is the number of microliters (uL) between the TOP and BOTTOM positions.</p>
         <p>During this procedure, we will transfer the amount of liquid between TOP and BOTTOM, then measure the outcome.</p>
         <p>To begin, we must place a disposable tip on the pipette we are about to calibrate the volume for.</p>
@@ -11,11 +11,11 @@
         <button class="btn-vol next" @click="currentStep = 'source'">Next</button>
       </div>
   
-      <div class="source" v-if="currentStep == 'source'">
-        <h2>Select source Container/Well</h2>
+      <div class="source" v-if="currentStep == 'source'" key="source">
+        <h2 key="select-source-heading">Select source Container/Well</h2>
         <img src="../assets/img/aspirate.gif" id="aspirate">
         <div class="form-wrapper">
-        <div class="current">
+        <div class="current" key="current-source">
 <!--         <p>Jog to a location of your choosing and select the use current location option</p> -->
 
         <label for="currentSource">
@@ -42,11 +42,11 @@
         <button class="btn-vol next" @click="aspirate">Aspirate</button>
       </div>
 
-      <div class="destination" v-if="currentStep == 'destination'">
-        <h2>Select destination Container/Well</h2>
+      <div class="destination" v-if="currentStep == 'destination'" key="destination">
+        <h2 key="select-destination-heading">Select destination Container/Well</h2>
         <img src="../assets/img/dispense.gif" id="dispense">
         <div class="form-wrapper">
-        <div class="current">
+        <div class="current" key="current-destination">
         <label for="currentDestination">
             <input type="checkbox" value="true" name="currentDestination" id="currentDestination" v-model="useCurrentDestination">
             <span>Use Current Location</span>
@@ -68,8 +68,8 @@
       </div>
 
 
-      <div class="enter-volume" v-if="currentStep == 'enter-volume'">
-        <h2>Enter volume (or redo)</h2>
+      <div class="enter-volume" v-if="currentStep == 'enter-volume'" key="max-volume">
+        <h2 key="enter-volume-heading">Enter volume (or redo)</h2>
         <div class="vol">
         <label>Current: {{ instrument.max_volume }} uL </label>
         <input type="number" v-model="volume">
