@@ -7,7 +7,7 @@
         <p>The "max_volume" of your pipette is the number of microliters (uL) between the TOP and BOTTOM positions.</p>
         <p>During this procedure, we will transfer the amount of liquid between TOP and BOTTOM, then measure the outcome.</p>
         <p>To begin, we must place a disposable tip on the pipette we are about to calibrate the volume for.</p>
-        <img src="../assets/img/calibrate-volume.gif" id="overview">
+        <img src="../assets/img/add-tip.gif" id="overview">
         <button class="btn-vol next" @click="currentStep = 'source'">Next</button>
       </div>
   
@@ -152,17 +152,17 @@
 
 <style type="text/css" scoped>
   img#overview{
-    margin-left: 100px;
+    margin-left: 300px;
     max-height: 250px;
     width: auto;
   }
 
   img#aspirate, img#dispense{
     display: inline-block;
-    max-height: 350px;
-    width: auto;
+    max-width: 240px;
 
-    margin: 10px 50px;
+
+    margin: 40px 50px 10px 20px;
     vertical-align: top;
   }
 
@@ -170,5 +170,6 @@
     width: 350px;
     display: inline-block;
     vertical-align: top;
+    margin-top: 20px;
   }
 </style>
