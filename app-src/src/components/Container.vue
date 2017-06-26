@@ -2,7 +2,7 @@
   <div class='placeable' @click='jogToSlot()'>
     <router-link :to="link()">
     <span v-if="wells">
-      <svg v-if="!drawRect" :width="width" viewBox='0 0 85.5 127.75' width='100%' preserveAspectRatio='xMinYMin meet'>
+      <svg v-if="!drawRect" :width="width" :viewBox="viewBox" width='100%' preserveAspectRatio='xMinYMin meet'>
         <g>
           <circle v-for="(well, key) in wells"  fill='blue' stroke='white' :cx='well.x' :cy='slotDimY-well.y' :r='well.diameter/2' :class="['well', key]">
           </circle>
@@ -39,6 +39,16 @@ export default {
       let wells = this.container['locations']
       if (wells['A1']['length']) { this.drawRect = true }
       return wells
+    },
+    containersPerSlot () {
+      let deck = this.$store.state.tasks.deck
+      let sameSlot = deck.filter((placeable) => {
+        return placeable.slot === this.placeable.slot
+      })
+      return sameSlot.length
+    },
+    viewBox () {
+      return '0 0 85.5 ' + 127.75 / this.containersPerSlot
     }
   },
   methods: {
