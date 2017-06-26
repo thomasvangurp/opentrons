@@ -7,9 +7,13 @@
       <div class="deck-container">
        <div v-for="col in cols" class="deck-col">
        <!-- TODO: refactor into class object -->
-          <div v-for="row in rows" class="deck-slot" :id="col+row" :class="{active : isActive(col+row), occupied: hasContainer(col+row), calibrated: isCalibrated(col+row), currentPipette: pipetteUsesContainer(col+row, axis)}" >
-              <container v-if="hasContainer(col+row)" :placeable="getContainer(col+row)"></container>
-              <div v-else class="empty"><p>{{col+row}}</p></div>
+          <div v-for="row in rows" class="deck-slot" :id="col+row" :class="{active : isActive(col+row), occupied: hasContainer(col+row)}" >
+              <template v-if="hasContainer(col+row)">
+                <container v-for="c in getSlotContainers(col+row)" :placeable="getContainer(col+row, c.label)" :class="{calibrated: isCalibrated(col+row, c.label), currentPipette: pipetteUsesContainer(col+row, c.label, axis)}"></container>
+              </template>
+              <template v-else>
+                <div class="empty"><p>{{col+row}}</p></div>
+              </template>
          </div>
         </div>
       </div>
@@ -53,7 +57,12 @@
         let container = this.deck.find(element => element.slot === slot)
         return container != null
       },
-      getContainer (slot) {
+      getSlotContainers (slot) {
+        return this.deck.filter((element) => {
+          return element.slot === slot
+        })
+      },
+      getContainer (slot, label) {
         let container = this.deck.find(element => element.slot === slot)
         return container
       },
@@ -70,7 +79,7 @@
           return false
         }
       },
-      pipetteUsesContainer (slot, axis) {
+      pipetteUsesContainer (slot, label, axis) {
         let container = this.getContainer(slot)
         if (container) {
           let pcPair = container.instruments.find(element => element.axis === axis)
