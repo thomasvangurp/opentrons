@@ -7,7 +7,7 @@
   :id="instrument.axis"
   class="tab" :class="{active : instrument.axis === axis}"  
   @click="togglePipette(instrument.axis)"> 
-  {{instrument.axis}} {{instrument.label}}<span v-for="c in instrument.channels">&#9661;</span></button>
+  {{instrument.axis}} {{instrument.label}}</button>
   </div>
 
   <div class="pipette-modal" :class="plungerMode">
