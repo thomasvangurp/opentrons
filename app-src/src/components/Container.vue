@@ -4,13 +4,13 @@
     <span v-if="wells">
       <svg v-if="!drawRect" :width="width" viewBox='0 0 85.5 127.75' width='100%' preserveAspectRatio='xMinYMin meet'>
         <g>
-          <circle v-for="well in wells"  fill='blue' stroke='white' :cx='well.x' :cy='slotDimY-well.y' :r='well.diameter/2' class="well">
+          <circle v-for="(well, key) in wells"  fill='blue' stroke='white' :cx='well.x' :cy='slotDimY-well.y' :r='well.diameter/2' :class="['well', key]">
           </circle>
         </g>
       </svg>
       <svg v-else viewBox='0 0 85.5 127.75' width='100%' preserveAspectRatio='xMinYMin'>
         <g>
-          <rect v-for="well in wells"  fill='blue' stroke='white' :x='well.x - well.width/2' :y='well.y - well.length/2' :width='well.width' :height="well.length" class="trough"></rect>
+          <rect v-for="(well, key) in wells"  fill='blue' stroke='white' :x='well.x - well.width/2' :y='slotDimY-well.y - well.length/2' :width='well.width' :height="well.length" :class="['trough', key]"></rect>
         </g>
       </svg>
     </span>
