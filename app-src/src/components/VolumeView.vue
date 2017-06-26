@@ -4,9 +4,6 @@
     <button class="close" @click="close()">X</button>
       <div class="add-tip" v-if="currentStep == 'add-tip'" key="add-tip">
         <h2 key="add-tip-deading">Place tip on pipette</h2>
-        <p>The "max_volume" of your pipette is the number of microliters (uL) between the TOP and BOTTOM positions.</p>
-        <p>During this procedure, we will transfer the amount of liquid between TOP and BOTTOM, then measure the outcome.</p>
-        <p>To begin, we must place a disposable tip on the pipette we are about to calibrate the volume for.</p>
         <img src="../assets/img/add-tip.gif" id="overview">
         <button class="btn-vol next" @click="currentStep = 'source'">Next</button>
       </div>
@@ -153,7 +150,7 @@
 <style type="text/css" scoped>
   img#overview{
     margin-left: 300px;
-    max-height: 250px;
+    max-height: 330px;
     width: auto;
   }
 
