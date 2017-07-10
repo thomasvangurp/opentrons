@@ -1,0 +1,39 @@
+
+/* Modal Content/Box */
+.network-config-content {
+    display: inherit;
+    z-index: 2;
+    background-color: #fefefe;
+    border: 1px solid #888;
+    width: 200px;
+    max-height: 300px;
+    overflow: auto
+}
+
+
+.available-network-container:focus > .collapsed-network,
+.available-network-container:hover > .collapsed-network
+{
+    background: #0070ff;
+    color: white;
+}
+
+.password-label{
+}
+
+.available-network {
+    outline: solid;
+    outline-width: 1px;
+    outline-color: slategrey;
+    cursor: pointer;
+    font-size: 110%;
+    position: relative;
+    padding: 4px 4px 4px 4px;
+    background: #eee;
+
+    /* make the list items unselectable */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
