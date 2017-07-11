@@ -1,4 +1,5 @@
 export {default as App} from './App.vue'
+export {default as NetworkConfig} from './NetworkConfig.vue'
 export {default as Connect} from './Connect.vue'
 export {default as Upload} from './Upload.vue'
 export {default as Home} from './Home.vue'
