@@ -4,8 +4,17 @@ FROM resin/raspberrypi3-python:3.5-slim-20170705
 
 WORKDIR /usr/src/api
 
+
+COPY ./api/requirements.txt ./requirements.txt 
+RUN apt-get install gcc make
+
+RUN apt-get update
+
+RUN pip install -r requirements.txt
+#******* Wifi_connect_resi*********n
+
 # Use apt-get to install dependencies
-RUN apt-get update && apt-get install -yq --no-install-recommends \
+RUN apt-get apt-get install -yq --no-install-recommends \
     dnsmasq \
     hostapd \
     iproute2 \
@@ -38,15 +47,10 @@ RUN curl -SL "https://github.com/resin-io/resin-wifi-connect/archive/v$RESIN_WIF
     ./node_modules/.bin/bower --allow-root cache clean && \
     ./node_modules/.bin/coffee -c ./src
 
+#******* Wifi_connect_resi*********n
+
+
 WORKDIR /usr/src/api
-
-COPY ./api/requirements.txt ./requirements.txt 
-
-RUN apt update
-
-RUN apt-get install gcc make
-
-RUN pip install -r requirements.txt
 
 COPY ./api ./
 
