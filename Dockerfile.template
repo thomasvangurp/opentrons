@@ -14,7 +14,7 @@ RUN pip install -r requirements.txt
 #******* Wifi_connect_resi*********n
 
 # Use apt-get to install dependencies
-RUN apt-get apt-get install -yq --no-install-recommends \
+RUN apt-get install -yq --no-install-recommends \
     dnsmasq \
     hostapd \
     iproute2 \
