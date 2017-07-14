@@ -2,7 +2,7 @@
 # see more about dockerfile templates here:http://docs.resin.io/pages/deployment/docker-templates
 FROM resin/raspberrypi3-python:3.5-slim-20170705 
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/api
 
 # Use apt-get to install dependencies
 RUN apt-get update && apt-get install -yq --no-install-recommends \
@@ -27,7 +27,7 @@ RUN curl -SLO "http://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-a
 # Install resin-wifi-connect
 ENV RESIN_WIFI_CONNECT_VERSION 2.0.7
 RUN curl -SL "https://github.com/resin-io/resin-wifi-connect/archive/v$RESIN_WIFI_CONNECT_VERSION.tar.gz" \
-    | tar xzC /usr/src/app/ && \
+    | tar xzC /usr/src/api/ && \
     mv resin-wifi-connect-$RESIN_WIFI_CONNECT_VERSION resin-wifi-connect && \
     cd resin-wifi-connect && \
     JOBS=MAX npm install --unsafe-perm --production && \
@@ -38,9 +38,9 @@ RUN curl -SL "https://github.com/resin-io/resin-wifi-connect/archive/v$RESIN_WIF
 
 
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/api
 
-COPY ./src/requirements.txt ./requirements.txt 
+COPY ./api/requirements.txt ./requirements.txt 
 
 RUN apt update
 
@@ -48,7 +48,7 @@ RUN apt-get install gcc make
 
 RUN pip install -r requirements.txt
 
-COPY . ./
+COPY ./api ./
 
 ENV INITSYSTEM on
 
