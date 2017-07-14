@@ -6,9 +6,9 @@ WORKDIR /usr/src/api
 
 
 COPY ./api/requirements.txt ./requirements.txt 
+RUN apt-get update
 RUN apt-get install gcc make
 
-RUN apt-get update
 
 RUN pip install -r requirements.txt
 #******* Wifi_connect_resi*********n
