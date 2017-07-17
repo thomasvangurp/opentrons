@@ -17,7 +17,7 @@ def access_point_setup():
     if not network_name():
         subprocess.call(["node", "resin-wifi-connect/src/app.js", "--clear=true"])
 
-def listen_for_reset()
+def listen_for_reset():
     counter = 0
     while True:
         input_state = GPIO.input(18)

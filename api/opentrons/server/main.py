@@ -1111,7 +1111,7 @@ def log_after_request(response):
     return response
 
 
-def start():
+def start(host='127.0.0.1'):
     data_dir = environment.get_path('APP_DATA_DIR')
     IS_DEBUG = os.environ.get('DEBUG', '').lower() == 'true'
     if not IS_DEBUG:
@@ -1131,7 +1131,8 @@ def start():
         use_reloader=False,
         log_output=False,
         engineio_logger=False,
-        port=31950
+        port=31950,
+        host=host
     )
 
 
