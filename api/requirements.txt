@@ -16,5 +16,5 @@ psutil==4.3.1
 greenlet==0.4.12
 gevent==1.2.2
 RPi.GPIO==0.6.3
-pyserial==3.3
+opentrons==2.4.2
 

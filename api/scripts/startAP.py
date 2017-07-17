@@ -29,7 +29,7 @@ def listen_for_reset():
             counter = 0
 
         #if button has been held for 2 seconds 
-        if count == 4:
+        if counter == 4:
             print("Connection Configuration Reset")
             subprocess.call(["node", "resin-wifi-connect/src/app.js", "--clear=true"])
 
