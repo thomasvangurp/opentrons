@@ -1,4 +1,3 @@
-from opentrons import server
 import RPi.GPIO as GPIO
 import time
 import subprocess
@@ -36,4 +35,3 @@ def listen_for_reset()
 
 if __name__ == '__main__':
     access_point_setup()
-    server.start('0.0.0.0')
