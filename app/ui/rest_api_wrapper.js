@@ -26,6 +26,8 @@ class Opentrons {
     this.cancelProtocolUrl = this.baseUrl + '/cancel'
     this.getPortsListUrl = this.baseUrl + '/robot/serial/list'
     this.versionUrl = this.baseUrl + '/robot/versions'
+    this.uploadUrl = this.baseUrl + '/upload'
+    this.loadUrl   = this.baseUrl + '/load'
   }
 
   getPortsList () {
@@ -112,7 +114,7 @@ class Opentrons {
 
   uploadProtocol (formData) {
     return Vue.http
-      .post('http://localhost:31950/upload', formData)
+      .post(this.uploadUrl, formData)
       .then((response) => {
         return processProtocol(response)
       }, (response) => {
@@ -123,7 +125,7 @@ class Opentrons {
 
   loadProtocol () {
     return Vue.http
-      .get('http://localhost:31950/load')
+      .get(this.loadUrl)
       .then((response) => {
         return processProtocol(response)
       }, (response) => {
@@ -293,4 +295,4 @@ class Opentrons {
   }
 }
 
-export default new Opentrons('http://localhost:31950')
+export default new Opentrons('http://ot-two.local:31950')
