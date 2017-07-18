@@ -6,7 +6,6 @@ export PORTAL_SSID=Opentrons_Robot
 
 echo "Exported env variables"
 echo "$(whoami)"
-/usr/local/bin/python /usr/src/api/scripts/startAP.py &
-/usr/local/bin/python /usr/src/api/scripts/startServer.py &
+python /usr/src/api/scripts/startAP.py &
+python /usr/src/api/scripts/startServer.py
 
-return 0

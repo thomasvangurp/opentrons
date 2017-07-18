@@ -57,4 +57,4 @@ COPY ./api ./
 
 ENV INITSYSTEM on
 
-CMD ["python", "/usr/src/api/scripts/startServer.py"]
+CMD ["/usr/src/api/scripts/start.sh"]
