@@ -17,4 +17,4 @@ greenlet==0.4.12
 gevent==1.2.2
 RPi.GPIO==0.6.3
 opentrons==2.4.2
-
+lockfile==0.12.2

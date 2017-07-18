@@ -14,10 +14,11 @@ from opentrons.helpers import helpers
 from opentrons.util.trace import traceable
 from opentrons.util.singleton import Singleton
 from opentrons.util.environment import settings
+from lockfile import LockFile
 
 
 log = get_logger(__name__)
-
+RESIN_UPDATE_LOCK = LockFile('/tmp/resin/resin-updates.lock')
 
 class InstrumentMosfet(object):
     """
@@ -660,40 +661,41 @@ class Robot(object, metaclass=Singleton):
         >>> robot.move_to(plate[0])
         >>> robot.move_to(plate[0].top())
         """
-        self.prepare_for_run()
+        with RESIN_UPDATE_LOCK:
+            self.prepare_for_run()
 
-        cmd_run_event = {}
-        cmd_run_event.update(kwargs)
+            cmd_run_event = {}
+            cmd_run_event.update(kwargs)
 
-        mode = 'live'
-        if self.is_simulating():
-            mode = 'simulate'
+            mode = 'live'
+            if self.is_simulating():
+                mode = 'simulate'
 
-        cmd_run_event['mode'] = mode
-        cmd_run_event['name'] = 'command-run'
-        for i, command in enumerate(self._commands):
-            cmd_run_event.update({
-                'command_description': command.description,
-                'command_index': i,
-                'commands_total': len(self._commands)
-            })
-            trace.EventBroker.get_instance().notify(cmd_run_event)
-            try:
-                self.can_pop_command.wait()
-                if command.description:
-                    log.info("Executing: {}".format(command.description))
-                command()
-            except Exception as e:
-                trace.EventBroker.get_instance().notify({
-                    'mode': mode,
-                    'name': 'command-failed',
-                    'error': str(e)
+            cmd_run_event['mode'] = mode
+            cmd_run_event['name'] = 'command-run'
+            for i, command in enumerate(self._commands):
+                cmd_run_event.update({
+                    'command_description': command.description,
+                    'command_index': i,
+                    'commands_total': len(self._commands)
                 })
-                raise RuntimeError(
-                    'Command #{0} failed (\"{1}\"").\nError: \"{2}\"'.format(
-                        i, command.description, str(e))) from e
+                trace.EventBroker.get_instance().notify(cmd_run_event)
+                try:
+                    self.can_pop_command.wait()
+                    if command.description:
+                        log.info("Executing: {}".format(command.description))
+                    command()
+                except Exception as e:
+                    trace.EventBroker.get_instance().notify({
+                        'mode': mode,
+                        'name': 'command-failed',
+                        'error': str(e)
+                    })
+                    raise RuntimeError(
+                        'Command #{0} failed (\"{1}\"").\nError: \"{2}\"'.format(
+                            i, command.description, str(e))) from e
 
-        return self._runtime_warnings
+            return self._runtime_warnings
 
     def send_to_app(self):
         robot_as_bytes = dill.dumps(self)
