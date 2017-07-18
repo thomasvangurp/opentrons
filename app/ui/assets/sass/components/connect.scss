@@ -37,30 +37,11 @@ nav.connect {
             }
         }
 
-        #wifi-indicator {
-            color: #f33b59;
-            padding: 4px;
-            &.connected {
-                color: #0070ff;
-            }
+        .wifi-indicator {
+            width: 40px;
+            height: 40px;
+            align-self: center;
+            margin-right: 10px;
         }
-
-        #wifi-indicator, #wifi-indicator:before {
-            display: inline-block;
-            border: 14px double transparent;
-            border-top-color: currentColor;
-            border-radius: 50%;
-        }
-
-        #wifi-indicator:before {
-            content: '';
-            width: 0; height: 0;
-        }
-
-        #wifi-text:before {
-            content: 'Connected';
-        }
-
-
 
     }

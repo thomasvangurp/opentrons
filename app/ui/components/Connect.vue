@@ -1,6 +1,7 @@
 <template>
   <nav class='connect'>
-    <div id='wifi-indicator' :class="{'connected': connected}"></div>
+    <img class='wifi-indicator' v-if="!connected" src='../assets/img/red-wifi.png' />
+    <img class='wifi-indicator' v-if="connected" src='../assets/img/blue-wifi.png' />
     <button v-if="!isAuthenticated" id="login" @click='login()' class='btn-run'>Login</button>
     <button v-else id="logout" @click='logout()' class='btn-run'>Logout</button>
   </nav>
