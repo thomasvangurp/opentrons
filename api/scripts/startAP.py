@@ -35,4 +35,6 @@ def listen_for_reset():
 
 
 if __name__ == '__main__':
+    print("[BOOT] AP node setup")
     access_point_setup()
+    print("[SHUTDOWN] AP node terminated")
