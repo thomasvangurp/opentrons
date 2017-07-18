@@ -58,4 +58,4 @@ COPY ./api ./
 ENV INITSYSTEM on
 
 # main.py will run when container starts up on the device
-CMD ["/bin/bash","/usr/src/api/scripts/start.sh"]
+CMD ["/usr/src/api/scripts/start.sh"]

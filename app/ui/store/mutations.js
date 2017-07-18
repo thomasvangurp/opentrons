@@ -32,7 +32,6 @@ const mutations = {
   },
   [types.UPDATE_ROBOT_CONNECTION] (state, payload) {
     state.isConnected = payload.isConnected
-    state.port = payload.port
   },
   [types.UPDATE_TASK_LIST] (state, payload) {
     state.tasks = payload.tasks

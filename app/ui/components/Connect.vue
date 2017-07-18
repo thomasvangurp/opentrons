@@ -1,11 +1,6 @@
 <template>
   <nav class='connect'>
-    <select @change='searchIfNecessary()' v-model='ports.selected' id='connections'>
-      <option value='default'>{{defaultOption}}</option>
-      <option value='refresh-list'>&#8635 refresh</option>
-      <option v-for='option in ports.options' v-bind:value='option.value'>{{ option.text }}</option>
-    </select>
-    <div id='indicator' :class="{'connected': connected}"></div>
+    <div id='wifi-indicator' :class="{'connected': connected}"></div>
     <button v-if="!isAuthenticated" id="login" @click='login()' class='btn-run'>Login</button>
     <button v-else id="logout" @click='logout()' class='btn-run'>Logout</button>
   </nav>

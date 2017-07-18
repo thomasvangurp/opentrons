@@ -23,6 +23,7 @@ nav.connect {
             background-position: 95% 50%;
             color: $btn-jog;
         }
+        
         div#indicator {
             width: 12px;
             height: 12px;
@@ -32,7 +33,34 @@ nav.connect {
             background-color: #f33b59;
             margin: 5px;
             &.connected {
-                background-color: #3bf389;
+                color: #3bf389;
             }
         }
+
+        #wifi-indicator {
+            color: #f33b59;
+            padding: 4px;
+            &.connected {
+                color: #0070ff;
+            }
+        }
+
+        #wifi-indicator, #wifi-indicator:before {
+            display: inline-block;
+            border: 14px double transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+        }
+
+        #wifi-indicator:before {
+            content: '';
+            width: 0; height: 0;
+        }
+
+        #wifi-text:before {
+            content: 'Connected';
+        }
+
+
+
     }

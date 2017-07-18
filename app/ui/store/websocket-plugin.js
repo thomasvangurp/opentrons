@@ -22,11 +22,11 @@ function WebSocketPlugin (socket) {
        */
       trackEventFromWebsocket(data)
 
-      if (data.type === 'connection_status') {
-        if (data.isConnected === false) {
-          store.commit(types.UPDATE_ROBOT_CONNECTION, {'isConnected': false, 'port': null})
-        }
-      }
+      // if (data.type === 'connection_status') {
+      //   if (data.isConnected === false) {
+      //     store.commit(types.UPDATE_ROBOT_CONNECTION, {'isConnected': false, 'port': null})
+      //   }
+      // }
       if (data.name === 'move-finished') {
         store.commit(types.UPDATE_POSITION, {
           x: data.position.head.x,
@@ -74,6 +74,16 @@ function WebSocketPlugin (socket) {
         console.log('JUPYTER UPLOAD HANDLER DISPATCHED W/', data)
         handleJupyterUpload(store, data)
       }
+    })
+    socket.on('connect', function() {
+      console.log('Wireless Robot connected')
+      socket.emit('connected')
+      store.commit(types.UPDATE_ROBOT_CONNECTION, {'isConnected': true})
+    })
+    socket.on('disconnect', function() {
+      console.log('Wireless Robot disconnected')
+      socket.emit('disconnected')
+      store.commit(types.UPDATE_ROBOT_CONNECTION, {'isConnected': false})
     })
   }
 }
