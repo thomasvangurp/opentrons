@@ -8,5 +8,10 @@ export PORTAL_SSID=Opentrons_Robot
 
 echo "Exported env variables"
 
-python /usr/src/api/scripts/startAP.py &
-python /usr/src/api/scripts/startServer.py &
+CHECK=python /usr/src/api/scripts/startAP.py &
+echo $CHECK
+CHECK_2=python /usr/src/api/scripts/startServer.py &
+echo $CHECK_2
+echo "AFTER PYTHON"
+
+return 0
