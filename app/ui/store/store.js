@@ -13,7 +13,7 @@ const { actions } = appActions
 
 Vue.use(Vuex)
 
-const socket = io('ws://ot-two.local:31950')
+const socket = io('ws://localhost:31950')
 socket.on('connect', function () {
   console.log('WebSocket has connected.')
   socket.emit('connected')

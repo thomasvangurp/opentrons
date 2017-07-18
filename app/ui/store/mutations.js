@@ -22,29 +22,17 @@ const state = {
   running: false,
   detached: false,
   protocolFinished: false,
-  paused: false,
-  isSocketConnected: false,
-  selectedRobot: 'ot-two.local:31950',
-  connectedRobot: '', // TODO: default to blank
-  robots: []
+  paused: false
 }
 
 const mutations = {
-  [types.SET_SELECTED_ROBOT] (state, address) {
-    state.selectedRobot = address
-  },
-  [types.UPDATE_ROBOT_URLS] (state, robots) {
-    state.robots = robots
-  },
-  [types.UPDATE_ROBOT_CONNECTION] (state, address) {
-    state.connectedRobot = address
-  },
-  [types.UPDATE_SOCKET_CONNECTION] (state, isConnected) {
-    state.isSocketConnected = isConnected
-  },
   [types.AUTHENTICATE] (state, payload) {
     state.isAuthenticated = payload.isAuthenticated
     state.userProfile = payload.userProfile
+  },
+  [types.UPDATE_ROBOT_CONNECTION] (state, payload) {
+    state.isConnected = payload.isConnected
+    state.port = payload.port
   },
   [types.UPDATE_TASK_LIST] (state, payload) {
     state.tasks = payload.tasks

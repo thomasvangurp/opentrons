@@ -1,9 +1,11 @@
+/* istanbul ignore next */
+
 import Vue from 'vue'
 import {addHrefs, processProtocol} from './util'
 
 class Opentrons {
   constructor (baseUrl) {
-    this.baseUrl = 'http://' + baseUrl
+    this.baseUrl = baseUrl || 'http://localhost:31950'
     this.connectUrl = this.baseUrl + '/robot/serial/connect'
     this.disconnectUrl = this.baseUrl + '/robot/serial/disconnect'
     this.jogUrl = this.baseUrl + '/jog'
@@ -24,8 +26,6 @@ class Opentrons {
     this.cancelProtocolUrl = this.baseUrl + '/cancel'
     this.getPortsListUrl = this.baseUrl + '/robot/serial/list'
     this.versionUrl = this.baseUrl + '/robot/versions'
-    this.uploadUrl = this.baseUrl + '/upload'
-    this.loadUrl = this.baseUrl + '/load'
   }
 
   getPortsList () {
@@ -112,7 +112,7 @@ class Opentrons {
 
   uploadProtocol (formData) {
     return Vue.http
-      .post(this.uploadUrl, formData)
+      .post('http://localhost:31950/upload', formData)
       .then((response) => {
         return processProtocol(response)
       }, (response) => {
@@ -123,7 +123,7 @@ class Opentrons {
 
   loadProtocol () {
     return Vue.http
-      .get(this.loadUrl)
+      .get('http://localhost:31950/load')
       .then((response) => {
         return processProtocol(response)
       }, (response) => {
@@ -293,4 +293,4 @@ class Opentrons {
   }
 }
 
-export default new Opentrons('ot-two.local:31950')
+export default new Opentrons('http://localhost:31950')

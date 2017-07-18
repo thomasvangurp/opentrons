@@ -18,6 +18,5 @@ export const UPDATE_RUNNING = 'UPDATE_RUNNING'
 export const UPDATE_DETACHED = 'UPDATE_DETACHED'
 export const UPDATE_PROTOCOL_FINISHED = 'UPDATE_PROTOCOL_FINISHED'
 export const UPDATE_PAUSED = 'UPDATE_PAUSED'
-export const SET_ROBOT_URL = 'SET_ROBOT_URL'
-// Update list of available robot URLs
-export const UPDATE_ROBOT_URLS = 'UPDATE_ROBOT_URLS'
+// export const PAUSE = 'PAUSE'
+// export const RESUME = 'RESUME'
