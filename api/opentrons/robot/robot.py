@@ -17,7 +17,7 @@ from opentrons.util.environment import settings
 from lockfile import LockFile
 
 log = get_logger(__name__)
-RESIN_UPDATE_LOCK = LockFile('/tmp/resin/resin-updates.lock')
+RESIN_UPDATE_LOCK = LockFile('/tmp/resin/resin-updates')
 
 class InstrumentMosfet(object):
     """
