@@ -58,7 +58,7 @@ COPY ./api ./
 
 RUN pip install piglow smbus2
 
-RUN mv /usr/local/lib/python3.5/site-packages/smbus2 usr/local/lib/python3.5/site-packages/smbus
+RUN mv /usr/local/lib/python3.5/site-packages/smbus2 /usr/local/lib/python3.5/site-packages/smbus
 
 ENV INITSYSTEM on
 
