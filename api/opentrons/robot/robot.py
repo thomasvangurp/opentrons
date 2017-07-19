@@ -16,7 +16,6 @@ from opentrons.util.singleton import Singleton
 from opentrons.util.environment import settings
 from lockfile import LockFile
 
-
 log = get_logger(__name__)
 RESIN_UPDATE_LOCK = LockFile('/tmp/resin/resin-updates.lock')
 
