@@ -11,18 +11,19 @@ import shell from 'shelljs'
 
 if (require('electron-squirrel-startup')) app.quit()
 
-const port = process.env.PORT || 8090
+const port        = process.env.PORT || 8090
 const dataDirName = 'otone_data'
-let appWindowUrl = `http://127.0.0.1:31950/`
-// TODO: Test app behavior with UI loaded from file://
-// const indexPath = path.join(__dirname, '../../ui/index.html')
-// console.log(`Index path: ${indexPath}`)
-// let appWindowUrl = `file://${indexPath}`
+const basePath    = path.join(__dirname, '../../')
+
+let indexPath = basePath.concat('ui/index.html')
 
 if (process.env.NODE_ENV === 'development') {
+  indexPath = basePath.concat('app/ui/index.html')
   require('electron-debug')({showDevTools: 'undocked'})
-  appWindowUrl = `http://127.0.0.1:${port}/`
 }
+
+console.log(`Index path: ${indexPath}`)
+let appWindowUrl = `file://${indexPath}`
 
 // TODO(artyom): it should belong to integration test and/or CI scripts
 // but for that we need to determine userData value before running the test
@@ -100,7 +101,7 @@ let createWindow = async () => {
   }, 3000)
 
   addMenu()
-  initAutoUpdater()
+  // initAutoUpdater()
 
   return mainWindow
 }
@@ -119,24 +120,24 @@ let startUp = async () => {
     }
   })
 
-  const serverManager = new ServerManager()
-  serverManager.start()
-  app.on('quit', () => {
-    serverManager.shutdown()
-  })
+  // const serverManager = new ServerManager()
+  // serverManager.start()
+  // app.on('quit', () => {
+  //   serverManager.shutdown()
+  // })
 
   createWindow()
 
-  let response
-  do {
-    response = await request(
-      appWindowUrl,
-      {timeout: 1000}
-    ).catch(error => {
-      log.debug(`While pinging back-end process: ${error}`)
-    })
-    await delay(1000)
-  } while (!response)
+  // let response
+  // do {
+  //   response = await request(
+  //     appWindowUrl,
+  //     {timeout: 1000}
+  //   ).catch(error => {
+  //     log.debug(`While pinging back-end process: ${error}`)
+  //   })
+  //   await delay(1000)
+  // } while (!response)
 
   loadUI(appWindowUrl)
 }

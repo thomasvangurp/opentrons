@@ -16,6 +16,14 @@ bin/opentrons-api-server:
 
 build: shell/dist ui/dist bin/opentrons-api-server
 
+build-ui-only: shell/dist ui/dist
+
+package-ui-only: build-ui-only
+	export OT_TIME_SUFFIX=$(OT_TIME_SUFFIX) && \
+	export OT_BRANCH_SUFFIX=$(OT_BRANCH_SUFFIX) && \
+	export OT_COMMIT_SUFFIX=$(OT_COMMIT_SUFFIX) && \
+	npm run package
+
 package: build
 	export OT_TIME_SUFFIX=$(OT_TIME_SUFFIX) && \
 	export OT_BRANCH_SUFFIX=$(OT_BRANCH_SUFFIX) && \
