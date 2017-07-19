@@ -51,10 +51,13 @@ RUN curl -SL "https://github.com/resin-io/resin-wifi-connect/archive/v$RESIN_WIF
 #******* Wifi_connect_resi*********n
 
 
+
 WORKDIR /usr/src/api
 
 COPY ./api ./
 
+RUN pip install piglow smbus2
+
 ENV INITSYSTEM on
 
-CMD ["/usr/src/api/scripts/start.sh"]
+CMD ["/usr/src/api/scripts/compute/start.sh"]

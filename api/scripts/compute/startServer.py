@@ -13,3 +13,4 @@ if __name__ == '__main__':
         robot.connect(DEFAULT_PORT)
     server.start('0.0.0.0')
     print("[BOOT] Server node terminated")
+
