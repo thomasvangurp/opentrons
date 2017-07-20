@@ -13,8 +13,8 @@ echo "[BOOT] ipc pipe created - /tmp/resin/status_light"
 
 
 echo "[BOOT] Starting access point daemon"
-python /usr/src/api/scripts/compute/startAP.py &
+python /usr/src/api/scripts/compute/start_access_point.py &
 
 echo "[BOOT] Starting server"
-python /usr/src/api/scripts/compute/startServer.py
+python /usr/src/api/scripts/compute/start_server.py
 
