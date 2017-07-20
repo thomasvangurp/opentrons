@@ -41,8 +41,8 @@ def access_point():
         time.sleep(0.01)
 
 def status_checker():
-    os.mkfifo(STATUS_INDICATOR_FIFO)
-    with open(STATUS_INDICATOR_FIFO, 'r') as status_file:
+    os.mkfifo(bc.STATUS_INDICATOR_FIFO)
+    with open(bc.STATUS_INDICATOR_FIFO, 'r') as status_file:
         while True:
             global STATUS
             STATUS = int(status_file.readline()) 
