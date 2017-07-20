@@ -1,6 +1,9 @@
 import RPi.GPIO as GPIO
 import time
 import subprocess
+import os
+
+
 
 def network_name():
     SSID = None
@@ -31,10 +34,12 @@ def listen_for_reset():
         #if button has been held for 2 seconds 
         if counter == 4:
             print("Connection Configuration Reset")
+            os.write(fd, str(bc.BOOT).encode())
             subprocess.call(["node", "resin-wifi-connect/src/app.js", "--clear=true"])
 
 
 if __name__ == '__main__':
+    fd = os.open(bc.STATUS_INDICATOR_FIFO, os.O_WRONLY) 
     print("[BOOT] AP node setup")
     access_point_setup()
     print("[SHUTDOWN] AP node terminated")
