@@ -47,7 +47,7 @@ def status_checker():
             global STATUS
             STATUS = int(status_file.readline()) 
             piglow.off()
-            print('STATUS CHANGE: ', STATUS)
+            print('[STATUS LIGHT] Status change: ', STATUS)
 
 
 if __name__ == "__main__":
