@@ -19,7 +19,7 @@ if __name__ == '__main__':
             print("[SERVER BOOT] Second smoothie connect attempt")
             robot.connect(bc.DEFAULT_PORT)
         except FileNotFoundError:
-
+            print("[SERVER ERROR] No smoothie detected at ", bc.DEFAULT_PORT)
 
         os.write(fd, str(bc.WIFI_AND_SMOOTHIE_CONNECTED).encode()) 
         server.start('0.0.0.0')
