@@ -2,6 +2,8 @@ import RPi.GPIO as GPIO
 import time
 import subprocess
 import os
+import boot_config as bc
+
 
 
 
