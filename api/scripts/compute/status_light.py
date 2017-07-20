@@ -59,7 +59,7 @@ def status_checker():
             piglow.off()
             print('[STATUS LIGHT] Status change: ', STATUS)
 
-def status_responder()
+def status_responder():
     global STATUS
     boot_counter = 0
     while True:
