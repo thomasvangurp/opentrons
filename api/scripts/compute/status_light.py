@@ -40,6 +40,15 @@ def access_point():
         piglow.show()
         time.sleep(0.01)
 
+def status_checker():
+    os.mkfifo(STATUS_INDICATOR_FIFO)
+    with open(STATUS_INDICATOR_FIFO, 'r') as status_file:
+        while True:
+            global STATUS
+            STATUS = int(status_file.readline()) 
+            piglow.off()
+            print('STATUS CHANGE: ', STATUS)
+
 
 if __name__ == "__main__":
     threading.Thread(target=status_checker).start()
@@ -61,17 +70,5 @@ if __name__ == "__main__":
             if boot_counter > 1000:
                 piglow.off()
                 STATUS = bc.ISSUE
-
-
-
-
-def status_checker():
-    os.mkfifo(STATUS_INDICATOR_FIFO)
-    with open(STATUS_INDICATOR_FIFO, 'r') as status_file:
-        while True:
-            global STATUS
-            STATUS = int(status_file.readline()) 
-            piglow.off()
-            print('STATUS CHANGE: ', STATUS)
 
 
