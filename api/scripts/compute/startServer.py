@@ -1,5 +1,5 @@
 from opentrons import server, robot
-from boot_config import as bc
+import boot_config as bc
 import os
 
 
