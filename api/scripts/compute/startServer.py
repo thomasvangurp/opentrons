@@ -7,7 +7,7 @@ DEFAULT_PORT = '/dev/ttyACM0'
 
 if __name__ == '__main__':
     fd = os.open(bc.STATUS_INDICATOR_FIFO, os.O_WRONLY) 
-    os.write(fd, str(bc.BOOT).encode())
+    os.write(fd, str(bc.BOOTING).encode())
     try:
         print("[BOOT] Server node setup")
         try:
