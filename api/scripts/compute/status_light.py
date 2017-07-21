@@ -8,7 +8,7 @@ import asyncio
 
 statuses = {
     'BOOTING': 0,
-    'ACCESS_POINT': 1
+    'ACCESS_POINT': 1,
     'WIFI_AND_SMOOTHIE_CONNECTED': 2,
     'ISSUE': 3
 }            
