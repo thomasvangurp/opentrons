@@ -9,7 +9,7 @@ import json
 
 
 
-async def fully_connected():
+async def access_point():
     freq = 0.01
     piglow.all(0)
     while True:
