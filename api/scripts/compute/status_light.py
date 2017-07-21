@@ -98,7 +98,7 @@ def send_status(status):
         reader, writer = await asyncio.open_connection('127.0.0.1', 8888,
                                                    loop=loop)
         print('Send: %r' % message)
-        writer.write(message.encode())
+        writer.write(message)
         print('Close the socket')
         writer.close()
     loop = asyncio.get_event_loop()
