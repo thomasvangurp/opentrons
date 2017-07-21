@@ -123,7 +123,7 @@ def create_listener():
         'ACCESS_POINT': False,
         'SMOOTHIE_CONNECTED': False,
         'ISSUE': False,
-        'BOOTING': False,
+        'BOOTING': True,
         'SERVER_ONLINE': False
     }
 

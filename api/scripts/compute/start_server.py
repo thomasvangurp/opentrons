@@ -7,8 +7,6 @@ import os, time
 DEFAULT_PORT = '/dev/ttyACM0'
 
 if __name__ == '__main__':
-    send_status({'BOOTING': True})
-
     try:
         print("[SERVER BOOT] Server node setup")
         try:
