@@ -6,7 +6,7 @@ import time
 import piglow
 import asyncio
 
-async def booting():
+async def access_point():
     freq = 0.4
     piglow.all(0)
     while True:
@@ -44,7 +44,7 @@ async def issue():
         piglow.show()
         await asyncio.sleep(freq)
 
-async def access_point():
+async def booting():
     i = 0
     freq = 0.1
 
