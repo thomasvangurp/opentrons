@@ -1,30 +1,35 @@
 #!/usr/bin/env python
 
 from opentrons import server, robot
-import boot_config as bc
+from status_light import statuses, send_status
 import os, time
+import asyncio
+
+DEFAULT_PORT = '/dev/ttyACM0'
 
 if __name__ == '__main__':
-    print("[SERVER BOOT] Opening status indication pipe")
-    fd = os.open(bc.STATUS_INDICATOR_FIFO, os.O_WRONLY) 
-    os.write(fd, str(bc.BOOTING).encode())
+    send_status(statuses['BOOTING'])
 
     try:
         print("[SERVER BOOT] Server node setup")
         try:
-            robot.connect(bc.DEFAULT_PORT)
+            robot.connect(DEFAULT_PORT)
         except RuntimeError:
             # Sometimes it fails on the first connection attempt - not sure why.
             # TODO: Change this hackey fix
             print("[SERVER BOOT] Second smoothie connect attempt")
-            robot.connect(bc.DEFAULT_PORT)
+            robot.connect(DEFAULT_PORT)
         except FileNotFoundError:
-            print("[SERVER ERROR] No smoothie detected at ", bc.DEFAULT_PORT)
+            print("[SERVER ERROR] No smoothie detected at ", DEFAULT_PORT)
 
-        os.write(fd, str(bc.WIFI_AND_SMOOTHIE_CONNECTED).encode()) 
         server.start('0.0.0.0')
         print("[SERVER SHUTDOWN] Server node terminated")
     
     # The server above should run indefinitely 
     finally:
-        os.write(fd, str(bc.ISSUE).encode()) 
+        send_status(statuses['ISSUE'])
+
+
+
+
+
