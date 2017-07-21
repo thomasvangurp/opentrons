@@ -14,14 +14,28 @@ statuses = {
 }            
 
 
-async def fully_connected():
+async def booting():
     freq = 0.4
     piglow.all(0)
     for x in range(210, 240):
-        piglow.green(x)
+        piglow.white(x)
         piglow.show()
         await asyncio.sleep(freq)
     for x in range(240, 210, -1):
+        piglow.white(x)
+        piglow.show()
+        await asyncio.sleep(freq)
+
+
+
+async def fully_connected():
+    freq = 0.4
+    piglow.all(0)
+    for x in range(150, 240):
+        piglow.green(x)
+        piglow.show()
+        await asyncio.sleep(freq)
+    for x in range(240, 150, -1):
         piglow.green(x)
         piglow.show()
         await asyncio.sleep(freq)
