@@ -20,7 +20,7 @@ def network_check():
     if not network_name():
         send_status({'WIRELESS_NETWORK_CONNECTED': False, 'ACCESS_POINT': True})
         subprocess.call(["node", "resin-wifi-connect/src/app.js", "--clear=true"])
-        send_status({'WIRELESS_NETWORK_CONNECTED': True, 'ACCESS_POINT': False})
+    send_status({'WIRELESS_NETWORK_CONNECTED': True, 'ACCESS_POINT': False})
     listen_for_reset()
 
 def listen_for_reset():
