@@ -3,45 +3,45 @@
 # lighting pattern when both wifi and smoothie are connected
 import os, time, sys
 import time
-#import piglow
+import piglow
 import asyncio
 
 async def booting():
     freq = 0.4
-    # piglow.all(0)
+    piglow.all(0)
     while True:
         for x in range(210, 240):
-            #piglow.white(x)
-            #piglow.show()
+            piglow.white(x)
+            piglow.show()
             await asyncio.sleep(freq)
         for x in range(240, 210, -1):
-            #piglow.white(x)
-            #piglow.show()
+            piglow.white(x)
+            piglow.show()
             await asyncio.sleep(freq)
 
 async def fully_connected():
     freq = 0.4
-    # piglow.all(0)
+    piglow.all(0)
     while True:
         for x in range(150, 240):
-            # piglow.green(x)
-            # piglow.show()
+            piglow.green(x)
+            piglow.show()
             await asyncio.sleep(freq)
         for x in range(240, 150, -1):
-            # piglow.green(x)
-            # piglow.show()
+            piglow.green(x)
+            piglow.show()
             await asyncio.sleep(freq)
 
 # indicates issue 
 async def issue():
     freq = 0.4
-    # piglow.all(0)
+    piglow.all(0)
     while True:
-        # piglow.red(200)
-        # piglow.show()
+        piglow.red(200)
+        piglow.show()
         await asyncio.sleep(freq)
-        # piglow.red(20)
-        # piglow.show()
+        piglow.red(20)
+        piglow.show()
         await asyncio.sleep(freq)
 
 async def access_point():
