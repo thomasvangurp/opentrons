@@ -20,11 +20,17 @@ async def booting():
     for x in range(210, 240):
         piglow.white(x)
         piglow.show()
-        await asyncio.sleep(freq)
+        try:
+            await asyncio.sleep(freq)
+        except:
+            print("Received exception!")
     for x in range(240, 210, -1):
         piglow.white(x)
         piglow.show()
-        await asyncio.sleep(freq)
+        try:
+            await asyncio.sleep(freq)
+        except:
+            print("Received exception!")
 
 
 
