@@ -7,10 +7,10 @@ import piglow
 import asyncio
 
 statuses = {
-    'BOOTING': b'0\n',
-    'ACCESS_POINT': b'1\n',
-    'WIFI_AND_SMOOTHIE_CONNECTED': b'2\n',
-    'ISSUE': b'3\n'
+    'BOOTING': 0,
+    'ACCESS_POINT': 1,
+    'WIFI_AND_SMOOTHIE_CONNECTED': 2,
+    'ISSUE': 3
 }            
 
 
@@ -101,7 +101,8 @@ def send_status(status):
         print('Close the socket')
         writer.close()
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(tcp_writer(status, loop))
+    status_to_send = (str(status) + '\n').encode()
+    loop.run_until_complete(tcp_writer(str(status).encode(), loop))
     loop.close()
 
 
