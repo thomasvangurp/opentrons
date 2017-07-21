@@ -85,22 +85,22 @@ states = {
 
 # defines state precedence
 def derive_state(state_components):
+    lighting_coroutine_function = None
     if state_components['ISSUE']:
-        return states['issue']
-    
+        lighting_coroutine_function = states['issue']
     elif state_components['ACCESS_POINT']:
-        return states['access_point']
-    
+        lighting_coroutine_function = states['access_point']
     elif (state_components['SERVER_ONLINE'] and 
             state_components['SMOOTHIE_CONNECTED'] and
             state_components['WIRELESS_NETWORK_CONNECTED']):
-        return states['fully_connected']
-    
+        lighting_coroutine_function = states['fully_connected']
     elif state_components['BOOTING']:
-        return states['booting']
-
+        lighting_coroutine_function = states['booting']
     else:
-        return states['unknown']
+        lighting_coroutine_function = states['unknown']
+
+    print("STATE RESOLVED TO: ", lighting_coroutine_function)
+    return lighting_coroutine_function
 
 
 class RobotLightIndicatorStateError(Exception):
