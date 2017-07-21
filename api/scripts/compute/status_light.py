@@ -9,16 +9,16 @@ import json
 
 
 
-async def access_point():
-    freq = 0.4
+async def fully_connected():
+    freq = 0.01
     piglow.all(0)
     while True:
-        for x in range(100, 240):
-            piglow.white(x)
+        for x in range(0, 255):
+            piglow.blue(x)
             piglow.show()
             await asyncio.sleep(freq)
-        for x in range(240, 100, -1):
-            piglow.white(x)
+        for x in range(255, 0, -1):
+            piglow.blue(x)
             piglow.show()
             await asyncio.sleep(freq)
 
