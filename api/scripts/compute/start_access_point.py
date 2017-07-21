@@ -17,6 +17,14 @@ def network_name():
 def network_check():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    
+    #TODO: this waits if the socket hasn't been set up yet. 
+    try:
+        send_status({'WIRELESS_NETWORK_CONNECTED': False, 'ACCESS_POINT': True})
+    except ConnectionRefusedError:
+        time.sleep(0.1)
+    send_status({'WIRELESS_NETWORK_CONNECTED': False, 'ACCESS_POINT': True})
+
     if not network_name():
         send_status({'WIRELESS_NETWORK_CONNECTED': False, 'ACCESS_POINT': True})
         subprocess.call(["node", "resin-wifi-connect/src/app.js", "--clear=true"])
