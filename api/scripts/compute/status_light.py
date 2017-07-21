@@ -75,10 +75,12 @@ def create_listener():
         loop = asyncio.get_event_loop()
 
         def cancel_animation():
+            print(type(current_animation))
             if current_animation:
                 current_animation.cancel()
 
         def set_state(lighting_function):
+            nonlocal current_animation
             cancel_animation()
             current_animation = loop.create_task(lighting_function)
 
