@@ -55,19 +55,6 @@ async def access_point():
         i += 1
         await asyncio.sleep(freq)
 
-async def access_point():
-    freq = 0.01
-    # piglow.all(0)
-    while True:
-        for x in range(140, 250, 2):
-            # piglow.blue(x)
-            # piglow.show()
-            await asyncio.sleep(freq)
-        for x in range(250, 140, -2):
-            # piglow.blue(x)
-            # piglow.show()
-            await asyncio.sleep(freq)
-
 statuses = {
     'BOOTING': booting,
     'ACCESS_POINT': access_point,
@@ -128,21 +115,24 @@ def send_status(status):
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    coro = asyncio.start_server(
-        create_listener(), '127.0.0.1', 8888, loop=loop)
-    server = loop.run_until_complete(coro)
 
-    print('Serving on {}'.format(server.sockets[0].getsockname()))
     try:
-        loop.run_forever()
-    except KeyboardInterrupt:
-        pass
+        loop = asyncio.get_event_loop()
+        coro = asyncio.start_server(
+            create_listener(), '127.0.0.1', 8888, loop=loop)
+        server = loop.run_until_complete(coro)
 
-    # Close the server
-    server.close()
-    loop.run_until_complete(server.wait_closed())
-    loop.close()
+        print('Serving on {}'.format(server.sockets[0].getsockname()))
+        try:
+            loop.run_forever()
+        except KeyboardInterrupt:
+            pass
 
+        # Close the server
+        server.close()
+        loop.run_until_complete(server.wait_closed())
+        loop.close()
+    finally:
+        piglow.off()
 
 
