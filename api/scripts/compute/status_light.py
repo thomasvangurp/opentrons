@@ -102,7 +102,7 @@ def send_status(status):
         print('Close the socket')
         writer.close()
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(tcp_echo_client(status, loop))
+    loop.run_until_complete(tcp_writer(status, loop))
     loop.close()
 
 
