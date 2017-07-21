@@ -66,29 +66,28 @@ def create_listener():
 
         def set_state(lighting_function):
             cancel_animation()
-            current_animation = loop.create_task(booting)
-            new_state = prevState
+            current_animation = loop.create_task(lighting_function)
 
         data = await reader.readline()
         try:
             new_state = int(data)
+            addr = writer.get_extra_info('peername')
+            print("Received %r from %r" % (new_state, addr))
+
+            prev_state = new_state
+
+            if new_state == statuses['BOOTING']:
+                set_state(booting)
+            elif new_state == statuses['WIFI_AND_SMOOTHIE_CONNECTED']:
+                set_state(fully_connected)
+            elif new_state == statuses['ACCESS_POINT']:
+                set_state(access_point)
+            elif new_state == statuses['ISSUE']:
+                set_state(issue)
+            else:
+                print('No animation for state: {}. Ignoring.'.format(new_state))
         except ValueError:
             print('[ERROR] received a non-interger status code\n')
-        addr = writer.get_extra_info('peername')
-        print("Received %r from %r" % (new_state, addr))
-
-        prev_state = new_state
-
-        if new_state == statuses['BOOTING']:
-            set_state(booting)
-        elif new_state == statuses['WIFI_AND_SMOOTHIE_CONNECTED']:
-            set_state(fully_connected)
-        elif new_state == statuses['ACCESS_POINT']:
-            set_state(access_point)
-        elif new_state == statuses['ISSUE']:
-            set_state(issue)
-        else:
-            print('No animation for state: {}. Ignoring.'.format(new_state))
 
         writer.close() # Is this necessary? Why here? Does the reader need to be closed?
     return listen
