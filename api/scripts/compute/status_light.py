@@ -60,7 +60,7 @@ async def access_point():
 statuses = {
     'BOOTING': booting,
     'ACCESS_POINT': access_point,
-    'WIFI_AND_SMOOTHIE_CONNECTED': fully_connected,
+    'FULLY_CONNECTED': fully_connected,
     'ISSUE': issue
 }   
 

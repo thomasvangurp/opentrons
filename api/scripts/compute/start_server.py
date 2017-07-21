@@ -21,6 +21,7 @@ if __name__ == '__main__':
         except FileNotFoundError:
             print("[SERVER ERROR] No smoothie detected at ", DEFAULT_PORT)
 
+        send_status('FULLY_CONNECTED')
         server.start('0.0.0.0')
         print("[SERVER SHUTDOWN] Server node terminated")
     
