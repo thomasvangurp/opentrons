@@ -3,114 +3,103 @@
 # lighting pattern when both wifi and smoothie are connected
 import os, time, sys
 import time
-import piglow
+#import piglow
 import asyncio
-
-statuses = {
-    'BOOTING': 0,
-    'ACCESS_POINT': 1,
-    'WIFI_AND_SMOOTHIE_CONNECTED': 2,
-    'ISSUE': 3
-}            
-
 
 async def booting():
     freq = 0.4
-    piglow.all(0)
-    for x in range(210, 240):
-        piglow.white(x)
-        piglow.show()
-        try:
+    # piglow.all(0)
+    while True:
+        for x in range(210, 240):
+            #piglow.white(x)
+            #piglow.show()
             await asyncio.sleep(freq)
-        except:
-            print("Received exception!")
-    for x in range(240, 210, -1):
-        piglow.white(x)
-        piglow.show()
-        try:
+        for x in range(240, 210, -1):
+            #piglow.white(x)
+            #piglow.show()
             await asyncio.sleep(freq)
-        except:
-            print("Received exception!")
-
-
 
 async def fully_connected():
     freq = 0.4
-    piglow.all(0)
-    for x in range(150, 240):
-        piglow.green(x)
-        piglow.show()
-        await asyncio.sleep(freq)
-    for x in range(240, 150, -1):
-        piglow.green(x)
-        piglow.show()
-        await asyncio.sleep(freq)
+    # piglow.all(0)
+    while True:
+        for x in range(150, 240):
+            # piglow.green(x)
+            # piglow.show()
+            await asyncio.sleep(freq)
+        for x in range(240, 150, -1):
+            # piglow.green(x)
+            # piglow.show()
+            await asyncio.sleep(freq)
 
 # indicates issue 
 async def issue():
     freq = 0.4
-    piglow.all(0)
+    # piglow.all(0)
     while True:
-        piglow.red(200)
-        piglow.show()
+        # piglow.red(200)
+        # piglow.show()
         await asyncio.sleep(freq)
-        piglow.red(20)
-        piglow.show()
+        # piglow.red(20)
+        # piglow.show()
         await asyncio.sleep(freq)
 
 async def access_point():
     freq = 0.01
-    piglow.all(0)
+    # piglow.all(0)
     while True:
         for x in range(140, 250, 2):
-            piglow.blue(x)
-            piglow.show()
+            # piglow.blue(x)
+            # piglow.show()
             await asyncio.sleep(freq)
         for x in range(250, 140, -2):
-            piglow.blue(x)
-            piglow.show()
+            # piglow.blue(x)
+            # piglow.show()
             await asyncio.sleep(freq)
 
+statuses = {
+    'BOOTING': booting,
+    'ACCESS_POINT': access_point,
+    'WIFI_AND_SMOOTHIE_CONNECTED': fully_connected,
+    'ISSUE': issue
+}   
+
+class RobotStatusChangeError(NotImplementedError):
+    """Raised when an invalid status change is requested for the
+    robot status lights.
+
+    Attributes:
+        received status -- status received
+    """
+
+    def __init__(self, received_status):
+        self.received_status = received_status
+        
 def create_listener():
     current_animation = None
     prev_state = None
 
     async def listen(reader, writer):
-        nonlocal current_animation
-        nonlocal prev_state
-        loop = asyncio.get_event_loop()
-
         def cancel_animation():
-            print(type(current_animation))
             if current_animation:
                 current_animation.cancel()
-
         def set_state(lighting_function):
             nonlocal current_animation
             cancel_animation()
-            current_animation = loop.create_task(lighting_function)
+            current_animation = loop.create_task(lighting_function())
 
+        nonlocal prev_state
         data = await reader.readline()
-        try:
-            new_state = int(data)
-            addr = writer.get_extra_info('peername')
-            print("Received %r from %r" % (new_state, addr))
+        new_state = data.decode()
+        addr = writer.get_extra_info('peername')
+        print("Received %r from %r" % (new_state, addr))
 
+        if new_state in statuses:
             prev_state = new_state
-
-            if new_state == statuses['BOOTING']:
-                set_state(booting)
-            elif new_state == statuses['WIFI_AND_SMOOTHIE_CONNECTED']:
-                set_state(fully_connected)
-            elif new_state == statuses['ACCESS_POINT']:
-                set_state(access_point)
-            elif new_state == statuses['ISSUE']:
-                set_state(issue)
-            else:
-                print('No animation for state: {}. Ignoring.'.format(new_state))
-        except ValueError:
-            print('[ERROR] received a non-interger status code\n')
-
+            set_state(statuses[new_state])
+        else:
+            print('No animation for state: {}. Ignoring.'.format(new_state))
+            raise(RobotStatusChangeError(data))
         writer.close() # Is this necessary? Why here? Does the reader need to be closed?
     return listen
 
@@ -125,7 +114,6 @@ def send_status(status):
     loop = asyncio.get_event_loop()
     status_to_send = (str(status) + '\n').encode()
     loop.run_until_complete(tcp_writer(str(status).encode(), loop))
-    loop.close()
 
 
 if __name__ == "__main__":

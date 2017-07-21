@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
 from opentrons import server, robot
-from status_light import statuses, send_status
+from status_light import send_status
 import os, time
-import asyncio
 
 DEFAULT_PORT = '/dev/ttyACM0'
 
 if __name__ == '__main__':
-    send_status(statuses['BOOTING'])
+    send_status('BOOTING')
 
     try:
         print("[SERVER BOOT] Server node setup")
@@ -27,7 +26,7 @@ if __name__ == '__main__':
     
     # The server above should run indefinitely 
     finally:
-        send_status(statuses['ISSUE'])
+        send_status('ISSUE')
 
 
 
