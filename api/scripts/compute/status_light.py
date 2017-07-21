@@ -10,11 +10,11 @@ async def booting():
     freq = 0.4
     piglow.all(0)
     while True:
-        for x in range(210, 240):
+        for x in range(100, 240):
             piglow.white(x)
             piglow.show()
             await asyncio.sleep(freq)
-        for x in range(240, 210, -1):
+        for x in range(240, 100, -1):
             piglow.white(x)
             piglow.show()
             await asyncio.sleep(freq)
@@ -23,11 +23,11 @@ async def fully_connected():
     freq = 0.4
     piglow.all(0)
     while True:
-        for x in range(150, 240):
+        for x in range(100, 240):
             piglow.green(x)
             piglow.show()
             await asyncio.sleep(freq)
-        for x in range(240, 150, -1):
+        for x in range(240, 100, -1):
             piglow.green(x)
             piglow.show()
             await asyncio.sleep(freq)
@@ -42,6 +42,17 @@ async def issue():
         await asyncio.sleep(freq)
         piglow.red(20)
         piglow.show()
+        await asyncio.sleep(freq)
+
+async def access_point():
+    i = 0
+    freq = 0.1
+
+    while True:
+        piglow.all(0)
+        piglow.set(i % 18, [15, 31, 63, 127, 255, 127, 63, 31, 15])
+        piglow.show()
+        i += 1
         await asyncio.sleep(freq)
 
 async def access_point():
