@@ -7,10 +7,10 @@ import piglow
 import asyncio
 
 statuses = {
-    'BOOTING': 0,
-    'ACCESS_POINT': 1,
-    'WIFI_AND_SMOOTHIE_CONNECTED': 2,
-    'ISSUE': 3
+    'BOOTING': b'0\n',
+    'ACCESS_POINT': b'1\n',
+    'WIFI_AND_SMOOTHIE_CONNECTED': b'2\n',
+    'ISSUE': b'3\n'
 }            
 
 
