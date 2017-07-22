@@ -13,24 +13,24 @@ async def access_point():
     freq = 0.01
     piglow.all(0)
     while True:
-        for x in range(0, 255):
+        for x in range(150, 255, 3):
             piglow.blue(x)
             piglow.show()
             await asyncio.sleep(freq)
-        for x in range(255, 0, -1):
+        for x in range(255, 150, -3):
             piglow.blue(x)
             piglow.show()
             await asyncio.sleep(freq)
 
 async def fully_connected():
-    freq = 0.4
+    freq = 0.01
     piglow.all(0)
     while True:
-        for x in range(100, 240):
+        for x in range(170, 255):
             piglow.green(x)
             piglow.show()
             await asyncio.sleep(freq)
-        for x in range(240, 100, -1):
+        for x in range(255, 170, -1):
             piglow.green(x)
             piglow.show()
             await asyncio.sleep(freq)
