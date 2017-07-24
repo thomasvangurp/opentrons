@@ -13,7 +13,6 @@ from opentrons.util.environment import settings
 
 
 log = get_logger(__name__)
-RESIN_UPDATE_LOCK = LockFile('/tmp/resin/resin-updates')
 
 class InstrumentMosfet(object):
     """
@@ -583,7 +582,7 @@ class Robot(object):
 
         for instrument in self._instruments.values():
             instrument.reset()
-            
+
     def set_connection(self, mode):
         self.mode = mode
         if mode not in self.smoothie_drivers:
