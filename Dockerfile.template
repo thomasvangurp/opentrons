@@ -11,7 +11,7 @@ RUN apt-get install gcc make git g++
 
 
 RUN pip install -r requirements.txt
-
+RUN pip install piglow smbus2
 #******* Wifi_connect_resi*********n
 
 # Use apt-get to install dependencies
@@ -49,9 +49,6 @@ RUN curl -SL "https://github.com/resin-io/resin-wifi-connect/archive/v$RESIN_WIF
     ./node_modules/.bin/coffee -c ./src
 
 #******* Wifi_connect_resi*********n
-
-
-RUN pip install piglow smbus2
 
 WORKDIR /usr/src/api
 
