@@ -5,7 +5,7 @@ Description = USB Stick inserted by user
 What = /dev/sda1
 Where = /data/user_storage
 Type = vfat
-Options = rw,relatime,data=ordered
+Options = rw
 
 [Install]
 WantedBy = multi-user.target
