@@ -56,6 +56,9 @@ COPY ./api ./
 
 RUN mv /usr/local/lib/python3.5/site-packages/smbus2 /usr/local/lib/python3.5/site-packages/smbus
 
+COPY data-user_storage.mount /etc/systemd/system/
+RUN systemctl enable data-user_storage.mount
+
 ENV INITSYSTEM on
 
 CMD ["/usr/src/api/scripts/compute/start.sh"]
