@@ -403,25 +403,34 @@ class Pipette(Instrument):
         >>> p200.dispense(plate[2]) # doctest: +ELLIPSIS
         <opentrons.instruments.pipette.Pipette object at ...>
         """
-        if not helpers.is_number(volume):
-            if volume and not location:
-                location = volume
-            volume = self.current_volume
-
-        # Ensure we don't dispense more than the current volume
-        volume = min(self.current_volume, volume)
 
         # if volume is specified as 0uL, then do nothing
         if volume == 0:
             return self
 
+        if not helpers.is_number(volume):
+            if volume and not location:
+                location = volume
+            volume = self.current_volume
+
+        #FIXME: This function doesn't work yet
+        if not location:
+           location = helpers._get_well_from_position(self.robot._driver.get_current_position())
+
+        # Ensure we don't dispense more than the current volume
+        volume = min(self.current_volume, volume)
+        self._dispense(volume, location)
+
+    def _dispense(self, volume, well, rate):
         _description = "Dispensing {0} {1}".format(
             volume,
             ('at ' + humanize_location(location) if location else '')
         )  # NOQA
         self.robot.add_command(_description)
 
-        self.move_to(location, strategy='arc')  # position robot above location
+        self.move_to(well, strategy='arc')  # position robot above location
+        well.add_volume()
+
 
         # TODO(ahmed): revisit this
         distance = self._plunge_distance(self.current_volume - volume)

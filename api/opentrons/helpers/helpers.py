@@ -305,3 +305,7 @@ def _compress_for_consolidate(max_vol, plan, **kwargs):
         temp_aspirates.append(p['aspirate'])
     _append_aspirates()
     return new_transfer_plan
+
+# TODO: need to find well given xy position so we can track volume
+def _get_well_from_position(position):
+    pass
