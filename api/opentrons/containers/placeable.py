@@ -480,7 +480,13 @@ class Well(Placeable):
     """
     Class representing a Well
     """
-    pass
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.volume = 0
+
+    def add_volume(self, volume):
+        self.volume += volume
 
 
 class Slot(Placeable):

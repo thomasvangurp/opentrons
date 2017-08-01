@@ -318,6 +318,8 @@ class Pipette(Instrument):
                 location = volume
             volume = self.max_volume - self.current_volume
 
+        location.add_volume(volume)
+
         # if volume is specified as 0uL, then do nothing
         if volume == 0:
             return self
