@@ -419,17 +419,17 @@ class Pipette(Instrument):
 
         # Ensure we don't dispense more than the current volume
         volume = min(self.current_volume, volume)
-        self._dispense(volume, location)
+        self._dispense(volume, location, rate)
 
-    def _dispense(self, volume, well, rate):
+    def _dispense(self, volume, location, rate):
         _description = "Dispensing {0} {1}".format(
             volume,
             ('at ' + humanize_location(location) if location else '')
         )  # NOQA
         self.robot.add_command(_description)
 
-        self.move_to(well, strategy='arc')  # position robot above location
-        well.add_volume()
+        self.move_to(location, strategy='arc')  # position robot above location
+        location.add_volume()
 
 
         # TODO(ahmed): revisit this

@@ -4,7 +4,6 @@ import unittest
 from opentrons import Robot
 from opentrons.containers import load as containers_load
 from opentrons.instruments import pipette
-from opentrons.trackers import liquid_tracker
 # from opentrons.util.vector import Vector
 
 # from opentrons.containers.placeable import unpack_location, Container, Well
