@@ -1,58 +1,8 @@
 import copy
 
 from opentrons.util import trace
-from opentrons.containers.placeable import WellSeries
 from opentrons import containers
-
-
-_tracker_state = {}
-_tracker_init_state = {}
-
-
-def liquid_event(data):
-    global _tracker_state
-    name = data.get('name')
-
-    if name is not 'aspirate' and name is not 'dispense':
-        return
-
-    location = data.get('location')
-    if not location:
-        return
-
-    volume = data.get('volume')
-    pipette_axis = data.get('pipette')
-    placeable, _ = containers.unpack_location(location)
-
-    if name is 'aspirate':
-        _tracker_state = aspirate(
-            _tracker_state, volume, pipette_axis, placeable)
-    else:
-        _tracker_state = dispense(
-            _tracker_state, volume, pipette_axis, placeable)
-
-
-trace.EventBroker.get_instance().add(liquid_event)
-
-
-def init(state=None):
-    global _tracker_init_state, _tracker_state
-    if not state:
-        state = {}
-    _tracker_init_state = state
-    reset()
-
-
-def reset():
-    global _tracker_init_state, _tracker_state
-    _tracker_state = {}
-    for k, v in _tracker_init_state.items():
-        _tracker_state[k] = v
-
-
-def state():
-    global _tracker_state
-    return _tracker_state
+from opentrons.containers import WellSeries
 
 
 def ensure_keys(state, path):
@@ -139,3 +89,46 @@ def dispense(state, volume, instrument, destination):
     for d in destination:
         state[d] = add(volume, state[d])
     return state
+
+
+class Tracker(object):
+    def __init__(self, state):
+        self.state = state
+        trace.EventBroker.get_instance().add(self.log)
+
+    def log(self, info):
+        if 'function' not in info:
+            return
+
+        if 'Pipette.' not in info['function']:
+            return
+
+        arguments = info['arguments']
+        if info['function'] == 'Pipette.dispense':
+            print('dispense')
+            self.state = dispense(
+                self.state,
+                arguments['volume'],
+                arguments['self'].name,
+                arguments['location'].get_name())
+
+        if info['function'] == 'Pipette.aspirate':
+            print('dispense')
+            self.state = aspirate(
+                self.state,
+                arguments['volume'],
+                arguments['self'].name,
+                arguments['location'].get_name())
+
+        print(self.state)
+
+    def init(self, state=None):
+        if not state:
+            state = {}
+        self.initial_state = state
+        reset()
+
+    def reset(self):
+        self.state = {}
+        for k, v in self.initial_state.items():
+            self.state[k] = v

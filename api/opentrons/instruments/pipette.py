@@ -8,6 +8,7 @@ from opentrons.containers.placeable import (
 )
 from opentrons.helpers import helpers
 from opentrons.instruments.instrument import Instrument
+from opentrons.util.trace import traceable
 
 
 class Pipette(Instrument):
@@ -259,6 +260,7 @@ class Pipette(Instrument):
 
         return self
 
+    @traceable
     def aspirate(self, volume=None, location=None, rate=1.0):
         """
         Aspirate a volume of liquid (in microliters/uL) using this pipette
@@ -347,6 +349,7 @@ class Pipette(Instrument):
         self.current_volume += volume  # update after actual aspirate
         return self
 
+    @traceable
     def dispense(self,
                  volume=None,
                  location=None,
@@ -429,7 +432,7 @@ class Pipette(Instrument):
         self.robot.add_command(_description)
 
         self.move_to(location, strategy='arc')  # position robot above location
-        location.add_volume()
+        # location.add_volume()
 
 
         # TODO(ahmed): revisit this
