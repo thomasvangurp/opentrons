@@ -387,6 +387,7 @@ class Robot(object):
                 'commands_total': self.cmds_total
             })
             trace.EventBroker.get_instance().notify(cmd_run_event)
+
         self._commands.append(command)
 
     @helpers.not_app_run_safe

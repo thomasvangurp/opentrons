@@ -29,7 +29,7 @@ def concentrations(state):
 
     t = total_volume(state)
     return {
-        key: value / t
+        key: value / t if t else 0  # if volume is 0, concentration is 0
         for key, value in state.items()
     }
 
@@ -105,6 +105,7 @@ class Tracker(object):
 
         setattr(item, 'liquids', self.state[item])
         setattr(item, 'volume', sum(self.state[item].values()))
+        setattr(item, 'concentrations', concentrations(self.state[item]))
 
     def __init__(self, instruments, state):
         self.state = state
