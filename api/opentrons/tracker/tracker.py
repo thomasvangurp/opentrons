@@ -92,35 +92,45 @@ def dispense(state, volume, instrument, destination):
 
 
 class Tracker(object):
-    def __init__(self, state):
-        self.state = state
-        trace.EventBroker.get_instance().add(self.log)
+    # Map names of functions to state transformation actions
+    event_mapping = {
+        'Pipette.dispense': dispense,
+        'Pipette.aspirate': aspirate
+    }
 
-    def log(self, info):
+    def update_volume_attributes(self, item):
+        setattr(item, 'liquids', self.state[item])
+        setattr(item, 'volume', sum(self.state[item].values()))
+
+    def __init__(self, instruments, state):
+        self.state = state
+        self.instruments = instruments
+        [self.update_volume_attributes(item) for item in state.keys()]
+        trace.EventBroker.get_instance().add(self.handler)
+
+    def handler(self, info):
         if 'function' not in info:
             return
 
-        if 'Pipette.' not in info['function']:
+        arguments = info['arguments']
+        function = info['function']
+
+        if function not in Tracker.event_mapping:
             return
 
-        arguments = info['arguments']
-        if info['function'] == 'Pipette.dispense':
-            print('dispense')
-            self.state = dispense(
-                self.state,
-                arguments['volume'],
-                arguments['self'].name,
-                arguments['location'].get_name())
+        if arguments['self'] not in self.instruments:
+            return
 
-        if info['function'] == 'Pipette.aspirate':
-            print('dispense')
-            self.state = aspirate(
-                self.state,
-                arguments['volume'],
-                arguments['self'].name,
-                arguments['location'].get_name())
+        action = Tracker.event_mapping[function]
+        well = arguments['location']
 
-        print(self.state)
+        self.state = action(
+            self.state,
+            arguments['volume'],
+            arguments['self'],
+            well)
+
+        self.update_volume_attributes(well)
 
     def init(self, state=None):
         if not state:

@@ -3,6 +3,7 @@ import unittest
 from opentrons import robot
 from opentrons.containers import load as containers_load
 from opentrons.instruments import pipette
+from pytest import approx
 # from opentrons.tracker import Tracker
 
 
@@ -59,13 +60,17 @@ def test_liquid_tracking():
     )
 
     wells = {
-        well.get_name(): {'red': 100, 'green': 100, 'blue': 100}
+        well: {'red': 30, 'green': 30, 'blue': 30}
         for well in plate.wells()}
 
-    tracker = Tracker({p200.name: {}, **wells})
+    tracker = Tracker(instruments=[p200], state=wells)
 
-    p200.aspirate(100, plate['A1'])
-    p200.dispense(100, plate['A2'])
+    p200.aspirate(30, plate['A1'])
+    p200.dispense(30, plate['A2'])
 
-    assert wells[plate['A1']] == {'red': 66, 'green': 66, 'blue': 66}
-    assert wells[plate['A2']] == {'red': 133, 'green': 133, 'blue': 133}
+    # Using approx to compare floating point numbers
+    # More here: https://docs.pytest.org/en/latest/builtin.html#comparing-floating-point-numbers  # NOQA
+    assert plate['A1'].volume == approx(60)
+    assert plate['A2'].volume == approx(120)
+    assert plate['A1'].liquids == approx({'red': 20, 'green': 20, 'blue': 20})
+    assert plate['A2'].liquids == approx({'red': 40, 'green': 40, 'blue': 40})
