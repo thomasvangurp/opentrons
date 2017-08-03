@@ -99,6 +99,10 @@ class Tracker(object):
     }
 
     def update_volume_attributes(self, item):
+        # No liquid yet. Nothing to do.
+        if item not in self.state:
+            return
+
         setattr(item, 'liquids', self.state[item])
         setattr(item, 'volume', sum(self.state[item].values()))
 
