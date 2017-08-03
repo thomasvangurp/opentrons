@@ -65,17 +65,20 @@ def test_liquid_tracking():
         trough: {'red': 30, 'green': 30, 'blue': 30}
     })
 
-    p200.aspirate(60, trough)
-    p200.dispense(30, plate['A1'])
-    p200.dispense(30, plate['A2'])
-
     # Using approx to compare floating point numbers
     # More here: https://docs.pytest.org/en/latest/builtin.html#comparing-floating-point-numbers  # NOQA
+
+    p200.aspirate(60, trough)
     assert trough.volume == approx(30)
+
+    p200.dispense(30, plate['A1'])
     assert plate['A1'].volume == approx(30)
+    assert plate['A1'].liquids == approx({'red': 10, 'green': 10, 'blue': 10})
+
+    p200.dispense(30, plate['A2'])
     assert plate['A2'].volume == approx(30)
-    assert plate['A1'].liquids == approx({'red': 10, 'green': 10, 'blue': 10})
-    assert plate['A1'].liquids == approx({'red': 10, 'green': 10, 'blue': 10})
+    assert plate['A2'].liquids == approx({'red': 10, 'green': 10, 'blue': 10})
+
     d = plate['A1'].properties['diameter']
     h = plate['A1'].volume / (pi * d * d / 4)
     # TODO: make sure h value aligns with measurement units for
