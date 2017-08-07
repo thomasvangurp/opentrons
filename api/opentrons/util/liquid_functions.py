@@ -53,6 +53,9 @@ def add_liquids(src_liq_dict, src_vol, dest_liq_dict, dest_vol):
 
 def well_liquid_height(well):
     vol = well.volume
+    radius = well.properties['diameter']/2
+    height = vol / (math.pi *  math.pow(radius, 2))
+    return height
 
 
 

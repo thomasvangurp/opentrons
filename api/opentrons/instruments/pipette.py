@@ -499,11 +499,17 @@ class Pipette(Instrument):
 
     @traceable('dispense')
     def _dispense_to_well(self, volume, well, rate, vector):
-        self.move_to(well, strategy='arc')  # position robot above location
+        self.move_to((well, vector), strategy='arc')  # position robot above location
         speed = self.speeds['dispense'] * rate
         self.motor.speed(speed)
         self.motor.move(self._plunge_destination_from_volume(volume))
         return self
+
+    def _dispense_at_liquid_level(self, volume, well, rate, vector):
+        liquid_level = lf.well_liquid_height(well)
+        print("dispensing at liquid level: {}".format(liquid_level))
+        new_vector = Vector(vector['x'], vector['y'], liquid_level)
+        _dispense_to_well(self, volume, well, rate, new_vector)
 
     def _position_for_aspirate(self, location=None):
         """
