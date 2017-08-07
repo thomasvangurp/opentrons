@@ -4,38 +4,57 @@ from opentrons import server, robot
 from status_light import send_status
 import os, time
 
-DEFAULT_PORT = '/dev/ttyACM0'
-
 if __name__ == '__main__':
     try:
         print("[SERVER BOOT] Server node setup")
-        try:
-            robot.connect(DEFAULT_PORT)
+        connection_made = False
+        attempt = 0
+        while not connection_made:
+            attempt += 1
+            try:
+                if connect_to_smoothie():
+                    connection_made = True
+                    print("[SERVER BOOT] Successfully connected to smoothie on
+                            attempt {}".format(attempt))
+            except RuntimeError as e:
+                print("[SERVER BOOT] Runtime Error in Smoothie Connection on
+                        attempt {} - {}".format(attempt, e))
+            except FileNotFoundError as e:
+                print("[SERVER BOOT] FileNotFound Error in Smoothie Connection on
+                        attempt {}, likely due to no smoothie connection -
+                        ".format(attempt, e))
+            except Exception as e:
+                print("[SERVER BOOT] Uncategorized exception during Smoothie
+                Connection on attempt {} - {}".format(attempt, e))
+            if attempt > 5:
+                break
+        if connection_made:
             send_status({'SMOOTHIE_CONNECTED': True})
-        except RuntimeError:
-            # Sometimes it fails on the first connection attempt - not sure why.
-            # TODO: Change this hackey fix
-            robot.connect(DEFAULT_PORT)
-            print("[SERVER BOOT] Second smoothie connect attempt")
-            send_status({'SMOOTHIE_CONNECTED': True})
-        except FileNotFoundError:
-            send_status({'SMOOTHIE_CONNECTED': False})
-            print("[SERVER ERROR] No smoothie detected at ", DEFAULT_PORT)
-        except:
-            send_status({'SMOOTHIE_CONNECTED': False})
-            send_status({'ISSUE': True})
-
-        send_status({'SERVER_ONLINE': True})
-        server.start('0.0.0.0')
-        send_status({'SERVER_ONLINE': False})
-
-
-
+            send_status({'SERVER_ONLINE': True})
+            print("server message: {}".format(server.start('0.0.0.0')))
+            send_status({'SERVER_ONLINE': False})
         print("[SERVER SHUTDOWN] Server node terminated")
-    
-    # The server above should run indefinitely 
+
+    # The server above should run indefinitely
     finally:
         send_status({'ISSUE': True})
+
+
+
+def connect_to_smoothie():
+    if os.path.exists('/dev/ACM0'):
+        smoothie_port = '/dev/ACM0'
+    elif os.path.exists('/dev/ACM1'):
+        smoothie_port = '/dev/ACM0'
+    robot.connect(smoothie_port)
+    if robot.is_connected() and not robot.is_simulating():
+        return True
+    else:
+        return False
+
+
+
+
 
 
 
