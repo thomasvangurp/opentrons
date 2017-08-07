@@ -3,6 +3,9 @@ import math
 import numbers
 from collections import OrderedDict
 from opentrons.util.vector import Vector
+from opentrons.util import trace
+from opentrons.util import liquid_functions as lf
+
 
 import re
 import functools
@@ -27,11 +30,22 @@ def unpack_location(location):
         )
     return (placeable, Vector(coordinates))
 
+def placeable_to_well(placeable):
+    '''
+    :param location: Takes is a location of either :Placeable:
+    or of (:Placeable:, :Vector:)
+    :return:
+    '''
+    if isinstance(placeable, (WellSeries, Container)):
+        return placeable[0]
+    elif isinstance(placeable, Well):
+        return placeable
+    else:
+        return None
 
 def humanize_location(location):
     well, _ = unpack_location(location)
     return repr(well)
-
 
 class Placeable(object):
     """
@@ -454,7 +468,6 @@ class Placeable(object):
 
         return coords_to_reference + coords_to_endpoint
 
-
 class Deck(Placeable):
     """
     This class implements behaviour specific to the Deck
@@ -480,15 +493,54 @@ class Well(Placeable):
     """
     Class representing a Well
     """
-    pass
+    def __init__(self, state={}, *args, **kwargs):
+        super(Well, self).__init__(*args, **kwargs)
+        default_state = {
+            'liquids': {id(self): 1},
+            'volume': 0}
+        self._state = {**default_state, **state}
+        trace.EventBroker.get_instance().add(self, self._state_event_handler)
 
+    def __del__(self):
+        trace.EventBroker.get_instance().remove(self)
+
+    def _state_event_handler(self, event_type, event_info):
+        if event_type == 'dispense':
+            self._state['liquids'], self._state['volume'] = \
+                lf.add_liquids(self._state['liquids'],
+                               self._state['volume'],
+                                event_info['liquids'],
+                                event_info['volume'])
+
+        elif event_type == 'aspirate':
+            volume   = event_info['volume']
+            self._state['volume'] -= volume
+
+    def add_liquid(self, name, volume):
+        self._state['liquids'],self._state['volume'] = \
+            lf.add_liquids({name: 1}, volume, self._state['liquids'], self._state['volume'])
+
+    @property
+    def volume(self):
+        '''Gets the current volume of all liquids in the Well'''
+        return self._state['volume']
+
+    @volume.setter
+    def volume(self, volume):
+        '''Sets the current volume of all liquids in the Well'''
+        self._state['volume'] = volume
+
+    @property
+    def liquids(self):
+        '''Returns a dict of the current contents of the Well
+            and their relative concentrations'''
+        return self._state['liquids']
 
 class Slot(Placeable):
     """
     Class representing a Slot
     """
     pass
-
 
 class Container(Placeable):
     """
@@ -688,7 +740,6 @@ class Container(Placeable):
             return self.wells(i)
         else:
             raise ValueError('Placeable.wells(x=, y=) expects ints')
-
 
 class WellSeries(Container):
     """

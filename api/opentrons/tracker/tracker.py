@@ -13,10 +13,8 @@ def ensure_keys(state, path):
         parent = parent[p]
     return state
 
-
 def total_volume(state):
     return sum(state.values())
-
 
 def concentrations(state):
     # if any of our children is a dict, go one level deeper
@@ -114,11 +112,13 @@ class Tracker(object):
         trace.EventBroker.get_instance().add(self.handler)
 
     def handler(self, info):
-        if 'function' not in info:
+        function = info.get('function', None)
+        
+        # TODO: why are other 'random' emits occuring?
+        if not function:
             return
 
         arguments = info['arguments']
-        function = info['function']
 
         if function not in Tracker.event_mapping:
             return
@@ -127,7 +127,7 @@ class Tracker(object):
             return
 
         action = Tracker.event_mapping[function]
-        well = arguments['location']
+        well = arguments['location'] #
 
         self.state = action(
             self.state,

@@ -98,6 +98,7 @@ class InstrumentMotor(object):
         return self
 
 
+# noinspection PyPackageRequirements
 class Robot(object):
     """
     This class is the main interface to the robot.
@@ -134,7 +135,7 @@ class Robot(object):
     >>> from opentrons import robot, instruments, containers
     >>> robot.reset() # doctest: +ELLIPSIS
     <opentrons.robot.robot.Robot object at ...>
-    >>> plate = containers.load('96-flat', 'A1', 'plate')
+    >>> plate = containers.load(load('96-flat', 'A1', 'plate')
     >>> p200 = instruments.Pipette(axis='b', max_volume=200)
     >>> p200.aspirate(200, plate[0]) # doctest: +ELLIPSIS
     <opentrons.instruments.pipette.Pipette object at ...>
@@ -386,7 +387,6 @@ class Robot(object):
                 'command_index': len(self._commands),
                 'commands_total': self.cmds_total
             })
-            trace.EventBroker.get_instance().notify(cmd_run_event)
 
         self._commands.append(command)
 
@@ -565,6 +565,18 @@ class Robot(object):
         Return a copy of a raw list of commands in the Robot's queue.
         """
         return copy.deepcopy(self._commands)
+
+    def commands(self):
+        """
+        Access the human-readable list of commands in the robot's queue.
+
+        Returns
+        -------
+        A list of string values for each command in the queue, for example:
+
+        ``'Aspirating 200uL at <Deck>/<Slot A1>/<Container plate>/<Well A1>'``
+        """
+        return self._commands
 
     def prepare_for_run(self):
         """
@@ -813,17 +825,7 @@ class Robot(object):
             }
         }
 
-    def commands(self):
-        """
-        Access the human-readable list of commands in the robot's queue.
 
-        Returns
-        -------
-        A list of string values for each command in the queue, for example:
-
-        ``'Aspirating 200uL at <Deck>/<Slot A1>/<Container plate>/<Well A1>'``
-        """
-        return self._commands
 
     def comment(self, msg):
         self.add_command(msg)

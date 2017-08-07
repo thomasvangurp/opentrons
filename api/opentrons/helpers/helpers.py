@@ -34,7 +34,6 @@ def flip_coordinates(coordinates, dimensions):
     x_size, y_size, z_size = unpack_coordinates(dimensions)
     return (x, y_size - y, z_size - z)
 
-
 def break_down_travel(p1, target, increment=5, mode='absolute'):
     """
     given two points p1 and target, this returns a list of
@@ -305,7 +304,3 @@ def _compress_for_consolidate(max_vol, plan, **kwargs):
         temp_aspirates.append(p['aspirate'])
     _append_aspirates()
     return new_transfer_plan
-
-# TODO: need to find well given xy position so we can track volume
-def _get_well_from_position(position):
-    pass

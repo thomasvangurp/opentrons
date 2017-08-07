@@ -10,7 +10,8 @@ from opentrons.containers.placeable import (
     Container,
     Well,
     WellSeries,
-    unpack_location
+    unpack_location,
+    placeable_to_well
 )
 from opentrons.containers.calibrator import apply_calibration
 from opentrons.util import environment
@@ -23,6 +24,7 @@ __all__ = [
     Well,
     WellSeries,
     unpack_location,
+    placeable_to_well,
     apply_calibration]
 
 
