@@ -122,7 +122,7 @@ class EventBroker(object):
         :param command_info: formatted message from the notifying event
         :return: None
         '''
-        for callback in self._occurrence_notifier:
+        for callback in self._occurrence_notifiers:
             callback(command_info)
 
 
