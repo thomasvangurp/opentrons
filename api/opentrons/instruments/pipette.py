@@ -161,11 +161,11 @@ class Pipette(Instrument):
 
         #TODO: should be able to accept an initial state
         self._state = self._default_state
-        trace.EventBroker.get_instance().add(
+        trace.EventBroker.get_instance().add_object_and_state_handler(
             self, self._state_event_handler)
 
     def __del__(self):
-        trace.EventBroker.get_instance().remove(self)
+        trace.EventBroker.get_instance().remove_tracked_object(self)
 
     def _state_event_handler(self, event_name, event_info):
         if event_name == 'aspirate':

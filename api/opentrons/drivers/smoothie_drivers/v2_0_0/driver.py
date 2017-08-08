@@ -11,7 +11,7 @@ from opentrons.util import trace
 
 
 log = get_logger(__name__)
-
+broker = trace.EventBroker.get_instance()
 
 class SmoothieDriver_2_0_0(SmoothieDriver):
 
@@ -316,7 +316,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             },
             'class': type(self.connection).__name__
         }
-        trace.EventBroker.get_instance().notify(arguments)
+        broker.notify_of_event(arguments)
 
     def move_plunger(self, mode='absolute', **kwargs):
         self.move(mode, **kwargs)
@@ -401,7 +401,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
                 'plunger': self.get_plunger_positions()["current"]
             }
         }
-        trace.EventBroker.get_instance().notify(arguments)
+        broker.notify_of_event(arguments)
 
     def set_coordinate_system(self, mode):
         if mode == 'absolute':
@@ -431,7 +431,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
                 time.sleep(delay_time)
 
         end_time = _current_time() + delay_time
-        trace.EventBroker.get_instance().notify({
+        broker.notify_of_event({
             'name': 'delay-start',
             'time': delay_time
         })
@@ -439,11 +439,11 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             self.check_paused_stopped()
             _sleep(min(1, end_time - _current_time()))
 
-            trace.EventBroker.get_instance().notify({
+            broker.notify_of_event({
                 'name': 'countdown',
                 'countdown': int(end_time - time.time())
             })
-        trace.EventBroker.get_instance().notify({
+        broker.notify_of_event({
             'name': 'delay-finish'
         })
 

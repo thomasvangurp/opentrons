@@ -26,7 +26,7 @@ def traceable(*args):
 
             # args_dict = {k: str(v) for k, v in args_dict.items()}
 
-            broker.notify({
+            broker.notify_of_object_state_change({
                 'name': name,
                 'function': f.__qualname__,
                 'arguments': args_dict,
@@ -90,15 +90,22 @@ class EventBroker(object):
     _instance = None
 
     def __init__(self):
+        # state change handlers for objects that hold and manage state
+        # keys are object id's and values are state_change handlers
         self._tracked_objects = {}
+        # general notifiers - currently used for sending notifications to the UI
+        self._occurrence_notifiers = []
 
-    def add(self, object, handler):
+    def add_object_and_state_handler(self, object, handler):
         self._tracked_objects.update({id(object): handler})
 
-    def remove(self, f):
+    def add_occurrence_handler(self, handler):
+        self._occurrence_notifiers.append(handler)
+
+    def remove_tracked_object(self, f):
         self._tracked_objects.pop(id(f))
 
-    def notify(self, command_info):
+    def notify_of_object_state_change(self, command_info):
         '''
         Passes information about tracked operations
          to the state handlers of the objects that they
@@ -109,6 +116,15 @@ class EventBroker(object):
         if objects:
             [self._tracked_objects[id(object)](event_name, event_info)
              for object in objects]
+
+    def notify_of_event(self, command_info):
+        '''
+        :param command_info: formatted message from the notifying event
+        :return: None
+        '''
+        for callback in self._occurrence_notifier:
+            callback(command_info)
+
 
     @classmethod
     def get_instance(cls):

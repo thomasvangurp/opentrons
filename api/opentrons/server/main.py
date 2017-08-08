@@ -67,7 +67,7 @@ def notify(info):
         socketio.emit('event', json.loads(s))
 
 
-trace.EventBroker.get_instance().add(notify)
+trace.EventBroker.get_instance().add_occurrence_handler(notify)
 
 
 @app.route("/")

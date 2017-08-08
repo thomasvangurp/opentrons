@@ -488,7 +488,6 @@ class Deck(Placeable):
         """
         return container_instance in self.containers().values()
 
-
 class Well(Placeable):
     """
     Class representing a Well
@@ -499,10 +498,10 @@ class Well(Placeable):
             'liquids': {id(self): 1},
             'volume': 0}
         self._state = {**default_state, **state}
-        trace.EventBroker.get_instance().add(self, self._state_event_handler)
+        trace.EventBroker.get_instance().add_object_and_state_handler(self, self._state_event_handler)
 
     def __del__(self):
-        trace.EventBroker.get_instance().remove(self)
+        trace.EventBroker.get_instance().remove_tracked_object(self)
 
     def _state_event_handler(self, event_type, event_info):
         if event_type == 'dispense':
