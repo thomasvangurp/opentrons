@@ -208,15 +208,15 @@ window.intercomSettings = {
 </div>
 <div class="section" id="homing">
 <h2>Homing<a class="headerlink" href="#homing" title="Permalink to this headline">¶</a></h2>
-<p>You can enqueue a <code class="docutils literal"><span class="pre">home()</span></code> command to your protocol, by giving it the <code class="docutils literal"><span class="pre">enqueue=True</span></code> option. Without passing the enqueue option, the home command will run immediately.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">(</span><span class="n">enqueue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>           <span class="c1"># home the robot on all axis</span>
-<span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">enqueue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>      <span class="c1"># home the Z axis only</span>
+<p>You can <cite>home</cite> the robot by calling <code class="docutils literal"><span class="pre">home()</span></code>. You can also specify axes. The robot will home immdediately when this call is made.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>           <span class="c1"># home the robot on all axis</span>
+<span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>        <span class="c1"># home the Z axis only</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="commands">
 <h2>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h2>
-<p>When commands are called on a pipette, they are automatically enqueued to the <code class="docutils literal"><span class="pre">robot</span></code> in the order they are called. You can see all currently held commands by calling <code class="docutils literal"><span class="pre">robot.commands()</span></code>, which returns a <a class="reference external" href="https://docs.python.org/3.5/tutorial/datastructures.html#more-on-lists">Python list</a>.</p>
+<p>When commands are called on a pipette, they are recorded on the <code class="docutils literal"><span class="pre">robot</span></code> in the order they are called. You can see all past executed commands by calling <code class="docutils literal"><span class="pre">robot.commands()</span></code>, which returns a <a class="reference external" href="https://docs.python.org/3.5/tutorial/datastructures.html#more-on-lists">Python list</a>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
 <span class="n">pipette</span><span class="o">.</span><span class="n">drop_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
 
@@ -225,16 +225,14 @@ window.intercomSettings = {
 </pre></div>
 </div>
 <p>will print out...</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>Homing Robot
-Homing Robot
-Picking up tip from &lt;Deck&gt;&lt;Slot A1&gt;&lt;Container my-rack&gt;&lt;Well A1&gt;
+<div class="highlight-none"><div class="highlight"><pre><span></span>Picking up tip from &lt;Deck&gt;&lt;Slot A1&gt;&lt;Container my-rack&gt;&lt;Well A1&gt;
 Drop_tip at &lt;Deck&gt;&lt;Slot A1&gt;&lt;Container my-rack&gt;&lt;Well A1&gt;
 </pre></div>
 </div>
 </div>
 <div class="section" id="clear-commands">
 <h2>Clear Commands<a class="headerlink" href="#clear-commands" title="Permalink to this headline">¶</a></h2>
-<p>Once commands are enqueued to the <code class="docutils literal"><span class="pre">robot</span></code>, we can erase those commands by calling <code class="docutils literal"><span class="pre">robot.clear_commands()</span></code>. Any previously created instruments and containers will still be inside robot, but all commands are erased.</p>
+<p>We can erase the robot command history by calling <code class="docutils literal"><span class="pre">robot.clear_commands()</span></code>. Any previously created instruments and containers will still be inside robot, but the commands history is erased.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">robot</span><span class="o">.</span><span class="n">clear_commands</span><span class="p">()</span>
 <span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">(</span><span class="n">tiprack</span><span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;There is&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">commands</span><span class="p">()),</span> <span class="s1">&#39;command&#39;</span><span class="p">)</span>
@@ -269,20 +267,6 @@ There are now 0 commands
 Hello, just picked up tip A1
 Picking up tip from &lt;Deck&gt;&lt;Slot A1&gt;&lt;Container my-rack&gt;&lt;Well A1&gt;
 Goodbye, just dropped tip A1
-</pre></div>
-</div>
-</div>
-<div class="section" id="simulate">
-<h2>Simulate<a class="headerlink" href="#simulate" title="Permalink to this headline">¶</a></h2>
-<p>Once commands have been enqueued to the <code class="docutils literal"><span class="pre">robot</span></code>, we can simulate their execution by calling <code class="docutils literal"><span class="pre">robot.simulate()</span></code>. This helps us debug our protocol, and to see if the robots gives us any warnings.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">()</span>
-
-<span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">robot</span><span class="o">.</span><span class="n">simulate</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>will print out...</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>pick_up_tip called with no reference to a tip
 </pre></div>
 </div>
 </div>
@@ -350,7 +334,6 @@ my-rack tiprack-200ul
 <li class="toctree-l2"><a class="reference internal" href="#commands">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#clear-commands">Clear Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#comment">Comment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#simulate">Simulate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#get-containers">Get Containers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#get-instruments">Get Instruments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reset">Reset</a></li>

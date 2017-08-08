@@ -191,9 +191,9 @@ window.intercomSettings = {
 <dt>Through this class you can can:</dt>
 <dd><ul class="first last simple">
 <li>define your <code class="xref py py-class docutils literal"><span class="pre">opentrons.Deck</span></code></li>
-<li><a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref py py-meth docutils literal"><span class="pre">simulate()</span></code></a> the protocol run</li>
+<li><code class="xref py py-meth docutils literal"><span class="pre">simulate()</span></code> the protocol run</li>
 <li><a class="reference internal" href="#opentrons.Robot.connect" title="opentrons.Robot.connect"><code class="xref py py-meth docutils literal"><span class="pre">connect()</span></code></a> to Opentrons physical robot</li>
-<li><a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref py py-meth docutils literal"><span class="pre">run()</span></code></a> the protocol on a robot</li>
+<li><code class="xref py py-meth docutils literal"><span class="pre">run()</span></code> the protocol on a robot</li>
 <li><a class="reference internal" href="#opentrons.Robot.home" title="opentrons.Robot.home"><code class="xref py py-meth docutils literal"><span class="pre">home()</span></code></a> axis, move head (<a class="reference internal" href="#opentrons.Robot.move_to" title="opentrons.Robot.move_to"><code class="xref py py-meth docutils literal"><span class="pre">move_to()</span></code></a>)</li>
 <li><a class="reference internal" href="#opentrons.Robot.pause" title="opentrons.Robot.pause"><code class="xref py py-meth docutils literal"><span class="pre">pause()</span></code></a> and <a class="reference internal" href="#opentrons.Robot.resume" title="opentrons.Robot.resume"><code class="xref py py-func docutils literal"><span class="pre">resume()</span></code></a> the protocol run</li>
 <li>set the <a class="reference internal" href="#opentrons.Robot.head_speed" title="opentrons.Robot.head_speed"><code class="xref py py-meth docutils literal"><span class="pre">head_speed()</span></code></a> of the robot</li>
@@ -214,16 +214,14 @@ containers and define instruments
 into an execution plan.</li>
 <li>Review the list of commands in the robot&#8217;s queue by running
 <a class="reference internal" href="#opentrons.Robot.commands" title="opentrons.Robot.commands"><code class="xref py py-meth docutils literal"><span class="pre">commands()</span></code></a>.</li>
-<li>Call <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref py py-func docutils literal"><span class="pre">simulate()</span></code></a> to run the protocol it against a virtual robot.</li>
-<li><a class="reference internal" href="#opentrons.Robot.connect" title="opentrons.Robot.connect"><code class="xref py py-meth docutils literal"><span class="pre">connect()</span></code></a> to the robot and call <a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref py py-func docutils literal"><span class="pre">run()</span></code></a> it on a real robot.</li>
+<li>Call <code class="xref py py-func docutils literal"><span class="pre">simulate()</span></code> to run the protocol it against a virtual robot.</li>
+<li><a class="reference internal" href="#opentrons.Robot.connect" title="opentrons.Robot.connect"><code class="xref py py-meth docutils literal"><span class="pre">connect()</span></code></a> to the robot and call <code class="xref py py-func docutils literal"><span class="pre">run()</span></code> it on a real robot.</li>
 </ul>
 </dd>
 </dl>
 <p>See <code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code> for the list of supported instructions.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">Robot</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">instruments</span><span class="p">,</span> <span class="n">containers</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span> <span class="o">=</span> <span class="n">Robot</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">robot</span><span class="p">,</span> <span class="n">instruments</span><span class="p">,</span> <span class="n">containers</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> 
 <span class="go">&lt;opentrons.robot.robot.Robot object at ...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plate</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">,</span> <span class="s1">&#39;plate&#39;</span><span class="p">)</span>
@@ -232,8 +230,6 @@ into an execution plan.</li>
 <span class="go">&lt;opentrons.instruments.pipette.Pipette object at ...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">commands</span><span class="p">()</span>
 <span class="go">[&#39;Aspirating 200 at &lt;Deck&gt;&lt;Slot A1&gt;&lt;Container plate&gt;&lt;Well A1&gt;&#39;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">simulate</span><span class="p">()</span>
-<span class="go">[]</span>
 </pre></div>
 </div>
 <dl class="attribute">
@@ -386,8 +382,8 @@ the list of options to be passed to <code class="xref py py-func docutils litera
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li>Runtime warnings accumulated since the last <a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref py py-func docutils literal"><span class="pre">run()</span></code></a></li>
-<li>or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref py py-func docutils literal"><span class="pre">simulate()</span></code></a>.</li>
+<li>Runtime warnings accumulated since the last <code class="xref py py-func docutils literal"><span class="pre">run()</span></code></li>
+<li>or <code class="xref py py-func docutils literal"><span class="pre">simulate()</span></code>.</li>
 </ul>
 </td>
 </tr>
@@ -427,13 +423,8 @@ to skip step, be careful when using this method</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>*args</strong> &#8211; <p>A string with axes to home. For example <code class="docutils literal"><span class="pre">'xyz'</span></code> or <code class="docutils literal"><span class="pre">'ab'</span></code>.</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> &#8211; <p>A string with axes to home. For example <code class="docutils literal"><span class="pre">'xyz'</span></code> or <code class="docutils literal"><span class="pre">'ab'</span></code>.</p>
 <p>If no arguments provided home Z-axis then X, Y, B, A</p>
-</li>
-<li><strong>enqueue</strong> ({True, False} Default: <code class="docutils literal"><span class="pre">False</span></code>) &#8211; If <code class="docutils literal"><span class="pre">True</span></code> put into command queue,
-if <code class="docutils literal"><span class="pre">False</span></code> execute immediately.</li>
-</ul>
 </td>
 </tr>
 </tbody>
@@ -442,7 +433,7 @@ if <code class="docutils literal"><span class="pre">False</span></code> execute 
 <p>Sometimes while executing a long protocol,
 a robot might accumulate precision
 error and it is recommended to home it. In this scenario, add
-<code class="docutils literal"><span class="pre">robot.home('xyzab',</span> <span class="pre">enqueue=True)</span></code> into your script.</p>
+<code class="docutils literal"><span class="pre">robot.home('xyzab')</span></code> into your script.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">Robot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;Virtual Smoothie&#39;</span><span class="p">)</span>
@@ -519,45 +510,6 @@ avoiding obstacles.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="opentrons.Robot.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.Robot.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the command queue on a device provided in <a class="reference internal" href="#opentrons.Robot.connect" title="opentrons.Robot.connect"><code class="xref py py-func docutils literal"><span class="pre">connect()</span></code></a>.</p>
-<p class="rubric">Notes</p>
-<p>If <a class="reference internal" href="#opentrons.Robot.connect" title="opentrons.Robot.connect"><code class="xref py py-func docutils literal"><span class="pre">connect()</span></code></a> was called with <code class="docutils literal"><span class="pre">port='Virtual</span> <span class="pre">Smoothie'</span></code>
-it will execute similar to <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref py py-func docutils literal"><span class="pre">simulate()</span></code></a>.</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">opentrons</span> <span class="k">import</span> <span class="n">Robot</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">opentrons.instruments.pipette</span> <span class="k">import</span> <span class="n">Pipette</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> 
-<span class="go">&lt;opentrons.robot.robot.Robot object at ...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;Virtual Smoothie&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plate</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">add_container</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">,</span> <span class="s1">&#39;plate&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">top</span><span class="p">())</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="opentrons.Robot.simulate">
-<code class="descname">simulate</code><span class="sig-paren">(</span><em>switches=False</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.Robot.simulate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simulate a protocol run on a virtual robot.</p>
-<p>It is recommended to call this method before running the
-protocol on a real robot.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>switches</strong> (<em>bool</em>) &#8211; If <code class="docutils literal"><span class="pre">True</span></code> tells the robot to stop
-execution and throw an error if limit switch was hit.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="opentrons.Robot.stop">
 <code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.Robot.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops execution of the protocol.</p>
@@ -570,7 +522,7 @@ execution and throw an error if limit switch was hit.</td>
 <span id="pipette"></span><h2>Pipette<a class="headerlink" href="#module-opentrons.instruments" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="opentrons.instruments.Pipette">
-<em class="property">class </em><code class="descclassname">opentrons.instruments.</code><code class="descname">Pipette</code><span class="sig-paren">(</span><em>axis</em>, <em>name=None</em>, <em>channels=1</em>, <em>min_volume=0</em>, <em>max_volume=None</em>, <em>trash_container=None</em>, <em>tip_racks=[]</em>, <em>aspirate_speed=300</em>, <em>dispense_speed=500</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">opentrons.instruments.</code><code class="descname">Pipette</code><span class="sig-paren">(</span><em>robot</em>, <em>axis</em>, <em>name=None</em>, <em>channels=1</em>, <em>min_volume=0</em>, <em>max_volume=None</em>, <em>trash_container=None</em>, <em>tip_racks=[]</em>, <em>aspirate_speed=300</em>, <em>dispense_speed=500</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Through this class you can can:</dt>
 <dd><ul class="first last simple">
@@ -588,7 +540,7 @@ and <a class="reference internal" href="#opentrons.instruments.Pipette.return_ti
 </ul>
 <p class="last">and an axis (<cite>a</cite> or <cite>b</cite>)
 * Design your protocol through the pipette&#8217;s liquid-handling commands
-* Run on the <a class="reference internal" href="#opentrons.Robot" title="opentrons.Robot"><code class="xref any py py-class docutils literal"><span class="pre">Robot</span></code></a> using <a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a></p>
+* Run on the <a class="reference internal" href="#opentrons.Robot" title="opentrons.Robot"><code class="xref any py py-class docutils literal"><span class="pre">Robot</span></code></a> using <code class="xref any docutils literal"><span class="pre">run</span></code> or <code class="xref any docutils literal"><span class="pre">simulate</span></code></p>
 </dd>
 </dl>
 <table class="docutils field-list" frame="void" rules="none">
@@ -625,6 +577,7 @@ and <a class="reference internal" href="#opentrons.instruments.Pipette.return_ti
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p1000</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tip_rack_200ul</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;p200&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">tip_racks</span><span class="o">=</span><span class="p">[</span><span class="n">tip_rack_200ul</span><span class="p">])</span>
@@ -632,7 +585,7 @@ and <a class="reference internal" href="#opentrons.instruments.Pipette.return_ti
 </div>
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.aspirate">
-<code class="descname">aspirate</code><span class="sig-paren">(</span><em>volume=None</em>, <em>location=None</em>, <em>rate=1.0</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.aspirate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">aspirate</code><span class="sig-paren">(</span><em>volume=None</em>, <em>location=None</em>, <em>rate=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.aspirate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Aspirate a volume of liquid (in microliters/uL) using this pipette</p>
 <p class="rubric">Notes</p>
 <p>If no <cite>location</cite> is passed, the pipette will aspirate
@@ -649,10 +602,6 @@ Can also be a tuple with first item <code class="xref any docutils literal"><spa
 second item relative <code class="xref any docutils literal"><span class="pre">Vector</span></code></li>
 <li><strong>rate</strong> (<em>float</em>) &#8211; Set plunger speed for this aspirate, where
 speed = rate * aspirate_speed (see <a class="reference internal" href="#opentrons.instruments.Pipette.set_speed" title="opentrons.instruments.Pipette.set_speed"><code class="xref py py-meth docutils literal"><span class="pre">set_speed()</span></code></a>)</li>
-<li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</li>
 </ul>
 </td>
 </tr>
@@ -665,7 +614,8 @@ method will skip the command queue and execute immediately</li>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;p200&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># aspirate 50uL from a Well</span>
@@ -674,8 +624,7 @@ method will skip the command queue and execute immediately</li>
 </pre></div>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># aspirate 50uL from the center of a well</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">relative_vector</span> <span class="o">=</span> <span class="n">plate</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">relative_vector</span><span class="p">))</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bottom</span><span class="p">())</span> 
 <span class="go">&lt;opentrons.instruments.pipette.Pipette object at ...&gt;</span>
 </pre></div>
 </div>
@@ -693,7 +642,7 @@ method will skip the command queue and execute immediately</li>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.blow_out">
-<code class="descname">blow_out</code><span class="sig-paren">(</span><em>location=None</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.blow_out" title="Permalink to this definition">¶</a></dt>
+<code class="descname">blow_out</code><span class="sig-paren">(</span><em>location=None</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.blow_out" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force any remaining liquid to dispense, by moving
 this pipette&#8217;s plunger to the calibrated <cite>blow_out</cite> position</p>
 <p class="rubric">Notes</p>
@@ -703,27 +652,18 @@ from it&#8217;s current position.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>location</strong> (<code class="xref any docutils literal"><span class="pre">Placeable</span></code> or tuple(<code class="xref any docutils literal"><span class="pre">Placeable</span></code>, <code class="xref any docutils literal"><span class="pre">Vector</span></code>)) &#8211; The <code class="xref any docutils literal"><span class="pre">Placeable</span></code> (<code class="xref any docutils literal"><span class="pre">Well</span></code>) to perform the blow_out.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>location</strong> (<code class="xref any docutils literal"><span class="pre">Placeable</span></code> or tuple(<code class="xref any docutils literal"><span class="pre">Placeable</span></code>, <code class="xref any docutils literal"><span class="pre">Vector</span></code>)) &#8211; The <code class="xref any docutils literal"><span class="pre">Placeable</span></code> (<code class="xref any docutils literal"><span class="pre">Well</span></code>) to perform the blow_out.
 Can also be a tuple with first item <code class="xref any docutils literal"><span class="pre">Placeable</span></code>,
-second item relative <code class="xref any docutils literal"><span class="pre">Vector</span></code></li>
-<li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</li>
-</ul>
-</td>
+second item relative <code class="xref any docutils literal"><span class="pre">Vector</span></code></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;p200&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">dispense</span><span class="p">()</span><span class="o">.</span><span class="n">blow_out</span><span class="p">()</span> 
 <span class="go">&lt;opentrons.instruments.pipette.Pipette object at ...&gt;</span>
 </pre></div>
@@ -802,19 +742,12 @@ second item relative <code class="xref any docutils literal"><span class="pre">V
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.delay">
-<code class="descname">delay</code><span class="sig-paren">(</span><em>seconds=0</em>, <em>minutes=0</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.delay" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delay</code><span class="sig-paren">(</span><em>seconds=0</em>, <em>minutes=0</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.delay" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>seconds</strong> (<em>float</em>) &#8211; The number of seconds to freeeze in place.</li>
-<li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>seconds</strong> (<em>float</em>) &#8211; The number of seconds to freeeze in place.</td>
 </tr>
 </tbody>
 </table>
@@ -822,7 +755,7 @@ method will skip the command queue and execute immediately</li>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.dispense">
-<code class="descname">dispense</code><span class="sig-paren">(</span><em>volume=None</em>, <em>location=None</em>, <em>rate=1.0</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.dispense" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dispense</code><span class="sig-paren">(</span><em>volume=None</em>, <em>location=None</em>, <em>rate=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.dispense" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dispense a volume of liquid (in microliters/uL) using this pipette</p>
 <p class="rubric">Notes</p>
 <p>If no <cite>location</cite> is passed, the pipette will dispense
@@ -840,10 +773,6 @@ Can also be a tuple with first item <code class="xref any docutils literal"><spa
 second item relative <code class="xref any docutils literal"><span class="pre">Vector</span></code></li>
 <li><strong>rate</strong> (<em>float</em>) &#8211; Set plunger speed for this dispense, where
 speed = rate * dispense_speed (see <a class="reference internal" href="#opentrons.instruments.Pipette.set_speed" title="opentrons.instruments.Pipette.set_speed"><code class="xref py py-meth docutils literal"><span class="pre">set_speed()</span></code></a>)</li>
-<li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</li>
 </ul>
 </td>
 </tr>
@@ -856,7 +785,7 @@ method will skip the command queue and execute immediately</li>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;p200&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># fill the pipette with liquid (200uL)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> 
 <span class="go">&lt;opentrons.instruments.pipette.Pipette object at ...&gt;</span>
@@ -887,7 +816,7 @@ method will skip the command queue and execute immediately</li>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.drop_tip">
-<code class="descname">drop_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>home_after=True</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.drop_tip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">drop_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>home_after=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.drop_tip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop the pipette&#8217;s current tip</p>
 <p class="rubric">Notes</p>
 <p>If no location is passed, the pipette defaults to its <cite>trash_container</cite>
@@ -896,22 +825,13 @@ method will skip the command queue and execute immediately</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>location</strong> (<code class="xref any docutils literal"><span class="pre">Placeable</span></code> or tuple(<code class="xref any docutils literal"><span class="pre">Placeable</span></code>, <code class="xref any docutils literal"><span class="pre">Vector</span></code>)) &#8211; The <code class="xref any docutils literal"><span class="pre">Placeable</span></code> (<code class="xref any docutils literal"><span class="pre">Well</span></code>) to perform the drop_tip.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>location</strong> (<code class="xref any docutils literal"><span class="pre">Placeable</span></code> or tuple(<code class="xref any docutils literal"><span class="pre">Placeable</span></code>, <code class="xref any docutils literal"><span class="pre">Vector</span></code>)) &#8211; The <code class="xref any docutils literal"><span class="pre">Placeable</span></code> (<code class="xref any docutils literal"><span class="pre">Well</span></code>) to perform the drop_tip.
 Can also be a tuple with first item <code class="xref any docutils literal"><span class="pre">Placeable</span></code>,
-second item relative <code class="xref any docutils literal"><span class="pre">Vector</span></code></li>
-<li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</li>
-</ul>
-</td>
+second item relative <code class="xref any docutils literal"><span class="pre">Vector</span></code></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -937,23 +857,18 @@ method will skip the command queue and execute immediately</li>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.home">
-<code class="descname">home</code><span class="sig-paren">(</span><em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.home" title="Permalink to this definition">¶</a></dt>
+<code class="descname">home</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.home" title="Permalink to this definition">¶</a></dt>
 <dd><p>Home the pipette&#8217;s plunger axis during a protocol run</p>
 <p class="rubric">Notes</p>
-<p><cite>Pipette.home()</cite> enqueues to <cite>Robot</cite> commands
-(see <a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> and <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>)</p>
+<p><cite>Pipette.home()</cite> homes the <cite>Robot</cite>
+(see <code class="xref any docutils literal"><span class="pre">run</span></code> and <code class="xref any docutils literal"><span class="pre">simulate</span></code>)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -967,7 +882,7 @@ method will skip the command queue and execute immediately</td>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.mix">
-<code class="descname">mix</code><span class="sig-paren">(</span><em>repetitions=1</em>, <em>volume=None</em>, <em>location=None</em>, <em>rate=1.0</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.mix" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mix</code><span class="sig-paren">(</span><em>repetitions=1</em>, <em>volume=None</em>, <em>location=None</em>, <em>rate=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.mix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mix a volume of liquid (in microliters/uL) using this pipette</p>
 <p class="rubric">Notes</p>
 <p>If no <cite>location</cite> is passed, the pipette will mix
@@ -986,10 +901,6 @@ second item relative <code class="xref any docutils literal"><span class="pre">V
 <li><strong>rate</strong> (<em>float</em>) &#8211; Set plunger speed for this mix, where
 speed = rate * (aspirate_speed or dispense_speed)
 (see <a class="reference internal" href="#opentrons.instruments.Pipette.set_speed" title="opentrons.instruments.Pipette.set_speed"><code class="xref py py-meth docutils literal"><span class="pre">set_speed()</span></code></a>)</li>
-<li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</li>
 </ul>
 </td>
 </tr>
@@ -1002,7 +913,7 @@ method will skip the command queue and execute immediately</li>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;p200&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># mix 50uL in a Well, three times</span>
@@ -1019,7 +930,7 @@ method will skip the command queue and execute immediately</li>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.move_to">
-<code class="descname">move_to</code><span class="sig-paren">(</span><em>location</em>, <em>strategy='arc'</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.move_to" title="Permalink to this definition">¶</a></dt>
+<code class="descname">move_to</code><span class="sig-paren">(</span><em>location</em>, <em>strategy='arc'</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.move_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move this <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref any py py-class docutils literal"><span class="pre">Pipette</span></code></a> to a <code class="xref any docutils literal"><span class="pre">Placeable</span></code> on the <code class="xref any docutils literal"><span class="pre">Deck</span></code></p>
 <p class="rubric">Notes</p>
 <p>Until obstacle-avoidance algorithms are in place,
@@ -1035,10 +946,6 @@ method will skip the command queue and execute immediately</li>
 over to the XY destination, then finally down to the Z destination.
 &#8220;direct&#8221; strategies will simply move in a straight line from
 the current position</li>
-<li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</li>
 </ul>
 </td>
 </tr>
@@ -1054,7 +961,7 @@ method will skip the command queue and execute immediately</li>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.pick_up_tip">
-<code class="descname">pick_up_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>presses=3</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.pick_up_tip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">pick_up_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>presses=3</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.pick_up_tip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pick up a tip for the Pipette to run liquid-handling commands with</p>
 <p class="rubric">Notes</p>
 <p>A tip can be manually set by passing a <cite>location</cite>. If no location
@@ -1064,22 +971,13 @@ it&#8217;s <cite>tip_racks</cite> list (see <a class="reference internal" href="
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>location</strong> (<code class="xref any docutils literal"><span class="pre">Placeable</span></code> or tuple(<code class="xref any docutils literal"><span class="pre">Placeable</span></code>, <code class="xref any docutils literal"><span class="pre">Vector</span></code>)) &#8211; The <code class="xref any docutils literal"><span class="pre">Placeable</span></code> (<code class="xref any docutils literal"><span class="pre">Well</span></code>) to perform the pick_up_tip.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>location</strong> (<code class="xref any docutils literal"><span class="pre">Placeable</span></code> or tuple(<code class="xref any docutils literal"><span class="pre">Placeable</span></code>, <code class="xref any docutils literal"><span class="pre">Vector</span></code>)) &#8211; The <code class="xref any docutils literal"><span class="pre">Placeable</span></code> (<code class="xref any docutils literal"><span class="pre">Well</span></code>) to perform the pick_up_tip.
 Can also be a tuple with first item <code class="xref any docutils literal"><span class="pre">Placeable</span></code>,
-second item relative <code class="xref any docutils literal"><span class="pre">Vector</span></code></li>
-<li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</li>
-</ul>
-</td>
+second item relative <code class="xref any docutils literal"><span class="pre">Vector</span></code></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -1103,7 +1001,7 @@ method will skip the command queue and execute immediately</li>
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.return_tip">
-<code class="descname">return_tip</code><span class="sig-paren">(</span><em>home_after=True</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.return_tip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">return_tip</code><span class="sig-paren">(</span><em>home_after=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.return_tip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop the pipette&#8217;s current tip to it&#8217;s originating tip rack</p>
 <p class="rubric">Notes</p>
 <p>This method requires one or more tip-rack <code class="xref any docutils literal"><span class="pre">Container</span></code>
@@ -1112,22 +1010,16 @@ to be in this Pipette&#8217;s <cite>tip_racks</cite> list (see <a class="referen
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">This instance of <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref py py-class docutils literal"><span class="pre">Pipette</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> 
-<span class="go">&lt;opentrons.robot.robot.Robot object at ...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tiprack</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">tip_racks</span><span class="o">=</span><span class="p">[</span><span class="n">tiprack</span><span class="p">])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tiprack</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">tip_racks</span><span class="o">=</span><span class="p">[</span><span class="n">tiprack</span><span class="p">],</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;p200&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span><span class="o">.</span><span class="n">pick_up_tip</span><span class="p">()</span> 
 <span class="go">&lt;opentrons.instruments.pipette.Pipette object at ...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> 
@@ -1158,7 +1050,7 @@ and who&#8217;s values are int or float (Example: <cite>{&#8220;aspirate&#8221;:
 
 <dl class="method">
 <dt id="opentrons.instruments.Pipette.touch_tip">
-<code class="descname">touch_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>radius=1.0</em>, <em>enqueue=True</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.touch_tip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">touch_tip</code><span class="sig-paren">(</span><em>location=None</em>, <em>radius=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#opentrons.instruments.Pipette.touch_tip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Touch the <a class="reference internal" href="#opentrons.instruments.Pipette" title="opentrons.instruments.Pipette"><code class="xref any py py-class docutils literal"><span class="pre">Pipette</span></code></a> tip to the sides of a well,
 with the intent of removing left-over droplets</p>
 <p class="rubric">Notes</p>
@@ -1177,10 +1069,6 @@ the percentage of a well&#8217;s radius. When radius=1.0,
 <a class="reference internal" href="#opentrons.instruments.Pipette.touch_tip" title="opentrons.instruments.Pipette.touch_tip"><code class="xref any py py-meth docutils literal"><span class="pre">touch_tip()</span></code></a> will move to 100% of the wells radius. When
 radius=0.5, <a class="reference internal" href="#opentrons.instruments.Pipette.touch_tip" title="opentrons.instruments.Pipette.touch_tip"><code class="xref any py py-meth docutils literal"><span class="pre">touch_tip()</span></code></a> will move to 50% of the wells
 radius.</li>
-<li><strong>enqueue</strong> (<em>bool</em>) &#8211; If set to <cite>True</cite> (default), the method will be appended
-to the robots list of commands for executing during
-<a class="reference internal" href="#opentrons.Robot.run" title="opentrons.Robot.run"><code class="xref any py py-meth docutils literal"><span class="pre">run</span></code></a> or <a class="reference internal" href="#opentrons.Robot.simulate" title="opentrons.Robot.simulate"><code class="xref any py py-meth docutils literal"><span class="pre">simulate</span></code></a>. If set to <cite>False</cite>, the
-method will skip the command queue and execute immediately</li>
 </ul>
 </td>
 </tr>
@@ -1193,7 +1081,7 @@ method will skip the command queue and execute immediately</li>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">Pipette</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;p200&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span><span class="o">.</span><span class="n">aspirate</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">plate</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> 
 <span class="go">&lt;opentrons.instruments.pipette.Pipette object at ...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p200</span><span class="o">.</span><span class="n">dispense</span><span class="p">(</span><span class="n">plate</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">touch_tip</span><span class="p">()</span> 

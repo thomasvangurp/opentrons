@@ -465,8 +465,8 @@ None
 </div>
 <div class="section" id="move-to">
 <h3>Move To<a class="headerlink" href="#move-to" title="Permalink to this headline">¶</a></h3>
-<p>Pipette&#8217;s are able to <code class="docutils literal"><span class="pre">move_to()</span></code> any location on the deck. Any call to <code class="docutils literal"><span class="pre">move_to()</span></code> will be enqueued, meaning that it will not execute until calling <code class="docutils literal"><span class="pre">robot.run()</span></code>.</p>
-<p>For example, we can enqueue a movement to the first tip in our tip rack:</p>
+<p>Pipette&#8217;s are able to <code class="docutils literal"><span class="pre">move_to()</span></code> any location on the deck.</p>
+<p>For example, we can move to the first tip in our tip rack:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pipette</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">tiprack</span><span class="o">.</span><span class="n">wells</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
