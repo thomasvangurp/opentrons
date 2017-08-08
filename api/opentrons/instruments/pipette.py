@@ -482,8 +482,8 @@ class Pipette(Instrument):
                 location = volume
             volume = self.current_volume
 
-        if volume == 0:
-            return self
+        # if volume == 0:
+        #     return self
 
             # Ensure we don't dispense more than the current volume
         volume = min(self.current_volume, volume)
@@ -491,7 +491,7 @@ class Pipette(Instrument):
                             ('at ' + repr(location) if location else ''))  # NOQA
         self.robot.add_command(_description)
 
-        vector = None
+        vector = Vector(0,0,0)
         if isinstance(location, tuple):
             location, vector = location
         well = placeable_to_well(location)
@@ -522,7 +522,7 @@ class Pipette(Instrument):
         liquid_level = lf.well_liquid_height(well)
         print("dispensing at liquid level: {}".format(liquid_level))
         new_vector = Vector(vector['x'], vector['y'], liquid_level)
-        self._dispense_to_well(self, volume, well, rate, new_vector)
+        self._dispense_to_well(volume, well, rate, new_vector)
 
     def _position_for_aspirate(self, location=None):
         """
