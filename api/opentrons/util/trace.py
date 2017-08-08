@@ -67,8 +67,6 @@ def parse_event(command_info):
     name = command_info['name']
     args = command_info.get('arguments', None)
 
-    print("COMMAND: {}".format(command_info))
-
     if name == 'dispense': #dispense events should only occur in a well
         well, pipette = args['well'], args['self']
         liquids = pipette._state['liquids']

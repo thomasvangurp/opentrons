@@ -1,4 +1,5 @@
 import unittest
+import time
 
 from opentrons.util import liquid_functions as lf
 from opentrons import robot
@@ -106,7 +107,7 @@ def test_liquid_tracking():
     trash = containers_load(robot, 'point', 'A1')
     tiprack1 = containers_load(robot, 'tiprack-10ul', 'B2')
     plate = containers_load(robot, '96-flat', 'A2')
-    trough = containers_load(robot, 'point', 'A3')
+    trough = containers_load(robot, 'trash-box', 'A3', 'trough')
 
     trough['A1'].add_liquid('red', 30)
     trough['A1'].add_liquid('blue',30)
@@ -169,8 +170,14 @@ def dispense_at_liquid():
         name='other-pipette-for-transfer-tests'
     )
 
-if __name__ == "__main__":
-    test_liquid_tracking()
+    p200.aspirate(60, trough['A1'])
+    for vol in range(0,60,5):
+        print("Well state: {}".format(plate['A1']._state))
+        print("Well liquid heights: {}".format(lf.well_liquid_height(plate['A1'])))
+        p200.dispense_at_liquid_level(5, plate['A1'])
+
+
+dispense_at_liquid()
     # adding_liquid_to_well()
     # test_pipette_aspiration()
     # test_pipette_dispense()
