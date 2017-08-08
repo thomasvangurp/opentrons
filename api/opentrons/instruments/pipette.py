@@ -462,7 +462,21 @@ class Pipette(Instrument):
         """
 
         # if volume is specified as 0uL, then do nothing
+        volume, well, rate, vector = \
+            self._parse_dispense_args(volume, location, rate)
+        self._dispense_to_well(volume, well, rate, vector)
+        return self
 
+    def dispense_at_liquid_level(self,
+                                 volume=None,
+                                 location=None,
+                                 rate=1.0):
+        volume, well, rate, vector = \
+            self._parse_dispense_args(volume, location, rate)
+        self._dispense_at_liquid_level(volume, well, rate, vector)
+        return self
+
+    def _parse_dispense_args(self, volume, location, rate):
         if not helpers.is_number(volume):
             if volume and not location:
                 location = volume
@@ -471,10 +485,10 @@ class Pipette(Instrument):
         if volume == 0:
             return self
 
-        # Ensure we don't dispense more than the current volume
+            # Ensure we don't dispense more than the current volume
         volume = min(self.current_volume, volume)
         _description = "Dispensing {0} {1}".format(volume,
-            ('at ' + humanize_location(location) if location else ''))  # NOQA
+                            ('at ' + repr(location) if location else ''))  # NOQA
         self.robot.add_command(_description)
 
         vector = None
@@ -484,8 +498,7 @@ class Pipette(Instrument):
         if not well:
             raise RuntimeError("{} is not an instance of a well, "
                                "can only dispense into a well".format(location))
-        self._dispense_to_well(volume, well, rate, vector)
-        return self
+        return (volume, well, rate, vector)
 
     @traceable('aspirate')
     def _aspirate_from_well(self, volume, well, rate, vector):
@@ -509,7 +522,7 @@ class Pipette(Instrument):
         liquid_level = lf.well_liquid_height(well)
         print("dispensing at liquid level: {}".format(liquid_level))
         new_vector = Vector(vector['x'], vector['y'], liquid_level)
-        _dispense_to_well(self, volume, well, rate, new_vector)
+        self._dispense_to_well(self, volume, well, rate, new_vector)
 
     def _position_for_aspirate(self, location=None):
         """
