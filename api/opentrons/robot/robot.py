@@ -466,11 +466,13 @@ class Robot(object):
         else:
             coordinates += placeable.coordinates(placeable.get_deck())
 
+        print("MOVE TO HEIGHT: {}".format(coordinates[2]))
         if strategy == 'arc':
             arc_coords = self._create_arc(coordinates, placeable, instrument)
             for coord in arc_coords:
                 self._driver.move_head(**coord)
         elif strategy == 'direct':
+
             self._driver.move_head(
                 x=coordinates[0],
                 y=coordinates[1],
