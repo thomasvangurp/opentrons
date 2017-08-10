@@ -1,5 +1,4 @@
 import unittest
-import time
 
 from opentrons.util import liquid_functions as lf
 from opentrons import robot
@@ -72,7 +71,6 @@ def test_pipette_aspiration():
                                        'red': .25},
                            'volume': 20}
 
-
 def test_pipette_dispense():
     broker = trace.EventBroker.get_instance()
     objects = broker._tracked_objects
@@ -107,7 +105,7 @@ def test_liquid_tracking():
     trash = containers_load(robot, 'point', 'A1')
     tiprack1 = containers_load(robot, 'tiprack-10ul', 'B2')
     plate = containers_load(robot, '96-flat', 'A2')
-    trough = containers_load(robot, 'trash-box', 'A3', 'trough')
+    trough = containers_load(robot, 'point', 'A3')
 
     trough['A1'].add_liquid('red', 30)
     trough['A1'].add_liquid('blue',30)
@@ -170,14 +168,24 @@ def dispense_at_liquid():
         name='other-pipette-for-transfer-tests'
     )
 
-    p200.aspirate(60, trough['A1'])
-    for vol in range(0,60,5):
-        print("Well state: {}".format(plate['A1']._state))
-        print("Well liquid heights: {}".format(lf.well_liquid_height(plate['A1'])))
-        p200.dispense_at_liquid_level(5, plate['A1'])
+def dispense_at_liquid_level():
+    plate = containers_load(robot, 'tube-rack-15_50ml', 'A1')
+    p200 = pipette.Pipette(
+        robot,
+        axis="b",
+        max_volume=200,
+        min_volume=10,  # These are variable
+        channels=1,
+        name='pipette'
+    )
+    p200.motor.move(p200._get_plunger_position('bottom'))
+    plate['A4'].add_liquid('green', 500)
+    p200.aspirate(100, plate['A4'])
+    for i in range(4):
+        p200.dispense_at_liquid_level(25, plate['B2'])
 
 
-dispense_at_liquid()
+dispense_at_liquid_level()
     # adding_liquid_to_well()
     # test_pipette_aspiration()
     # test_pipette_dispense()
