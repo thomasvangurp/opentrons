@@ -3,6 +3,7 @@ import math
 import numbers
 from collections import OrderedDict
 from opentrons.util.vector import Vector
+from opentrons.trackers import position_tracker
 
 import re
 import functools
@@ -230,6 +231,10 @@ class Placeable(object):
         self.children_by_name[name] = child
         self.children_by_reference[child] = name
 
+        position_tracker.track_object(
+            child, *child.coordinates()) #temporary placement
+
+
     def get_deck(self):
         """
         Returns parent :Deck: of a :Placeable:
@@ -249,6 +254,7 @@ class Placeable(object):
         child = self.children_by_name[name]
         del self.children_by_name[name]
         del self.children_by_reference[child]
+        del position_tracker[child]
 
     def get_parent(self):
         """
