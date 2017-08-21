@@ -65,7 +65,7 @@ class PositionTracker(object):
     def __repr__(self):
         return repr(self._position_dict)
 
-    def track_object(self, obj, x, y, z):
+    def register(self, obj, x, y, z):
         '''
         Adds an object to the dict of object positions
 
@@ -87,7 +87,7 @@ class PositionTracker(object):
         :return: None
         '''
         glb_x, glb_y, glb_z, dummy = self[tracked_obj] * [x, y, z, DUMMY]
-        self.track_object(new_obj, glb_x, glb_y, glb_z)
+        self.register(new_obj, glb_x, glb_y, glb_z)
 
     def remove_object(self, obj):
         del self[obj]

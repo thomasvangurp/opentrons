@@ -3,8 +3,7 @@ import math
 import numbers
 from collections import OrderedDict
 from opentrons.util.vector import Vector
-from opentrons.util import trace
-from opentrons.util import liquid_functions as lf
+
 
 from opentrons.trackers import position_tracker
 
