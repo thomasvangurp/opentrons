@@ -11,7 +11,7 @@ from opentrons.util import trace
 
 
 log = get_logger(__name__)
-broker = trace.EventBroker.get_instance()
+broker = trace.MessageBroker.get_instance()
 
 class SmoothieDriver_2_0_0(SmoothieDriver):
 
@@ -316,7 +316,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             },
             'class': type(self.connection).__name__
         }
-        broker.notify_of_event(arguments)
+        trace.MessageBroker.get_instance().publish('instrument-action', arguments)
 
     def move_plunger(self, mode='absolute', **kwargs):
         self.move(mode, **kwargs)
@@ -401,7 +401,8 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
                 'plunger': self.get_plunger_positions()["current"]
             }
         }
-        broker.notify_of_event(arguments)
+
+        trace.MessageBroker.get_instance().publish('instrument-action', arguments)
 
     def set_coordinate_system(self, mode):
         if mode == 'absolute':
@@ -431,19 +432,19 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
                 time.sleep(delay_time)
 
         end_time = _current_time() + delay_time
-        broker.notify_of_event({
+        trace.MessageBroker.get_instance().publish('time-action', {
             'name': 'delay-start',
             'time': delay_time
         })
         while end_time > _current_time():
             self.check_paused_stopped()
             _sleep(min(1, end_time - _current_time()))
-
-            broker.notify_of_event({
+            
+            trace.MessageBroker.get_instance().publish('time-action', {
                 'name': 'countdown',
                 'countdown': int(end_time - time.time())
             })
-        broker.notify_of_event({
+        trace.MessageBroker.get_instance().publish('time-action', {
             'name': 'delay-finish'
         })
 

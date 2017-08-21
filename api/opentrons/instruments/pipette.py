@@ -32,7 +32,6 @@ class Pipette(Instrument):
         * Instantiate a pipette with a maximum volume (uL)
         and an axis (`a` or `b`)
         * Design your protocol through the pipette's liquid-handling commands
-        * Run on the :any:`Robot` using :any:`run` or :any:`simulate`
 
     Parameters
     ----------
@@ -161,11 +160,11 @@ class Pipette(Instrument):
 
         #TODO: should be able to accept an initial state
         self._state = self._default_state
-        trace.EventBroker.get_instance().add_object_and_state_handler(
+        trace.MessageBroker.get_instance().add_object_and_state_handler(
             self, self._state_event_handler)
 
     def __del__(self):
-        trace.EventBroker.get_instance().remove_tracked_object(self)
+        trace.MessageBroker.get_instance().remove_tracked_object(self)
 
     def _state_event_handler(self, event_name, event_info):
         if event_name == 'aspirate':
@@ -961,7 +960,6 @@ class Pipette(Instrument):
         Notes
         -----
         `Pipette.home()` homes the `Robot`
-        (see :any:`run` and :any:`simulate`)
 
         Returns
         -------

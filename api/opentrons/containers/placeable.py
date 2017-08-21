@@ -6,6 +6,7 @@ from opentrons.util.vector import Vector
 from opentrons.util import trace
 from opentrons.util import liquid_functions as lf
 
+from opentrons.trackers import position_tracker
 
 import re
 import functools
@@ -244,6 +245,10 @@ class Placeable(object):
         self.children_by_name[name] = child
         self.children_by_reference[child] = name
 
+        position_tracker.track_object(
+            child, *child.coordinates()) #temporary placement
+
+
     def get_deck(self):
         """
         Returns parent :Deck: of a :Placeable:
@@ -263,6 +268,7 @@ class Placeable(object):
         child = self.children_by_name[name]
         del self.children_by_name[name]
         del self.children_by_reference[child]
+        del position_tracker[child]
 
     def get_parent(self):
         """
@@ -498,10 +504,10 @@ class Well(Placeable):
             'liquids': {id(self): 1},
             'volume': 0}
         self._state = {**default_state, **state}
-        trace.EventBroker.get_instance().add_object_and_state_handler(self, self._state_event_handler)
+        trace.MessageBroker.get_instance().add_object_and_state_handler(self, self._state_event_handler)
 
     def __del__(self):
-        trace.EventBroker.get_instance().remove_tracked_object(self)
+        trace.MessageBroker.get_instance().remove_tracked_object(self)
 
     def _state_event_handler(self, event_type, event_info):
         if event_type == 'dispense':

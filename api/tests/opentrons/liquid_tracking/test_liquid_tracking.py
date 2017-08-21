@@ -21,14 +21,14 @@ from opentrons.util import trace
 
 
 def well_registers_when_created():
-    broker = trace.EventBroker.get_instance()
+    broker = trace.MessageBroker.get_instance()
     objects = broker._tracked_objects
     assert len(objects) == 0
     well = Well()
     assert id(well) in objects
 
 def test_well_registration_from_container_load():
-    broker = trace.EventBroker.get_instance()
+    broker = trace.MessageBroker.get_instance()
     objects = broker._tracked_objects
     assert len(objects) == 0
 
@@ -43,7 +43,7 @@ def adding_liquid_to_well():
            {'liquids': {'green': 1}, 'volume': 10}
 
 def test_pipette_aspiration():
-    broker = trace.EventBroker.get_instance()
+    broker = trace.MessageBroker.get_instance()
     objects = broker._tracked_objects
     # assert len(objects) == 0 #TODO: Singleton issues in reference deletions
     # plate = containers_load(robot, '96-flat', 'A2')
@@ -72,7 +72,7 @@ def test_pipette_aspiration():
                            'volume': 20}
 
 def test_pipette_dispense():
-    broker = trace.EventBroker.get_instance()
+    broker = trace.MessageBroker.get_instance()
     objects = broker._tracked_objects
     plate = containers_load(robot, '96-flat', 'A2')
     trash = containers_load(robot, 'point', 'A1')

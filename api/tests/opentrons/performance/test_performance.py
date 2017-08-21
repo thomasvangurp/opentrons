@@ -130,9 +130,9 @@ class PerformanceTest(unittest.TestCase):
     def test_performance(self):
         """
         # import time
-        # from opentrons.util.trace import EventBroker
+        # from opentrons.util.trace import MessageBroker
 
-        EventBroker.get_instance().add(self.log)
+        MessageBroker.get_instance().add(self.log)
         start = time.process_time()
         self.protocol()
         finish = time.process_time()

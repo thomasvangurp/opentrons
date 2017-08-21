@@ -109,7 +109,7 @@ class Tracker(object):
         self.state = state
         self.instruments = instruments
         [self.update_volume_attributes(item) for item in state.keys()]
-        trace.EventBroker.get_instance().add(self.handler)
+        trace.MessageBroker.get_instance().add(self.handler)
 
     def handler(self, info):
         function = info.get('function', None)
