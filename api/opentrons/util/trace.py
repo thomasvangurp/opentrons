@@ -26,7 +26,7 @@ def traceable(topic, name=None):
 
             # args_dict = {k: str(v) for k, v in args_dict.items()}
 
-            broker.notify({
+            broker.publish(topic, {
                 'name': name,
                 'function': f.__qualname__,
                 'arguments': args_dict,

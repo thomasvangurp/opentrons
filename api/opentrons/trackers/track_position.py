@@ -10,6 +10,18 @@ from pyrr import matrix44, vector4
 
 DUMMY = 1 # Sometimes added to vectors to maintain matrix values
 
+class Node(object):
+    def __init__(self, object):
+        self.children = []
+        self.parent = None
+        self.id = id(object)
+
+    def add_child(self, object):
+        new_node = Node(object)
+        new_node.parent = self
+        self.children.append(new_node)
+        return new_node
+
 class Pose(object):
     def __init__(self, x, y, z):
         self._pose = numpy.identity(4)
@@ -53,6 +65,7 @@ class Pose(object):
 class PositionTracker(object):
     def __init__(self):
         self._position_dict = {}
+        self._node_dict = {} # dict where values are nodes in a tree
 
     def __getitem__(self, obj):
         try:
@@ -68,7 +81,7 @@ class PositionTracker(object):
     def __repr__(self):
         return repr(self._position_dict)
 
-    def track_object(self, obj, x, y, z):
+    def track_object(self, parent, obj, x, y, z):
         '''
         Adds an object to the dict of object positions
 
@@ -77,7 +90,14 @@ class PositionTracker(object):
         :return: None
         '''
         pose = Pose(x, y, z)
-        self[obj] = pose
+        node = self[parent][1].add_child(obj)
+        self[obj] = (pose, node)
+
+    def create_root_object(self, obj, x, y, z):
+        pose = Pose(x, y, z)
+        node = Node(object)
+        self[obj] = (pose, node)
+
 
     def track_relative_object(self, new_obj, tracked_obj, x, y, z):
         '''

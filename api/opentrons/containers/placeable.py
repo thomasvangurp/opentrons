@@ -465,6 +465,9 @@ class Deck(Placeable):
     """
     This class implements behaviour specific to the Deck
     """
+    def __init__(self):
+        position_tracker.create_root_object(self, 0,0,0)
+
     def containers(self) -> dict:
         """
         Returns all containers on a deck as a name:placeable dict

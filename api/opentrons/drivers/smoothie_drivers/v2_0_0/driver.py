@@ -355,6 +355,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
                 self.connection.serial_pause()
                 self.connection.flush_input()
 
+            print("diff: {}".format(time.time() - did_move_timestamp))
             if time.time() - did_move_timestamp > 1.0:
                 raise RuntimeError('Expected robot to move, please reconnect')
 
