@@ -11,10 +11,10 @@ import numpy
 # of using numpy for relative coordinate systems
 class Pose(object):
     def __init__(self, x, y, z):
-        self._pose = numpy.identity(3)
+        self._pose = numpy.identity(4)
         self.x = x
         self.y = y
-        #self.z = z
+        self.z = z
 
     def __repr__(self):
         return repr(self._pose)
@@ -29,18 +29,28 @@ class Pose(object):
 
     @property
     def x(self):
-        return self._pose[0][2]
+        return self._pose[0][3]
 
     @x.setter
     def x(self, val):
-        self._pose[0][2] = val
+        self._pose[0][3] = val
 
     @property
     def y(self):
-        return self._pose[1][2]
+        return self._pose[1][3]
+
     @y.setter
     def y(self, val):
-        self._pose[1][2] = val
+        self._pose[1][3] = val
+
+    @property
+    def z(self):
+        return self._pose[2][3]
+
+    @y.setter
+    def z(self, val):
+        self._pose[2][3] = val
+
 
 class PositionTracker(object):
     def __init__(self):
@@ -81,8 +91,8 @@ class PositionTracker(object):
         :param x, y, z: relative translation between the two objects
         :return: None
         '''
-        glb_x, glb_y, dummy = self[tracked_obj] * [x, y, 1]
-        self.track_object(new_obj, glb_x, glb_y, dummy)
+        glb_x, glb_y, glb_z = self[tracked_obj] * [x, y, z, 1]
+        self.track_object(new_obj, glb_x, glb_y, glb_z)
 
     def remove_object(self, obj):
         del self[obj]
@@ -91,6 +101,6 @@ class PositionTracker(object):
         return self[obj]
 
     def adjust_object(self, obj, x, y, z):
-        new_coords = self[obj] * [x, y, 1]
+        new_coords = self[obj] * [x, y, z, 1]
         new_pose   = Pose(*new_coords)
         self[obj] = new_pose
