@@ -66,8 +66,10 @@ def notify(info):
     if name != 'move-finished' and name != 'move-to':
         socketio.emit('event', json.loads(s))
 
-
-trace.EventBroker.get_instance().add(notify)
+broker = trace.MessageBroker.get_instance()
+broker.subscribe('system-action', notify)
+broker.subscribe('time-action', notify)
+broker.subscribe('instrument-action', notify)
 
 
 @app.route("/")

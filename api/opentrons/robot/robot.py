@@ -385,11 +385,12 @@ class Robot(object):
                 'command_index': len(self._commands),
                 'commands_total': self.cmds_total
             })
-            trace.EventBroker.get_instance().notify(cmd_run_event)
+            trace.MessageBroker.get_instance().publish('system-action', cmd_run_event)
         self._commands.append(command)
 
     @helpers.not_app_run_safe
     def move_head(self, *args, **kwargs):
+
         self._driver.move_head(*args, **kwargs)
 
     @helpers.not_app_run_safe
