@@ -253,7 +253,7 @@ class Placeable(object):
         child = self.children_by_name[name]
         del self.children_by_name[name]
         del self.children_by_reference[child]
-        del position_tracker[child]
+        # del position_tracker[child]
 
     def get_parent(self):
         """
@@ -464,8 +464,8 @@ class Deck(Placeable):
     """
     This class implements behaviour specific to the Deck
     """
-    def __init__(self):
-        position_tracker.create_root_object(self, 0,0,0)
+    # def __init__(self):
+    #     # position_tracker.create_root_object(self, 0,0,0)
 
     def containers(self) -> dict:
         """
