@@ -1,14 +1,8 @@
 import numpy
 
-# not sure if this swinging too far against 'custom vector'
-from pyrr import matrix44, vector4
-
-
-
 # Double check the real meaning of pose
-# Also not dealing with roation at all
+# Also not dealing with rotation at all
 
-DUMMY = 1 # Sometimes added to vectors to maintain matrix values
 
 class Node(object):
     def __init__(self, object):
@@ -110,7 +104,7 @@ class PositionTracker(object):
         :return: None
         '''
 
-        glb_x, glb_y, glb_z = self[tracked_obj] * [x, y, z, DUMMY]
+        glb_x, glb_y, glb_z = self[tracked_obj] * [x, y, z, 1]
         self.track_object(new_obj, glb_x, glb_y, glb_z)
 
     def remove_object(self, obj):
@@ -121,5 +115,5 @@ class PositionTracker(object):
 
     def adjust_object(self, obj, x, y, z):
         new_coords = self[obj] * [x, y, z, 1]
-        new_pose   = Pose(*new_coords)
-        self[obj]  = new_pose
+        new_pose   = Pose(*new_coords[:3])
+        self[obj] = new_pose

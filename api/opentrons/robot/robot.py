@@ -203,9 +203,11 @@ class Robot(object):
         self._deck = containers.Deck()
         self.setup_deck()
 
-        self._ingredients = {}  # TODO needs to be discusses/researched
         self._instruments = {}
 
+        self.position_tracker = position_tracker.PositionTracker()
+
+        # TODO: Shouldn't we make driver now about these things not robot ?
         self.axis_homed = {
             'x': False, 'y': False, 'z': False, 'a': False, 'b': False}
 
@@ -255,6 +257,7 @@ class Robot(object):
         """
         return list(self._runtime_warnings)
 
+    # TODO: remove because Magbead will be controlled by RPI
     def get_mosfet(self, mosfet_index):
         """
         Get MOSFET for a MagBead (URL).
@@ -709,12 +712,22 @@ class Robot(object):
         container.properties['type'] = container_name
         self._deck[slot].add(container, label)
 
+        self.add_to_position_tracker(container)
+
         # if a container is added to Deck AFTER a Pipette, the Pipette's
         # Calibrator must update to include all children of Deck
         for _, instr in self.get_instruments():
             if hasattr(instr, 'update_calibrator'):
                 instr.update_calibrator()
         return container
+
+    def add_to_position_tracker(self, object : Placeable):
+        """
+        Tracks object in position tracker
+        :param object:
+        :return:
+        """
+        pass
 
     def clear_commands(self):
         """
