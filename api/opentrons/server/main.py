@@ -66,7 +66,7 @@ def notify(info):
     if name != 'move-finished' and name != 'move-to':
         socketio.emit('event', json.loads(s))
 
-broker = trace.MessageBroker.get_instance()
+broker = robot.message_broker
 broker.subscribe('system-action', notify)
 broker.subscribe('time-action', notify)
 broker.subscribe('instrument-action', notify)
