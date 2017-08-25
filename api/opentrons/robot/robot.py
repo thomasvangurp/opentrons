@@ -3,13 +3,13 @@ import os
 from threading import Event
 
 from opentrons import containers, drivers
+from opentrons.containers import Container
 from opentrons.util import trace
 from opentrons.util.vector import Vector
 from opentrons.util.log import get_logger
 from opentrons.helpers import helpers
-from opentrons.util.trace import traceable
-
-from opentrons.trackers import position_tracker
+from opentrons.util.trace import MessageBroker
+from opentrons.trackers import position_tracker, liquid_tracker
 
 
 log = get_logger(__name__)
@@ -201,12 +201,18 @@ class Robot(object):
 
         self._previous_container = None
 
+        message_broker = MessageBroker.get_instance()
+        self.liquid_tracker = liquid_tracker.LiquidTracker(message_broker)
+        self.position_tracker = position_tracker.PositionTracker(message_broker)
+        self.position_tracker.create_root_object('head', 0, 0, 0)
+
         self._deck = containers.Deck()
         self.setup_deck()
 
-        self._ingredients = {}  # TODO needs to be discusses/researched
         self._instruments = {}
 
+
+        # TODO: Shouldn't we make driver now about these things not robot ?
         self.axis_homed = {
             'x': False, 'y': False, 'z': False, 'a': False, 'b': False}
 
@@ -237,6 +243,8 @@ class Robot(object):
         """
         axis = axis.upper()
         self._instruments[axis] = instrument
+        self.position_tracker.track_object('head', instrument, 0, 0, 0)
+        self.liquid_tracker.track_liquid_holder(instrument)
 
     def add_warning(self, warning_msg):
         """
@@ -256,6 +264,7 @@ class Robot(object):
         """
         return list(self._runtime_warnings)
 
+    # TODO: remove because Magbead will be controlled by RPI
     def get_mosfet(self, mosfet_index):
         """
         Get MOSFET for a MagBead (URL).
@@ -420,7 +429,7 @@ class Robot(object):
         """
         self._driver.set_speed(*args, **kwargs)
 
-    @traceable('move-to')
+    @MessageBroker.traceable('instrument_action', 'move-to') # just giving a random topic name since IDK what this is doing
     def move_to(self, location, instrument=None, strategy='arc', **kwargs):
         """
         Move an instrument to a coordinate, container or a coordinate within
@@ -669,7 +678,7 @@ class Robot(object):
         # TODO: dynamically figure out robot rows
         return 3
 
-    def setup_deck(self):
+    def add_slots_to_deck(self):
         robot_rows = self.get_max_robot_rows()
         row_offset, col_offset, x_offset, y_offset = self.get_slot_offsets()
 
@@ -688,6 +697,20 @@ class Robot(object):
                 )
                 slot_name = "{}{}".format(col, row)
                 self._deck.add(slot, slot_name, slot_coordinates)
+
+    def setup_deck(self):
+        self.add_slots_to_deck()
+        # Setup Deck as root object for position tracker
+        self.position_tracker.create_root_object(
+            self._deck, *self._deck.coordinates()
+        )
+
+        for slot in self._deck:
+            self.position_tracker.track_object(
+                self._deck,
+                slot,
+                *slot.coordinates()
+            )
 
     @property
     def deck(self):
@@ -725,12 +748,34 @@ class Robot(object):
         container.properties['type'] = container_name
         self._deck[slot].add(container, label)
 
+        self._add_container_to_position_tracker(container)
+        self._add_wells_to_liquid_tracker(container)
+
         # if a container is added to Deck AFTER a Pipette, the Pipette's
         # Calibrator must update to include all children of Deck
         for _, instr in self.get_instruments():
             if hasattr(instr, 'update_calibrator'):
                 instr.update_calibrator()
         return container
+
+    def _add_container_to_position_tracker(self, container : Container):
+        """
+        Add container and child wells to position tracker. Sets container.parent
+        (slot) as position tracker parent
+        """
+        self.position_tracker.track_object(
+            container.parent, container, *container.coordinates()
+        )
+        for well in container:
+            self.position_tracker.track_object(
+                container,
+                well,
+                *well.coordinates()
+            )
+    def _add_wells_to_liquid_tracker(self, container : Container):
+        for well in container:
+            self.liquid_tracker.track_liquid_holder(well)
+
 
     def clear_commands(self):
         """

@@ -3,9 +3,8 @@ import math
 import numbers
 from collections import OrderedDict
 from opentrons.util.vector import Vector
-
-
 from opentrons.trackers import position_tracker
+
 
 import re
 import functools
@@ -244,9 +243,8 @@ class Placeable(object):
         self.children_by_name[name] = child
         self.children_by_reference[child] = name
 
-        position_tracker.track_object(
-            child, *child.coordinates()) #temporary placement
-
+        # position_tracker.track_object(
+        #     child, *child.coordinates()) #temporary placement
 
     def get_deck(self):
         """
@@ -267,7 +265,7 @@ class Placeable(object):
         child = self.children_by_name[name]
         del self.children_by_name[name]
         del self.children_by_reference[child]
-        del position_tracker[child]
+        # del position_tracker[child]
 
     def get_parent(self):
         """
@@ -497,48 +495,6 @@ class Well(Placeable):
     """
     Class representing a Well
     """
-    def __init__(self, state={}, *args, **kwargs):
-        super(Well, self).__init__(*args, **kwargs)
-        default_state = {
-            'liquids': {id(self): 1},
-            'volume': 0}
-        self._state = {**default_state, **state}
-        trace.MessageBroker.get_instance().add_object_and_state_handler(self, self._state_event_handler)
-
-    def __del__(self):
-        trace.MessageBroker.get_instance().remove_tracked_object(self)
-
-    def _state_event_handler(self, event_type, event_info):
-        if event_type == 'dispense':
-            self._state['liquids'], self._state['volume'] = \
-                lf.add_liquids(self._state['liquids'],
-                               self._state['volume'],
-                                event_info['liquids'],
-                                event_info['volume'])
-
-        elif event_type == 'aspirate':
-            volume   = event_info['volume']
-            self._state['volume'] -= volume
-
-    def add_liquid(self, name, volume):
-        self._state['liquids'],self._state['volume'] = \
-            lf.add_liquids({name: 1}, volume, self._state['liquids'], self._state['volume'])
-
-    @property
-    def volume(self):
-        '''Gets the current volume of all liquids in the Well'''
-        return self._state['volume']
-
-    @volume.setter
-    def volume(self, volume):
-        '''Sets the current volume of all liquids in the Well'''
-        self._state['volume'] = volume
-
-    @property
-    def liquids(self):
-        '''Returns a dict of the current contents of the Well
-            and their relative concentrations'''
-        return self._state['liquids']
 
 class Slot(Placeable):
     """

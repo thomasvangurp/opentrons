@@ -1,5 +1,5 @@
 import math
-
+# from ..trackers.liquid_tracker import LiquidContent
 
 
 
@@ -8,22 +8,31 @@ import math
 # but that has not been reset discard its previous contents? Maybe it should only
 # reset on new a tip? Maybe it should be marked as dirty?
 #
-def add_liquids(src_liq_dict, src_vol, dest_liq_dict, dest_vol):
+def combine_liquids(liq1, liq2):
     '''
-    add two liquids together
+    combine twoliquids together
 
-    Takes in a dictionary of liquid names and their
-    relative proportions for both source and destination
-    as well as the volume of each.
-
-    Returns a dict of the new relative proportions and the total volume
-
-    :param src_liq_dict:
-    :param src_vol:
-    :param dest_liq_dict:
-    :param dest_vol:
-    :return:
     '''
+
+    liq_by_vols_1, liq_by_vols_2 = [
+                        {liquid: liquid_proportion / sum(liq_holder.liquids.values()) * liq_holder.volume
+                        for liquid, proportion in liq_holder.liquids.items()}
+                        for liq_holder in (liq1 ,liq2)
+                        ]
+
+    # combine dicts to account for the disjunctive union
+    combined_liqs = {**liq_by_vols_1, **liq_by_vols_2}
+
+    # adjust to combine the original volumes of liquids in the intersection
+    for liquid in liq1.liquids.keys() & liq2.liquids.keys():
+        combined_liqs.update({liquid: liq_by_vols_1[liquid] + liq_by_vols_2[liquid]})
+
+    # Resolve volumes back to proportions
+    total_volume = sum(combined_liqs.values())
+    combined_liqs_ratios = {liquid: volume / total_volume for liquid, volume in combined_liqs.items()}
+    # return LiquidContent(combined_liqs_ratios, total_volume)
+
+
 
     #if their is no destination liquid
     # then it now contains the source liquid

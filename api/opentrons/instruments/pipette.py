@@ -9,12 +9,15 @@ from opentrons.containers.placeable import (
 )
 from opentrons.helpers import helpers
 from opentrons.instruments.instrument import Instrument
-from opentrons.util.trace import traceable
+from opentrons.util.trace import MessageBroker
 from opentrons.util import trace
 from opentrons.util.vector import Vector
 from opentrons.util import liquid_functions as lf
+from opentrons.pubsub_util.topics import LIQUID_TRANSFER
+from opentrons.pubsub_util.messages.liquid import liquid_transfer_msg
 
 
+message_broker = MessageBroker.get_instance()
 
 class Pipette(Instrument):
 
@@ -87,7 +90,7 @@ class Pipette(Instrument):
             tip_racks=[],
             aspirate_speed=300,
             dispense_speed=500,
-            state={}):
+            current_volume=0):
 
         self.robot = robot
         self.axis = axis
@@ -118,7 +121,6 @@ class Pipette(Instrument):
             'aspirate': aspirate_speed,
             'dispense': dispense_speed
         }
-
         self.min_volume = min_volume
         self.max_volume = max_volume or (min_volume + 1)
 
@@ -153,44 +155,11 @@ class Pipette(Instrument):
 
         self.calibrator = Calibrator(self.robot._deck, self.calibration_data)
 
-        self._default_state = {
-            'liquids': {id(self): 1},
-            'volume': 0
-        }
-
-        #TODO: should be able to accept an initial state
-        self._state = self._default_state
-        trace.MessageBroker.get_instance().add_object_and_state_handler(
-            self, self._state_event_handler)
-
-    def __del__(self):
-        trace.MessageBroker.get_instance().remove_tracked_object(self)
-
-    def _state_event_handler(self, event_name, event_info):
-        if event_name == 'aspirate':
-            self._state['liquids'], self._state['volume'] = \
-                lf.add_liquids(event_info['liquids'],
-                               event_info['volume'],
-                               self._state['liquids'],
-                               self._state['volume'])
-            print(self._state['liquids'], self._state['volume'])
-        # Concern about floating points. Could leave residual.
-        # Myabe that's good. Only clear on droptip?
-        elif event_name == 'dispense':
-            self._state['volume'] -= event_info['volume']
-
-        elif event_name == 'drop_tip':
-
-            pass
-        elif event_name == 'pick_up_tip':
-            pass
-        else:
-            pass
 
     @property
     def current_volume(self):
         '''Get current volume in tip'''
-        return self._state['volume']
+        return self.robot.liquid_tracker[self].volume
 
     @current_volume.setter
     def current_volume(self, volume):
@@ -499,7 +468,6 @@ class Pipette(Instrument):
                                "can only dispense into a well".format(location))
         return (volume, well, rate, vector)
 
-    @traceable('aspirate')
     def _aspirate_from_well(self, volume, well, rate, vector):
         distance = self._plunge_distance(self.current_volume + volume)
         bottom = self._get_plunger_position('bottom')
@@ -508,13 +476,18 @@ class Pipette(Instrument):
         self._position_for_aspirate(well)
         self.motor.speed(speed)
         self.motor.move(destination)
+        message_broker.publish(LIQUID_TRANSFER, liquid_transfer_msg(well, self, volume))
+        return self
 
-    @traceable('dispense')
+
+
     def _dispense_to_well(self, volume, well, rate, vector):
         self.move_to((well, vector), strategy='arc')  # position robot above location
         speed = self.speeds['dispense'] * rate
         self.motor.speed(speed)
         self.motor.move(self._plunge_destination_from_volume(volume))
+        message_broker.publish(LIQUID_TRANSFER, liquid_transfer_msg(self, well, volume))
+
         return self
 
     def _dispense_at_liquid_level(self, volume, well, rate, vector):

@@ -6,12 +6,12 @@ from threading import Event
 from opentrons.util.log import get_logger
 from opentrons.util.vector import Vector
 from opentrons.drivers.smoothie_drivers import VirtualSmoothie, SmoothieDriver
-
-from opentrons.util import trace
-
+from opentrons.pubsub_util.topics import POSITION_MOVED
+from opentrons.pubsub_util.messages.position import pos_moved_msg
+from opentrons.util.trace import MessageBroker
 
 log = get_logger(__name__)
-broker = trace.MessageBroker.get_instance()
+message_broker = MessageBroker.get_instance()
 
 class SmoothieDriver_2_0_0(SmoothieDriver):
 
@@ -308,15 +308,21 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         self.wait_for_ok()
         self.wait_for_arrival()
 
+        current_pos = self.get_head_position()["current"]
+
         arguments = {
             'name': 'move-finished',
             'position': {
-                'head': self.get_head_position()["current"],
+                'head': current_pos,
                 'plunger': self.get_plunger_positions()["current"]
             },
             'class': type(self.connection).__name__
         }
-        trace.MessageBroker.get_instance().publish('instrument-action', arguments)
+        message_broker.publish('instrument-action', arguments)
+
+        new_position = pos_moved_msg('head',*current_pos)
+        print("Publishing movement: ", new_position)
+        message_broker.publish(POSITION_MOVED, new_position)
 
     def move_plunger(self, mode='absolute', **kwargs):
         self.move(mode, **kwargs)
@@ -354,7 +360,6 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             except Exception:
                 self.connection.serial_pause()
                 self.connection.flush_input()
-
             if time.time() - did_move_timestamp > 1.0:
                 raise RuntimeError('Expected robot to move, please reconnect')
 
@@ -402,7 +407,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
             }
         }
 
-        trace.MessageBroker.get_instance().publish('instrument-action', arguments)
+        message_broker.publish('instrument-action', arguments)
 
     def set_coordinate_system(self, mode):
         if mode == 'absolute':
@@ -432,19 +437,19 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
                 time.sleep(delay_time)
 
         end_time = _current_time() + delay_time
-        trace.MessageBroker.get_instance().publish('time-action', {
+        message_broker.publish('time-action', {
             'name': 'delay-start',
             'time': delay_time
         })
         while end_time > _current_time():
             self.check_paused_stopped()
             _sleep(min(1, end_time - _current_time()))
-            
-            trace.MessageBroker.get_instance().publish('time-action', {
+
+            message_broker.publish('time-action', {
                 'name': 'countdown',
                 'countdown': int(end_time - time.time())
             })
-        trace.MessageBroker.get_instance().publish('time-action', {
+            message_broker.publish('time-action', {
             'name': 'delay-finish'
         })
 
