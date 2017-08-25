@@ -15,6 +15,7 @@ from opentrons import robot, Robot, instruments, containers  # NOQA
 from opentrons.util import trace, environment, state as robot_state
 from opentrons.util.vector import VectorEncoder
 from opentrons.drivers.smoothie_drivers.v2_0_0 import player
+from opentrons.util.trace import MessageBroker
 
 
 sys.path.insert(0, os.path.abspath('..'))  # NOQA
@@ -66,7 +67,7 @@ def notify(info):
     if name != 'move-finished' and name != 'move-to':
         socketio.emit('event', json.loads(s))
 
-broker = robot.message_broker
+broker = MessageBroker.get_instance()
 broker.subscribe('system-action', notify)
 broker.subscribe('time-action', notify)
 broker.subscribe('instrument-action', notify)
