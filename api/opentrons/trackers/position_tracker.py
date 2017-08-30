@@ -7,8 +7,8 @@ from opentrons.pubsub_util.messages.position import pos_moved_msg
 class Node(object):
     def __init__(self, object):
         self.children = []
-        self.parent = None
-        self.value = object
+        self.parent   = None
+        self.value    = object
 
     def add_child(self, object):
         new_node = Node(object)
@@ -29,6 +29,8 @@ class Pose(object):
     def __eq__(self, other):
         return (self._pose == other._pose).all()
 
+
+    #TODO: We might want to think about whether this will be communcative and if the behavior is obvious
     def __mul__(self, other):
         return self._pose.dot(other)
 
@@ -57,7 +59,7 @@ class Pose(object):
 
     @property
     def position(self):
-        return (self.x, self.y, self.z)
+        return numpy.array([self.x, self.y, self.z])
 
 class PositionTracker(object):
     def __init__(self, message_broker: MessageBroker):
@@ -80,6 +82,17 @@ class PositionTracker(object):
 
     def __repr__(self):
         return repr(self._position_dict)
+
+    def get_subtree(self, root, subtree_dict={}):
+        '''Returns a position dict of a subtree with a DFS traversal'''
+        subtree_dict[root] = self._position_dict[root]
+        for child in self.get_object_children(root):
+            self.get_subtree(child, subtree_dict)
+        return subtree_dict
+
+    def max_z_in_subtree(self, root):
+        return max([pose.z for pose, _ in self.get_subtree(root).values()])
+
 
     def track_object(self, parent, obj, x, y, z):
         '''
@@ -141,4 +154,9 @@ class PositionTracker(object):
         old_x, old_y, old_z = self[moved_object].position
         delta_x, delta_y, delta_z = new_position.x - old_x, new_position.y - old_y, new_position.z - old_z
         self.translate_object(moved_object, delta_x, delta_y, delta_z)
+
+    def relative_object_position(self, target_object, reference_object):
+        tx, ty, tz = self[target_object].position
+        rx, ry, rz = self[reference_object].position
+        return (tx - rx, ty - ry, tz - rz)
 
