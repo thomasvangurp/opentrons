@@ -7,8 +7,8 @@ from opentrons.pubsub_util.messages.movement import moved_msg
 class Node(object):
     def __init__(self, object):
         self.children = []
-        self.parent = None
-        self.value = object
+        self.parent   = None
+        self.value    = object
 
     def add_child(self, object):
         new_node = Node(object)
@@ -59,7 +59,7 @@ class Pose(object):
 
     @property
     def position(self):
-        return (self.x, self.y, self.z)
+        return numpy.array([self.x, self.y, self.z])
 
 class PositionTracker(object):
     def __init__(self, broker: MessageBroker):
@@ -78,11 +78,21 @@ class PositionTracker(object):
     def __setitem__(self, obj, pose):
         if not isinstance(pose, Pose):
             raise TypeError("{} is not an instance of Pose".format(pose))
-        print(self._position_dict[obj][0])
         self._position_dict[obj] = (pose, self._position_dict[obj][1])
 
     def __repr__(self):
         return repr(self._position_dict)
+
+    def get_subtree(self, root, subtree_dict={}):
+        '''Returns a position dict of a subtree with a DFS traversal'''
+        subtree_dict[root] = self._position_dict[root]
+        for child in self.get_object_children(root):
+            self.get_subtree(child, subtree_dict)
+        return subtree_dict
+
+    def max_z_in_subtree(self, root):
+        return max([pose.z for pose, _ in self.get_subtree(root).values()])
+
 
     def track_object(self, parent, obj, x, y, z):
         '''
@@ -149,3 +159,4 @@ class PositionTracker(object):
         tx, ty, tz = self[target_object].position
         rx, ry, rz = self[reference_object].position
         return (tx - rx, ty - ry, tz - rz)
+
