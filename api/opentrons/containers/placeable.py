@@ -3,8 +3,7 @@ import math
 import numbers
 from collections import OrderedDict
 from opentrons.util.vector import Vector
-# from opentrons.trackers import position_tracker
-
+from opentrons.util.render import render_container
 
 import re
 import functools
@@ -708,6 +707,9 @@ class Container(Placeable):
             return self.wells(i)
         else:
             raise ValueError('Placeable.wells(x=, y=) expects ints')
+
+    def _repr_html_(self):
+        return render_container(self)
 
 
 class WellSeries(Container):
