@@ -1,14 +1,11 @@
-import numpy
-
 # not sure if this swinging too far against 'custom vector'
 from pyrr import matrix44, vector4
-
-
 
 # Double check the real meaning of pose
 # Also not dealing with roation at all
 
-DUMMY = 1 # Sometimes added to vectors to maintain matrix values
+DUMMY = 1  # Sometimes added to vectors to maintain matrix values
+
 
 class Pose(object):
     def __init__(self, x, y, z):
@@ -29,6 +26,7 @@ class Pose(object):
     @property
     def x(self):
         return self._pose[0][3]
+
     @x.setter
     def x(self, val):
         self._pose[0][3] = val
@@ -36,6 +34,7 @@ class Pose(object):
     @property
     def y(self):
         return self._pose[1][3]
+
     @y.setter
     def y(self, val):
         self._pose[1][3] = val
@@ -43,9 +42,11 @@ class Pose(object):
     @property
     def z(self):
         return self._pose[2][3]
+
     @z.setter
     def z(self, val):
         self._pose[2][3] = val
+
 
 class PositionTracker(object):
     def __init__(self):
@@ -82,7 +83,8 @@ class PositionTracker(object):
         given another object and relative positioning
 
         :param new_obj:     object to be added to position dict
-        :param tracked_obj: already tracked object that this object is position relative to
+        :param tracked_obj: already tracked object that this object is position
+        relative to
         :param x, y, z: relative translation between the two objects
         :return: None
         '''
@@ -97,5 +99,5 @@ class PositionTracker(object):
 
     def adjust_object(self, obj, x, y, z):
         new_coords = self[obj] * vector4.create(x, y, z, DUMMY)
-        new_pose   = Pose(*new_coords)
-        self[obj]  = new_pose
+        new_pose = Pose(*new_coords)
+        self[obj] = new_pose

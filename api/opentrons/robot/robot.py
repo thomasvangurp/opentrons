@@ -9,8 +9,8 @@ from opentrons.util.log import get_logger
 from opentrons.helpers import helpers
 from opentrons.util.trace import MessageBroker
 from opentrons.trackers import position_tracker, liquid_tracker
-import opentrons.util.calibration_functions as calib
-import opentrons.util.position_functions as pf
+from opentrons.util import calibration_functions as calib
+from opentrons.util import position_functions as pf
 
 log = get_logger(__name__)
 HEAD = 'head'
@@ -387,7 +387,6 @@ class Robot(object):
             self._driver.home('z')
             self._driver.home('x', 'y', 'b', 'a')
 
-    @MessageBroker.traceable('add-command')
     def add_command(self, command):
         if self.mode == 'live':
             cmd_run_event = {'caller': 'ui'}

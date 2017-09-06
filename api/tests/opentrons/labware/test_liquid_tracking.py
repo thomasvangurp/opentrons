@@ -1,4 +1,4 @@
-import unittest
+# import unittest
 # from unittest import mock
 
 from opentrons import Robot
@@ -12,8 +12,10 @@ from opentrons.instruments import pipette
 def test_adding_to_dict_on_load():
     robot = Robot()
     trash = containers_load(robot, 'point', 'A1')
-    assert trash.state == {'liquid_volume': 0,
-                                    'liquid_height': 0}
+    assert trash.state == {
+        'liquid_volume': 0,
+        'liquid_height': 0}
+
 
 def test_liquid_tracking():
     robot = Robot()
@@ -41,12 +43,13 @@ def test_liquid_tracking():
 def test_lt2():
     from opentrons.tracker import Tracker
 
-
     trash = containers_load(robot, 'point', 'A1')
     tiprack1 = containers_load(robot, 'tiprack-10ul', 'B2')
     plate = containers_load(robot, '96-flat', 'A2')
 
-    tracker = Tracker({well: {'red': 5, 'green': 5, 'blue': 5} for well in plate.wells()})
+    tracker = Tracker({
+        well: {'red': 5, 'green': 5, 'blue': 5}
+        for well in plate.wells()})
 
     p200 = pipette.Pipette(
         robot,
@@ -61,6 +64,3 @@ def test_lt2():
 
     p200.aspirate(plate['A1'])
     p200.dispense(plate['A2'])
-
-    
-
