@@ -5,6 +5,8 @@ SHELL := /bin/bash
 .PHONY: test docs publish clean install exe dev
 
 install:
+	git submodule update --init --recursive &&\
+	git submodule update --remote &&\
 	python setup.py install && pip install -r requirements.txt
 
 test:
@@ -14,7 +16,8 @@ docs:
 	cd docs && make html && make doctest
 
 publish:
-	cd scripts && publish.sh && doc-deploy.sh
+	# ./scripts/publish.sh;
+	./scripts/doc-deploy.sh
 
 dev:
 	python opentrons/server/main.py

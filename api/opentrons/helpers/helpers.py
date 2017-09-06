@@ -34,7 +34,6 @@ def flip_coordinates(coordinates, dimensions):
     x_size, y_size, z_size = unpack_coordinates(dimensions)
     return (x, y_size - y, z_size - z)
 
-
 def break_down_travel(p1, target, increment=5, mode='absolute'):
     """
     given two points p1 and target, this returns a list of

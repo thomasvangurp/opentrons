@@ -1,17 +1,26 @@
 import copy
 import itertools
 
-from opentrons.containers import unpack_location
+from opentrons.containers import unpack_location, placeable_to_well
 from opentrons.containers.calibrator import Calibrator
 from opentrons.containers.placeable import (
-    Container, humanize_location, Placeable, WellSeries
+    Container, humanize_location, Placeable,
+    WellSeries
 )
 from opentrons.helpers import helpers
 from opentrons.instruments.instrument import Instrument
+from opentrons.util.trace import MessageBroker
+# from opentrons.util import trace
+from opentrons.util.vector import Vector
+from opentrons.util import liquid_functions as lf
+from opentrons.pubsub_util.topics import LIQUID_TRANSFER
+from opentrons.pubsub_util.messages.liquid import liquid_transfer_msg
+
+
+message_broker = MessageBroker.get_instance()
 
 
 class Pipette(Instrument):
-
     """
 
     Through this class you can can:
@@ -26,7 +35,6 @@ class Pipette(Instrument):
         * Instantiate a pipette with a maximum volume (uL)
         and an axis (`a` or `b`)
         * Design your protocol through the pipette's liquid-handling commands
-        * Run on the :any:`Robot` using :any:`run` or :any:`simulate`
 
     Parameters
     ----------
@@ -83,7 +91,8 @@ class Pipette(Instrument):
             trash_container=None,
             tip_racks=[],
             aspirate_speed=300,
-            dispense_speed=500):
+            dispense_speed=500,
+            current_volume=0):
 
         self.robot = robot
         self.axis = axis.lower()
@@ -109,30 +118,20 @@ class Pipette(Instrument):
 
         self.placeables = []
         self.previous_placeable = None
-        self.current_volume = 0
 
         self.speeds = {
             'aspirate': aspirate_speed,
             'dispense': dispense_speed
         }
-
         self.min_volume = min_volume
         self.max_volume = max_volume or (min_volume + 1)
 
-        # NOTE: positions set to none in order to determine calibration state?
-        # self.positions = {
-        #     'top': None,
-        #     'bottom': None,
-        #     'blow_out': None,
-        #     'drop_tip': None
-        # }
-
         # FIXME
         default_positions = {
-            'top': 0,
-            'bottom': 10,
-            'blow_out': 12,
-            'drop_tip': 14
+            'top': 0.0101,
+            'bottom': 10.0101,
+            'blow_out': 12.0101,
+            'drop_tip': 14.0101
         }
         self.positions = {}
         self.positions.update(default_positions)
@@ -158,9 +157,23 @@ class Pipette(Instrument):
 
         self.calibrator = Calibrator(self.robot._deck, self.calibration_data)
 
-        if helpers.is_number(max_volume) and max_volume > 0:
-            self.max_volume = max_volume
-            self.update_calibrations()
+    @property
+    def current_volume(self):
+        '''Get current volume in tip'''
+        return self.robot.liquid_tracker[self].volume
+
+    @current_volume.setter
+    def current_volume(self, volume):
+        '''
+        Set current volume in tip.
+        This does not reset the liquids of the container
+        '''
+        self._state['volume'] = volume
+
+    def reset_tip(self):
+        ''' Resets liquids in pipette and 0s the volume'''
+        self._state['volume'] = 0
+        self._state['liquids'] = {}
 
     def update_calibrator(self):
         self.calibrator = Calibrator(self.robot._deck, self.calibration_data)
@@ -343,11 +356,9 @@ class Pipette(Instrument):
                     self.max_volume,
                     self.current_volume + volume)
             )
-
-        distance = self._plunge_distance(self.current_volume + volume)
-        bottom = self._get_plunger_position('bottom')
-        destination = bottom - distance
-        speed = self.speeds['aspirate'] * rate
+        vector = None
+        if isinstance(location, tuple):
+            location, vector = location
 
         _description = "Aspirating {0} {1}".format(
             volume,
@@ -355,10 +366,17 @@ class Pipette(Instrument):
         )
 
         self._position_for_aspirate(location)
-        self.motor.speed(speed)
-        self.motor.move(destination)
+        # TODO (Ian 2017-09-06) ???
+        # self.motor.speed(speed)
+        # self.motor.move(destination)
         self.robot.add_command(_description)
-        self.current_volume += volume  # update after actual aspirate
+
+        well = placeable_to_well(location)
+        if not well:
+            raise RuntimeError(
+                "{} is not an instance of a Well, WellSeries "
+                "can only aspirate from a Well or WellSeries".format(location))
+        self._aspirate_from_well(volume, location, rate, vector)
         return self
 
     def dispense(self,
@@ -417,36 +435,82 @@ class Pipette(Instrument):
         >>> p200.dispense(plate[2]) # doctest: +ELLIPSIS
         <opentrons.instruments.pipette.Pipette object at ...>
         """
+
+        # if volume is specified as 0uL, then do nothing
+        volume, well, rate, vector = \
+            self._parse_dispense_args(volume, location, rate)
+        self._dispense_to_well(volume, well, rate, vector)
+        return self
+
+    def dispense_at_liquid_level(self,
+                                 volume=None,
+                                 location=None,
+                                 rate=1.0):
+        volume, well, rate, vector = \
+            self._parse_dispense_args(volume, location, rate)
+        self._dispense_at_liquid_level(volume, well, rate, vector)
+        return self
+
+    def _parse_dispense_args(self, volume, location, rate):
         if not helpers.is_number(volume):
             if volume and not location:
                 location = volume
             volume = self.current_volume
 
-        # Ensure we don't dispense more than the current volume
+        # if volume == 0:
+        #     return self
+
+            # Ensure we don't dispense more than the current volume
         volume = min(self.current_volume, volume)
+        _description = "Dispensing {0} {1}".format(volume,
+                            ('at ' + repr(location) if location else ''))  # NOQA
+        self.robot.add_command(_description)
 
-        # if volume is specified as 0uL, then do nothing
-        if volume == 0:
-            return self
+        vector = Vector(0, 0, 0)
+        if isinstance(location, tuple):
+            location, vector = location
+        well = placeable_to_well(location)
+        if not well:
+            raise RuntimeError(
+                "{} is not an instance of a well, "
+                "can only dispense into a well".format(location))
+        return (volume, well, rate, vector)
 
-        self.move_to(location, strategy='arc')  # position robot above location
-
-        # TODO(ahmed): revisit this
-        distance = self._plunge_distance(self.current_volume - volume)
+    def _aspirate_from_well(self, volume, well, rate, vector):
+        distance = self._plunge_distance(self.current_volume + volume)
         bottom = self._get_plunger_position('bottom')
         destination = bottom - distance
-        speed = self.speeds['dispense'] * rate
-
+        speed = self.speeds['aspirate'] * rate
+        self._position_for_aspirate(well)
         self.motor.speed(speed)
         self.motor.move(destination)
-        self.current_volume -= volume  # update after actual dispense
+        message_broker.publish(
+            LIQUID_TRANSFER, liquid_transfer_msg(well, self, volume))
+        return self
 
+    def _dispense_to_well(self, volume, well, rate, vector):
+        # position robot above location
+        self.move_to((well, vector), strategy='arc')
+
+        speed = self.speeds['dispense'] * rate
+        self.motor.speed(speed)
+        self.motor.move(self._plunge_destination_from_volume(volume))
+        message_broker.publish(
+            LIQUID_TRANSFER, liquid_transfer_msg(self, well, volume))
+
+        # TODO (Ian 2017-09-06) location ???
         _description = "Dispensing {0} {1}".format(
             volume,
-            ('at ' + humanize_location(location) if location else '')
+            # ('at ' + humanize_location(location) if location else '')
         )
         self.robot.add_command(_description)
         return self
+
+    def _dispense_at_liquid_level(self, volume, well, rate, vector):
+        liquid_level = lf.well_liquid_height(well)
+        print("dispensing at liquid level: {}".format(liquid_level))
+        new_vector = Vector(vector['x'], vector['y'], liquid_level)
+        self._dispense_to_well(volume, well, rate, new_vector)
 
     def _position_for_aspirate(self, location=None):
         """
@@ -569,14 +633,14 @@ class Pipette(Instrument):
         <opentrons.instruments.pipette.Pipette object at ...>
         """
 
-        self.move_to(location, strategy='arc')
-        self.motor.move(self._get_plunger_position('blow_out'))
-        self.current_volume = 0
-
         _description = "Blowing out {}".format(
             'at ' + humanize_location(location) if location else ''
         )
         self.robot.add_command(_description)
+
+        self.move_to(location, strategy='arc')
+        self.motor.move(self._get_plunger_position('blow_out'))
+        self.current_volume = 0
         return self
 
     def touch_tip(self, location=None, radius=1.0):
@@ -617,6 +681,10 @@ class Pipette(Instrument):
         >>> p200.dispense(plate[1]).touch_tip() # doctest: +ELLIPSIS
         <opentrons.instruments.pipette.Pipette object at ...>
         """
+
+        _description = 'Touching tip'
+        self.robot.add_command(_description)
+
         height_offset = 0
 
         if helpers.is_number(location):
@@ -644,8 +712,6 @@ class Pipette(Instrument):
 
         [self.move_to((location, e), strategy='direct') for e in well_edges]
 
-        _description = 'Touching tip'
-        self.robot.add_command(_description)
         return self
 
     def air_gap(self, volume=None, height=None):
@@ -688,6 +754,7 @@ class Pipette(Instrument):
             return self
 
         _description = 'Air gap'
+        self.robot.add_command(_description)
 
         if height is None:
             height = 5
@@ -696,7 +763,6 @@ class Pipette(Instrument):
         # "move_to" separate from aspirate command
         # so "_position_for_aspirate" isn't executed
         self.move_to(location)
-        self.robot.add_command(_description)
         self.aspirate(volume)
         return self
 
@@ -721,7 +787,7 @@ class Pipette(Instrument):
         <opentrons.robot.robot.Robot object at ...>
         >>> tiprack = containers.load('tiprack-200ul', 'E1', share=True)
         >>> p200 = instruments.Pipette(axis='a',
-        ...     tip_racks=[tiprack], max_volume=200)
+        ...     tip_racks=[tiprack], max_volume=200, name='p200')
         >>> p200.pick_up_tip() # doctest: +ELLIPSIS
         <opentrons.instruments.pipette.Pipette object at ...>
         >>> p200.aspirate(50, plate[0]) # doctest: +ELLIPSIS
@@ -792,6 +858,11 @@ class Pipette(Instrument):
         if isinstance(location, Placeable):
             location = location.bottom()
 
+        _description = "Picking up tip {0}".format(
+            ('from ' + humanize_location(location) if location else '')
+        )  # NOQA
+        self.robot.add_command(_description)
+
         presses = (1 if not helpers.is_number(presses) else presses)
 
         self.motor.move(self._get_plunger_position('bottom'))
@@ -860,6 +931,11 @@ class Pipette(Instrument):
             # give space for the drop-tip mechanism
             location = location.bottom(self._drop_tip_offset)
 
+        _description = "Drop_tip {}".format(
+            ('at ' + humanize_location(location) if location else '')
+        )
+        self.robot.add_command(_description)
+
         if location:
             self.move_to(location, strategy='arc')
 
@@ -871,11 +947,6 @@ class Pipette(Instrument):
 
         self.current_volume = 0
         self.current_tip(None)
-
-        _description = "Drop_tip {}".format(
-            ('at ' + humanize_location(location) if location else '')
-        )
-        self.robot.add_command(_description)
         return self
 
     def home(self):
@@ -886,7 +957,6 @@ class Pipette(Instrument):
         Notes
         -----
         `Pipette.home()` homes the `Robot`
-        (see :any:`run` and :any:`simulate`)
 
         Returns
         -------
@@ -901,13 +971,14 @@ class Pipette(Instrument):
         <opentrons.instruments.pipette.Pipette object at ...>
         """
 
-        self.current_volume = 0
-        self.motor.home()
         _description = "Homing pipette plunger on axis {}".format(
             self.axis
         )
 
         self.robot.add_command(_description)
+
+        self.current_volume = 0
+        self.motor.home()
         return self
 
     def distribute(self, *args, **kwargs):
@@ -1090,14 +1161,14 @@ class Pipette(Instrument):
         """
 
         minutes += int(seconds / 60)
-        seconds = seconds % 60
-        _description = "Delaying {} minutes and {} seconds".format(
-            minutes, seconds)
+        seconds %= 60
+
+        # TODO (Ian 2017-09-05) _location unused?
+        # _description = "Delaying {} minutes and {} seconds".format(
+        #     minutes, seconds)
+
         seconds += float(minutes * 60)
-
         self.motor.wait(seconds)
-
-        self.robot.add_command(_description)
         return self
 
     def calibrate(self, position):
@@ -1270,6 +1341,12 @@ class Pipette(Instrument):
             raise RuntimeError(
                 'Plunger position "{}" does not exist'.format(
                     position))
+
+    def _plunge_destination_from_volume(self, volume):
+        distance = self._plunge_distance(self.current_volume - volume)
+        bottom = self._get_plunger_position('bottom')
+        destination = bottom - distance
+        return destination
 
     def _plunge_distance(self, volume):
         """Calculate axis position for a given liquid volume.
