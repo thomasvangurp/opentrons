@@ -690,6 +690,42 @@ class Container(Placeable):
         else:
             raise ValueError('Placeable.wells(x=, y=) expects ints')
 
+    def _repr_html_(self):
+        # TODO SOON factor out to a utils/viz file
+        def draw_well(well):
+            SCALE = 2
+            parent = well.get_parent()
+            # Offset child coordinates by parent, and scale from mm to pixels
+            x, y, z = (well.coordinates() - parent.coordinates()) * SCALE
+            if 'diameter' in well.properties:
+                # It's a circular well
+                return '<circle cx="{cx}" cy="{cy}" r="{radius}" fill={fill} />'.format(  # noqa: E501
+                        cx=x,
+                        cy=y,
+                        radius=well.properties['diameter'] / 2 * SCALE,
+                        fill='red'  # TODO!
+                    )
+            elif 'width' in well.properties and 'length' in well.properties:
+                return '<rect x="{x}" y="{y}" width="{width}" height="{length}" fill="{fill}" />'.format(  # noqa: E501
+                    x=x,
+                    y=y,
+                    length=well.properties['length'] * SCALE,
+                    width=well.properties['width'] * SCALE,
+                    fill='blue'  # TODO!
+                )
+            else:
+                #  TODO: remove/rewrite -- this is for my debugging
+                print(
+                    'warning: well has no diameter,' +
+                    'and is missing either width or length', well)
+
+        html = (
+            '<svg style="height: 20em;">' +  # TODO: don't inline height
+            ''.join([draw_well(well) for well in self.wells()]) +
+            '</svg>')
+
+        return html
+
 
 class WellSeries(Container):
     """
