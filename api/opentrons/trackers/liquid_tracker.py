@@ -1,5 +1,5 @@
 from opentrons.util.trace import MessageBroker
-from opentrons.util import liquid_functions as lf
+# from opentrons.util import liquid_functions as lf
 from opentrons.pubsub_util.topics import LIQUID_TRANSFER
 from opentrons.pubsub_util.messages.liquid import liquid_transfer_msg
 
@@ -7,10 +7,10 @@ message_broker = MessageBroker.get_instance()
 
 
 def relative_proportions_to_percentages(liquid_dict):
-    liquids_as_percent = {liquid: (proportion / sum(liquid_dict.values()))
-                         for liquid, proportion in liquid_dict.items()}
+    liquids_as_percent = {
+        liquid: (proportion / sum(liquid_dict.values()))
+        for liquid, proportion in liquid_dict.items()}
     return liquids_as_percent
-
 
 
 def combine_liquids(liq1, liq2):
@@ -18,27 +18,31 @@ def combine_liquids(liq1, liq2):
     combine two liquids together
 
     '''
-    liq_by_vols_1, liq_by_vols_2 = [{liquid: (ratio * liq_holder.volume)
-                                    for liquid, ratio in liq_holder.liquids.items()}
-                                    for liq_holder in [liq1, liq2]]
+    liq_by_vols_1, liq_by_vols_2 = [
+        {liquid: (ratio * liq_holder.volume)
+            for liquid, ratio in liq_holder.liquids.items()}
+        for liq_holder in [liq1, liq2]]
 
     # combine dicts to account for the disjunctive union
     combined_liqs = {**liq_by_vols_1, **liq_by_vols_2}
 
     # adjust to combine the original volumes of liquids in the intersection
     for liquid in liq1.liquids.keys() & liq2.liquids.keys():
-        combined_liqs.update({liquid: liq_by_vols_1[liquid] + liq_by_vols_2[liquid]})
+        combined_liqs.update({
+            liquid: liq_by_vols_1[liquid] + liq_by_vols_2[liquid]})
 
     # Resolve volumes back to proportions
     total_volume = sum(combined_liqs.values())
-    combined_liqs_ratios = {liquid: volume / total_volume for liquid, volume in combined_liqs.items()}
+    combined_liqs_ratios = {
+        liquid: volume / total_volume
+        for liquid, volume in combined_liqs.items()}
     return LiquidContent(combined_liqs_ratios, total_volume)
 
 
 class LiquidContent(object):
     def __init__(self, liquid_dict, volume):
         self._liquids = relative_proportions_to_percentages(liquid_dict)
-        self._volume  = volume
+        self._volume = volume
 
     def __repr__(self):
         return "Liquid: {} \nVolume: {}".format(self._liquids, self._volume)
@@ -58,7 +62,6 @@ class LiquidContent(object):
     def liquids(self, liquid_dict):
         self._liquids = relative_proportions_to_percentages(liquid_dict)
 
-
     @property
     def volume(self):
         return self._volume
@@ -66,6 +69,7 @@ class LiquidContent(object):
     @volume.setter
     def volume(self, vol):
         self._volume = vol
+
 
 class LiquidTracker(object):
     def __init__(self, message_broker: MessageBroker):
@@ -80,7 +84,7 @@ class LiquidTracker(object):
 
     def __setitem__(self, liq_holder, liquid_contents: LiquidContent):
         if not isinstance(liquid_contents, LiquidContent):
-            raise TypeError("{} is not an instance of LiquidContent".format(liquid_contents))
+            raise TypeError("{} is not an instance of LiquidContent".format(liquid_contents))  # noqa: E501
         self._liquid_holder_dict[liq_holder] = liquid_contents
 
     def __repr__(self):
@@ -90,7 +94,7 @@ class LiquidTracker(object):
         pass
 
     def __getitem__(self, item):
-       return self._liquid_holder_dict[item]
+        return self._liquid_holder_dict[item]
 
     def _track_liquid_holder(self, liq_holder, liquid_contents: LiquidContent):
         self[liq_holder] = liquid_contents
@@ -108,13 +112,18 @@ class LiquidTracker(object):
         self[liq_holder] += liquid_to_add
 
     def transfer_liquid(self, src, dest, volume):
-        '''Transfers liquid from one liq_holder to another'''
+        '''
+        Transfers liquid from one liq_holder to another
+        '''
         liquid = self._extract_liquid(src, volume)
         self._add_liquid(dest, liquid)
 
     def _liquid_transfer_event(self, liquid_transfer: liquid_transfer_msg):
-        '''liquid_movement_msg(source='source', destination='dest', liquid_contents={}) '''
-        #TODO: update this example with a real liq_transfer_msg
+        '''
+        liquid_movement_msg(
+            source='source', destination='dest', liquid_contents={})
+        '''
+        # TODO: update this example with a real liq_transfer_msg
         src, dest, volume = liquid_transfer
         print("src: {}, dest: {}, volume: {}".format(src, dest, volume))
         self.transfer_liquid(src, dest, volume)
@@ -122,8 +131,3 @@ class LiquidTracker(object):
     def add_liquid(self, liquid_holder, liquid_name, volume):
         liq_to_add = LiquidContent({liquid_name: 1}, volume)
         self._add_liquid(liquid_holder, liq_to_add)
-
-
-
-
-
