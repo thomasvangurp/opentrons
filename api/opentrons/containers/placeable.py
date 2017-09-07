@@ -709,6 +709,8 @@ class Container(Placeable):
             raise ValueError('Placeable.wells(x=, y=) expects ints')
 
     def _repr_html_(self):
+        # TODO IMMEDIATELY
+        raise NotImplementedError('Container cannot render to html because of robot import. Use utils.render.render_container for now') # noqa
         return render_container(self)
 
 
