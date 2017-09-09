@@ -11,6 +11,7 @@ from opentrons.util.trace import MessageBroker
 from opentrons.trackers import position_tracker, liquid_tracker
 from opentrons.util import calibration_functions as calib
 from opentrons.util import position_functions as pf
+from opentrons.util import render
 
 log = get_logger(__name__)
 HEAD = 'head'
@@ -203,6 +204,8 @@ class Robot(object):
         self._previous_container = None
 
         message_broker = MessageBroker.get_instance()
+        # TODO: (Ian 2017-09-07) this depends on __init__.py's robot.reset().
+        # If you reset it again, this line breaks liquid tracking.
         self.liquid_tracker = liquid_tracker.LiquidTracker(message_broker)
         self.position_tracker = position_tracker\
             .PositionTracker(message_broker)
@@ -487,7 +490,6 @@ class Robot(object):
         # # else:
         #     coordinates += placeable.coordinates(placeable.get_deck())
 
-        print("MOVE TO HEIGHT: {}".format(coordinates[2]))
         if strategy == 'arc':
             arc_coords = self._create_arc(coordinates, placeable)
             for coord in arc_coords:
@@ -887,3 +889,6 @@ class Robot(object):
             container,
             self.position_tracker,
             **(tracked_position-true_position))
+
+    def show(self, entity):
+        return render.Display(robot=self, entity=entity)

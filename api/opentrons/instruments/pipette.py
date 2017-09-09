@@ -91,8 +91,7 @@ class Pipette(Instrument):
             trash_container=None,
             tip_racks=[],
             aspirate_speed=300,
-            dispense_speed=500,
-            current_volume=0):
+            dispense_speed=500):
 
         self.robot = robot
         self.axis = axis.lower()
@@ -168,12 +167,11 @@ class Pipette(Instrument):
         Set current volume in tip.
         This does not reset the liquids of the container
         '''
-        self._state['volume'] = volume
+        self.robot.liquid_tracker[self].volume = volume
 
     def reset_tip(self):
         ''' Resets liquids in pipette and 0s the volume'''
-        self._state['volume'] = 0
-        self._state['liquids'] = {}
+        self.current_volume = 0
 
     def update_calibrator(self):
         self.calibrator = Calibrator(self.robot._deck, self.calibration_data)
@@ -488,6 +486,8 @@ class Pipette(Instrument):
             LIQUID_TRANSFER, liquid_transfer_msg(well, self, volume))
         return self
 
+    # TODO (Ian 2017-09-07) - is this where `location` belongs?
+    # git merge confusion.
     def _dispense_to_well(self, volume, well, rate, vector):
         # position robot above location
         self.move_to((well, vector), strategy='arc')
@@ -498,10 +498,9 @@ class Pipette(Instrument):
         message_broker.publish(
             LIQUID_TRANSFER, liquid_transfer_msg(self, well, volume))
 
-        # TODO (Ian 2017-09-06) location ???
         _description = "Dispensing {0} {1}".format(
             volume,
-            # ('at ' + humanize_location(location) if location else '')
+            ('at ' + str(well))
         )
         self.robot.add_command(_description)
         return self

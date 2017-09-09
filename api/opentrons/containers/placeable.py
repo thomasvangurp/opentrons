@@ -3,7 +3,7 @@ import math
 import numbers
 from collections import OrderedDict
 from opentrons.util.vector import Vector
-from opentrons.util.render import render_container
+# from opentrons.util.render import render_container
 
 import re
 import functools
@@ -707,11 +707,6 @@ class Container(Placeable):
             return self.wells(i)
         else:
             raise ValueError('Placeable.wells(x=, y=) expects ints')
-
-    def _repr_html_(self):
-        # TODO IMMEDIATELY
-        raise NotImplementedError('Container cannot render to html because of robot import. Use utils.render.render_container for now') # noqa
-        return render_container(self)
 
 
 class WellSeries(Container):

@@ -320,8 +320,7 @@ class SmoothieDriver_2_0_0(SmoothieDriver):
         }
         message_broker.publish('instrument-action', arguments)
 
-        new_position = pos_moved_msg('head',*current_pos)
-        print("Publishing movement: ", new_position)
+        new_position = pos_moved_msg('head', *current_pos)
         message_broker.publish(POSITION_MOVED, new_position)
 
     def move_plunger(self, mode='absolute', **kwargs):

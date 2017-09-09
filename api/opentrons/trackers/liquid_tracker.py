@@ -125,7 +125,6 @@ class LiquidTracker(object):
         '''
         # TODO: update this example with a real liq_transfer_msg
         src, dest, volume = liquid_transfer
-        print("src: {}, dest: {}, volume: {}".format(src, dest, volume))
         self.transfer_liquid(src, dest, volume)
 
     def add_liquid(self, liquid_holder, liquid_name, volume):
