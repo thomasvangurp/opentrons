@@ -25,10 +25,10 @@ current_position = (0, 0, 0)
 # 200uL tip. Used during calibration process
 # The actual calibration represents end of a pipette
 # without tip on
-TIP_LENGTH = 46
+TIP_LENGTH = 41
 # Smoothie Z value when Deck's Z=0
 current_position = (0, 0, 0)
-Z_OFFSET = 3.75
+Z_OFFSET = 8
 
 # Reference point being calibrated
 point_number = 0
@@ -36,16 +36,16 @@ point_number = 0
 # (0, 0) is in bottom-left corner
 # Expected reference points
 # v0
-# expected = [
-#     (64.0, -2.5 + 90.5),        # 4
-#     (329.16, -2.5 + 90.5),      # 6
-#     (196.58, 274.0)             # 11
-# ]
 expected = [
-    (64.0, 92.8),       # 1
-    (329.0, 92.8),      # 3
-    (196.50, 273.80)    # 11
+    (64.0, 92.8),        # 4
+    (329, 92.8),      # 6
+    (196.50, 273.8)             # 11
 ]
+# expected = [
+#     (64.0, 92.8),       # 1
+#     (329.0, 92.8),      # 3
+#     (196.50, 273.80)    # 11
+# ]
 # Expected
 # Updated during calibration process when you press ENTER
 # Default values don't matter and get overridden when ENTER is pressed
@@ -57,10 +57,11 @@ actual = [
 # Accessible through 1,2,3 ... keyboard keys to test
 # calibration by moving to known locations
 test_points = [
-    (64.0, 92.8, TIP_LENGTH),            # 4
-    (329.0, 92.8, TIP_LENGTH),          # 6
-    (196.50, 183.30, TIP_LENGTH),                # 11
-    (196.50, 273.80, TIP_LENGTH+127.8)     # 5?
+    (132.50, 90.50, TIP_LENGTH),    # bottom left of slot 5
+    (330.14, 222.78, TIP_LENGTH),   # sharp corner of 9
+    (190.65, 227.75, TIP_LENGTH),   # sharp corner of 8
+    (196.50, 273.8, TIP_LENGTH),     # dimple under 11
+    (332.13, 47.41, TIP_LENGTH)     # sharp corner of 3
 ]
 
 # World > Smoothie XY-plane transformation
@@ -69,10 +70,9 @@ test_points = [
 # if you want to test points or to measure real-world objects
 # using the tool
 XY = \
-    array([[  9.98113208e-01,  -5.52486188e-03,  -3.46165381e+01],
-           [ -3.77358491e-03,   1.00000000e+00,  -1.03084906e+01],
+    array([[  1.00188679e+00,   1.38121547e-03,  -3.96196865e+01],
+           [ -1.41509434e-02,   9.96546961e-01,  -5.40150631e+00],
            [ -5.03305613e-19,   2.60208521e-18,   1.00000000e+00]])
-
 # Add fixed Z offset which is known so we don't have to calibrate for height
 # during calibration process
 T = insert(
