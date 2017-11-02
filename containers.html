@@ -160,13 +160,25 @@ window.intercomSettings = {
 <p class="last">All names are case-sensitive, copying and pasting from this list into the protocol editor will ensure no errors are made.</p>
 </div>
 <hr class="docutils" />
-<div class="section" id="point">
-<h3>Point<a class="headerlink" href="#point" title="Permalink to this headline">¶</a></h3>
-<p>Use <code class="docutils literal"><span class="pre">point</span></code> when there is only one position per container, such as the trash or a scale.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;point&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="section" id="terminology">
+<h3>Terminology<a class="headerlink" href="#terminology" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="deck-slots">
+<h4>Deck Slots<a class="headerlink" href="#deck-slots" title="Permalink to this headline">¶</a></h4>
+<p>When writing an Opentrons protocol, you must specify how containers will be laid out on the robot. Containers are placed on the <strong>deck</strong>, in one of several <strong>slots</strong>. Slots are labeled starting from A1 in the bottom left, then going to A2, A3, and so on.</p>
+<p><strong>OT One-S Standards &amp; Pro:</strong></p>
+<img alt="_images/DeckMapEmpty.png" src="_images/DeckMapEmpty.png" />
+<p><strong>OT One-S Hood:</strong></p>
+<p>The hood model has no 3rd row:</p>
+<img alt="_images/DeckMapEmptyHood.png" src="_images/DeckMapEmptyHood.png" />
+</div>
+</div>
+<div class="section" id="containers-load-command">
+<h3><code class="docutils literal"><span class="pre">containers.load</span></code> command<a class="headerlink" href="#containers-load-command" title="Permalink to this headline">¶</a></h3>
+<p>To load a container, use the <code class="docutils literal"><span class="pre">containers.load</span></code> function. For example, to load a 96-well flat plate into Slot A2 on the robot deck:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">opentrons</span> <span class="kn">import</span> <span class="n">containers</span>
+<span class="n">myContainer</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-flat&#39;</span><span class="p">,</span> <span class="s1">&#39;A2&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You can access the point position as <code class="docutils literal"><span class="pre">container.wells('A1')</span></code> or <code class="docutils literal"><span class="pre">container.wells(0)</span></code>.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="tipracks">
@@ -174,7 +186,7 @@ window.intercomSettings = {
 <div class="section" id="tiprack-10ul">
 <h4>tiprack-10ul<a class="headerlink" href="#tiprack-10ul" title="Permalink to this headline">¶</a></h4>
 <p>Tip rack for a 10 uL pipette (single or 8-channel)</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-10ul&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-10ul&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Tips:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['H12']</span></code>, <em>8-channel</em> <code class="docutils literal"><span class="pre">['A1']-['A12']</span></code></p>
@@ -183,7 +195,7 @@ window.intercomSettings = {
 <div class="section" id="tiprack-10ul-h">
 <h4>tiprack-10ul-H<a class="headerlink" href="#tiprack-10ul-h" title="Permalink to this headline">¶</a></h4>
 <p>Tip rack for a single channel 10 uL pipette when the pipette is in the center position.  Set initial position to H1, and the pipette will use all the tips on the right hand side (E-H, 1-12)</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-10ul-H&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-10ul-H&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Tips:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['E-H,</span> <span class="pre">1-12']</span></code></p>
@@ -192,7 +204,7 @@ window.intercomSettings = {
 <div class="section" id="tiprack-200ul">
 <h4>tiprack-200ul<a class="headerlink" href="#tiprack-200ul" title="Permalink to this headline">¶</a></h4>
 <p>Tip rack for a 200 or 300 uL pipette (single or 8-channel)</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-200ul&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Tips:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['H12']</span></code>, <em>8-channel</em> <code class="docutils literal"><span class="pre">['A1']-['A12']</span></code></p>
@@ -201,7 +213,7 @@ window.intercomSettings = {
 <div class="section" id="tiprack-1000ul">
 <h4>tiprack-1000ul<a class="headerlink" href="#tiprack-1000ul" title="Permalink to this headline">¶</a></h4>
 <p>Tip rack for a 1000 uL pipette (single or 8-channel)</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-1000ul&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-1000ul&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Tips:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['H12']</span></code>, <em>8-channel</em> <code class="docutils literal"><span class="pre">['A1']-['A12']</span></code></p>
@@ -210,7 +222,7 @@ window.intercomSettings = {
 <div class="section" id="tiprack-1000ul-chem">
 <h4>tiprack-1000ul-chem<a class="headerlink" href="#tiprack-1000ul-chem" title="Permalink to this headline">¶</a></h4>
 <p>Tip rack for 1000ul chem (10x10)</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-1000ul-chem&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tiprack-1000ul-chem&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Tips:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">[0]-[99]</span></code></p>
@@ -223,7 +235,7 @@ window.intercomSettings = {
 <div class="section" id="trough-12row">
 <h4>trough-12row<a class="headerlink" href="#trough-12row" title="Permalink to this headline">¶</a></h4>
 <p>12 row reservoir</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;trough-12row&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;trough-12row&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Rows:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['A12']</span></code>, <em>8-channel</em> <code class="docutils literal"><span class="pre">['A1']-['A12']</span></code></p>
@@ -237,7 +249,7 @@ window.intercomSettings = {
 <h4>tube-rack-.75ml<a class="headerlink" href="#tube-rack-75ml" title="Permalink to this headline">¶</a></h4>
 <p>4x6 rack that holds .75 mL microcentrifuge tubes
 (A1, A1-D6)</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tube-rack-.75ml&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tube-rack-.75ml&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Tubes:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['D6']</span></code></p>
@@ -246,7 +258,7 @@ window.intercomSettings = {
 <div class="section" id="tube-rack-2ml">
 <h4>tube-rack-2ml<a class="headerlink" href="#tube-rack-2ml" title="Permalink to this headline">¶</a></h4>
 <p>4x6 rack that holds 1.5 mL microcentrifuge tubes and 2 mL microcentrifuge tubes</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tube-rack-2ml&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tube-rack-2ml&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Tubes:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['D6']</span></code></p>
@@ -255,7 +267,7 @@ window.intercomSettings = {
 <div class="section" id="tube-rack-15-50ml">
 <h4>tube-rack-15_50ml<a class="headerlink" href="#tube-rack-15-50ml" title="Permalink to this headline">¶</a></h4>
 <p>rack that holds 6 15 mL tubes and 4 50 mL tubes</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tube-rack-15_50ml&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;tube-rack-15_50ml&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Tubes:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['A3'],</span> <span class="pre">['B1']-['B3'],</span> <span class="pre">['C1']-['C2'],</span> <span class="pre">['D1']-['D2']</span></code></p>
@@ -267,7 +279,7 @@ window.intercomSettings = {
 <div class="section" id="deep-well">
 <h4>96-deep-well<a class="headerlink" href="#deep-well" title="Permalink to this headline">¶</a></h4>
 <p>See dimensions in diagram below.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-deep-well&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-deep-well&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Wells:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['H12']</span></code>, <em>8-channel</em> <code class="docutils literal"><span class="pre">['A1']-['A12']</span></code></p>
@@ -276,7 +288,7 @@ window.intercomSettings = {
 <div class="section" id="pcr-tall">
 <h4>96-PCR-tall<a class="headerlink" href="#pcr-tall" title="Permalink to this headline">¶</a></h4>
 <p>See dimensions in diagram below.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-PCR-tall&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-PCR-tall&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Wells:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['H12']</span></code>, <em>8-channel</em> <code class="docutils literal"><span class="pre">['A1']-['A12']</span></code></p>
@@ -285,7 +297,7 @@ window.intercomSettings = {
 <div class="section" id="pcr-flat">
 <h4>96-PCR-flat<a class="headerlink" href="#pcr-flat" title="Permalink to this headline">¶</a></h4>
 <p>See dimensions in diagram below.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-PCR-flat&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;96-PCR-flat&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Wells:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['H12']</span></code>, <em>8-channel</em> <code class="docutils literal"><span class="pre">['A1']-['A12']</span></code></p>
@@ -294,7 +306,7 @@ window.intercomSettings = {
 <div class="section" id="pcr-strip-tall">
 <h4>PCR-strip-tall<a class="headerlink" href="#pcr-strip-tall" title="Permalink to this headline">¶</a></h4>
 <p>See dimensions in diagram below.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;PCR-strip-tall&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;PCR-strip-tall&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Wells:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['A8']</span></code>, <em>8-channel</em> <code class="docutils literal"><span class="pre">['A1']</span></code></p>
@@ -303,11 +315,30 @@ window.intercomSettings = {
 <div class="section" id="plate">
 <h4>384-plate<a class="headerlink" href="#plate" title="Permalink to this headline">¶</a></h4>
 <p>See dimensions in diagram below.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">container</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;384-plate&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;384-plate&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Accessing Wells:</strong> <em>single channel</em> <code class="docutils literal"><span class="pre">['A1']-['P24']</span></code>, <em>multi-channel</em> <code class="docutils literal"><span class="pre">['A1']-['A24]</span></code></p>
 <img alt="_images/384-plate.png" src="_images/384-plate.png" />
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trash-point">
+<h3>Trash &amp; Point<a class="headerlink" href="#trash-point" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="trash-box-container">
+<h4>Trash box container<a class="headerlink" href="#trash-box-container" title="Permalink to this headline">¶</a></h4>
+<p>A generic trash box for disposing of tips and liquids.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;trash-box&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="point">
+<h4>Point<a class="headerlink" href="#point" title="Permalink to this headline">¶</a></h4>
+<p>Use <code class="docutils literal"><span class="pre">point</span></code> when there is only one position per container, such as the trash or a scale.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">myContainer</span> <span class="o">=</span> <span class="n">containers</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;point&#39;</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can access the point position as <code class="docutils literal"><span class="pre">myContainer.wells('A1')</span></code> or <code class="docutils literal"><span class="pre">myContainer.wells(0)</span></code>.</p>
 <hr class="docutils" />
 </div>
 </div>
@@ -667,11 +698,13 @@ The same arguments described above can be used with <code class="docutils litera
 <li class="toctree-l1"><a class="reference internal" href="writing.html">Design with Python</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Containers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#labware-library">Labware Library</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#point">Point</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#terminology">Terminology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#containers-load-command"><code class="docutils literal"><span class="pre">containers.load</span></code> command</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tipracks">Tipracks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#troughs">Troughs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tube-racks">Tube Racks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#plates">Plates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trash-point">Trash &amp; Point</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#id3">Containers</a><ul>
