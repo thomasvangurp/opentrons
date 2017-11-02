@@ -50,13 +50,13 @@ h1 {
 }
 
 .robot_list li {
-  height: 6rem;
+  min-height: 6rem;
   border-bottom: 2px solid #ddd;
   margin: 0;
 }
 
 .connection_type {
-  margin: -1rem 1rem 0;
+  margin: -1rem 0.5rem 0;
   height: 3rem;
   display: inline-block;
   vertical-align: baseline;
@@ -64,7 +64,7 @@ h1 {
 
 .connection_info {
   display: inline-block;
-  width: 13rem;
+  width: 14rem;
   height: 6rem;
 }
 
@@ -74,14 +74,23 @@ h1 {
 
 .connection_name,
 .connection_btn {
-  width: 10rem;
+  width: 14rem;
   display: block;
   text-align: center;
 }
 
+.connection_btn {
+  width: 14rem;
+}
+
 .btn_connect {
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
+  display: inline-block;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.75rem;
+  margin-right: 0.25rem;
 }
 
 .btn_connect:hover {

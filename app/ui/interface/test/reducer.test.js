@@ -1,6 +1,9 @@
 // interface reducer test
 
 import {reducer, actionTypes} from '../'
+import {
+  actionTypes as robotActionTypes
+} from '../../robot'
 
 describe('interface reducer', () => {
   test('initial state', () => {
@@ -8,7 +11,8 @@ describe('interface reducer', () => {
 
     expect(state).toEqual({
       isNavPanelOpen: false,
-      currentNavPanelTask: ''
+      currentNavPanelTask: '',
+      isSettingsPanelOpen: false
     })
   })
 
@@ -33,14 +37,20 @@ describe('interface reducer', () => {
     })
   })
 
-  test('handles setCurrentNavPanel with nav panel open', () => {
-    const state = {currentNavPanelTask: 'upload', isNavPanelOpen: true}
-    const panel = 'upload'
-    const action = {type: actionTypes.SET_CURRENT_NAV_PANEL, payload: {panel}}
+  test('handles toggleSettingsPanel on settings button click', () => {
+    const state = {isSettingsPanelOpen: false}
+    const action = {type: actionTypes.TOGGLE_SETTINGS_PANEL}
 
     expect(reducer(state, action)).toEqual({
-      currentNavPanelTask: 'upload',
-      isNavPanelOpen: false
+      isSettingsPanelOpen: true
+    })
+  })
+
+  test('handles toggleSettingsPanel on robot disconnect', () => {
+    const state = {isSettingsPanelOpen: true}
+    const action = {type: robotActionTypes.DISCONNECT}
+    expect(reducer(state, action)).toEqual({
+      isSettingsPanelOpen: false
     })
   })
 })

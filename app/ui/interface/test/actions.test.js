@@ -14,4 +14,9 @@ describe('interface actions', () => {
 
     expect(actions.setCurrentNavPanel('upload')).toEqual(expected)
   })
+
+  test('set settings panel open', () => {
+    const expected = {type: actionTypes.TOGGLE_SETTINGS_PANEL}
+    expect(actions.toggleSettingsPanel()).toEqual(expected)
+  })
 })

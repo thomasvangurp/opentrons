@@ -1,0 +1,30 @@
+.settings {
+  text-align: center;
+}
+
+.label,
+.input {
+  display: inline-block;
+  height: 2rem;
+  line-height: 2rem;
+  vertical-align: top;
+}
+
+.label {
+  width: 6rem;
+  background-color: #ccc;
+}
+
+.input {
+  border: 1px solid #ccc;
+  width: 9rem;
+  margin-bottom: 0.25rem;
+}
+
+.btn_join {
+  margin: 0.5rem auto;
+  padding: 0 0.5rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.75rem;
+}

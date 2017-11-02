@@ -187,12 +187,15 @@ button:focus {
   outline: 0;
 }
 
+input:focus {
+  outline: none;
+}
+
 .btn {
   height: 2.5rem;
   line-height: 2.5rem;
   border-radius: 2px;
   font-family: 'sans';
-  font-size: 14px;
   text-transform: uppercase;
   cursor: pointer;
   background-color: transparent;
